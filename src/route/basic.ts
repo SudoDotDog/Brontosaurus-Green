@@ -1,6 +1,6 @@
 /**
  * @author WMXPY
- * @namespace Brontosaurus_Mint_Routes
+ * @namespace Brontosaurus_Green_Routes
  * @description Basic
  */
 

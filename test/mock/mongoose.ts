@@ -1,6 +1,6 @@
 /**
  * @author WMXPY
- * @namespace Brontosaurus_Mint
+ * @namespace Brontosaurus_Green
  * @description Mongoose
  * @package Mock
  */

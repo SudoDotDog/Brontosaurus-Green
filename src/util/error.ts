@@ -1,12 +1,12 @@
 /**
  * @author WMXPY
- * @namespace Brontosaurus_Mint_Util
+ * @namespace Brontosaurus_Green_Util
  * @description Error
  */
 
 import { Connor, Panic } from 'connor';
 
-export const MODULE_NAME = 'Brontosaurus-Mint';
+export const MODULE_NAME = 'Brontosaurus-Green';
 
 export enum ERROR_CODE {
 
@@ -15,8 +15,6 @@ export enum ERROR_CODE {
     TOKEN_EXPIRED = 4107,
 
     APPLICATION_KEY_NOT_FOUND = 4120,
-
-    ACCOUNT_MINT_NOT_VALID = 4130,
 
     ACCOUNT_ORGANIZATION_NOT_FOUND = 4135,
 
@@ -56,8 +54,6 @@ export const ERROR_LIST: Record<ERROR_CODE, string> = {
     [ERROR_CODE.TOKEN_EXPIRED]: 'Token expired',
 
     [ERROR_CODE.APPLICATION_KEY_NOT_FOUND]: 'Application key not found',
-
-    [ERROR_CODE.ACCOUNT_MINT_NOT_VALID]: 'Account mint not valid',
 
     [ERROR_CODE.ACCOUNT_ORGANIZATION_NOT_FOUND]: 'Account organization not found',
 

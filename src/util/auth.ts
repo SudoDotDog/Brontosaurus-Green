@@ -1,6 +1,6 @@
 /**
  * @author WMXPY
- * @namespace Brontosaurus_Mint_Util
+ * @namespace Brontosaurus_Green_Util
  * @description Auth
  */
 
@@ -152,7 +152,7 @@ export const compareGroups = (userGroups: string[], targetGroups: any): boolean 
 };
 
 export const createSalt = (): string => Math.random().toString(36).substring(2, 9);
-export const createMint = (): string => Math.random().toString(36).substring(2, 9);
+export const createGreen = (): string => Math.random().toString(36).substring(2, 9);
 
 export const garblePassword = (password: string, salt: string): string => {
 

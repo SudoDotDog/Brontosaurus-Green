@@ -1,6 +1,6 @@
 /**
  * @author WMXPY
- * @namespace Brontosaurus_Mint_Handlers
+ * @namespace Brontosaurus_Green_Handlers
  * @description Hook
  */
 
