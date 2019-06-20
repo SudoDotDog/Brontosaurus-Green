@@ -1,6 +1,6 @@
 /**
  * @author WMXPY
- * @namespace Brontosaurus_Square_Util
+ * @namespace Brontosaurus_Green_Util
  * @description Conf
  * @package Unit Test
  */

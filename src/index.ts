@@ -1,6 +1,6 @@
 /**
  * @author WMXPY
- * @namespace Brontosaurus_Square
+ * @namespace Brontosaurus_Green
  * @description Index
  */
 
@@ -9,6 +9,7 @@ import { SudooExpress, SudooExpressApplication } from '@sudoo/express';
 import { LOG_LEVEL, SudooLog } from '@sudoo/log';
 import * as Mongoose from "mongoose";
 import * as Path from 'path';
+import { OrganizationListRoute } from './route/organization';
 import { BrontosaurusConfig, isDevelopment, readConfigEnvironment } from './util/conf';
 
 const setting: SudooExpressApplication = SudooExpressApplication.create('Brontosaurus-Square', '1');
@@ -29,6 +30,9 @@ db.on('error', console.log.bind(console, 'connection error:'));
 
 // Static
 app.static(Path.join(__dirname, '..', 'public', 'air'));
+
+// Routes
+app.route(new OrganizationListRoute());
 
 // Health
 app.health('/health');

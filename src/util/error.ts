@@ -15,6 +15,7 @@ export enum ERROR_CODE {
     TOKEN_EXPIRED = 4107,
 
     APPLICATION_KEY_NOT_FOUND = 4120,
+    APPLICATION_GREEN_NOT_VALID = 4121,
 
     ACCOUNT_ORGANIZATION_NOT_FOUND = 4135,
 
@@ -41,8 +42,6 @@ export enum ERROR_CODE {
     DUPLICATE_GROUP = 6252,
     DUPLICATE_ORGANIZATION = 6253,
 
-    CANNOT_MODIFY_INTERNAL_GROUP = 6701,
-
     NOT_ENOUGH_PERMISSION = 7001,
     PERMISSION_USER_DOES_NOT_MATCH = 7002,
 }
@@ -54,6 +53,7 @@ export const ERROR_LIST: Record<ERROR_CODE, string> = {
     [ERROR_CODE.TOKEN_EXPIRED]: 'Token expired',
 
     [ERROR_CODE.APPLICATION_KEY_NOT_FOUND]: 'Application key not found',
+    [ERROR_CODE.APPLICATION_GREEN_NOT_VALID]: 'Application green not valid',
 
     [ERROR_CODE.ACCOUNT_ORGANIZATION_NOT_FOUND]: 'Account organization not found',
 
@@ -79,8 +79,6 @@ export const ERROR_LIST: Record<ERROR_CODE, string> = {
     [ERROR_CODE.DUPLICATE_APPLICATION]: 'Application: "{}" already exist',
     [ERROR_CODE.DUPLICATE_GROUP]: 'Group: "{}" already exist',
     [ERROR_CODE.DUPLICATE_ORGANIZATION]: 'Organization: "{}" already exist',
-
-    [ERROR_CODE.CANNOT_MODIFY_INTERNAL_GROUP]: 'Internal group cannot be modify',
 
     [ERROR_CODE.NOT_ENOUGH_PERMISSION]: 'Permission insufficient, need "{}"',
     [ERROR_CODE.PERMISSION_USER_DOES_NOT_MATCH]: 'Permission user does not match between: "{}" and "{}"',
