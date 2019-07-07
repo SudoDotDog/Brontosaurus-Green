@@ -25,14 +25,15 @@
   dependencies:
     "@brontosaurus/definition" "^1.4.3"
 
-"@brontosaurus/db@^2.3.2":
-  version "2.3.2"
-  resolved "https://registry.yarnpkg.com/@brontosaurus/db/-/db-2.3.2.tgz#8fe107aae6eb96765fdb2846bbf1d775d7cf55b0"
-  integrity sha512-MUFExkiS517rHhWb4zO8WaEvT1ZGtbVgJmplxl4M1NSYWi7K8ZC/yatCg00yW4KPYqHzxBHBugy06p8TVTgCzQ==
+"@brontosaurus/db@^2.13.0":
+  version "2.13.0"
+  resolved "https://registry.yarnpkg.com/@brontosaurus/db/-/db-2.13.0.tgz#406973e12676e251289ac0702481bad84ba98923"
+  integrity sha512-M2/tfm2Y7aAGuhKn7MXVJnk1s4uvzTqrxOR8DJan61KxY8sprwRgL9z9MvoZ7sotBy8MqSbeEGmr+rpUQkG7gw==
   dependencies:
     "@brontosaurus/definition" "^1.4.3"
     "@sudoo/bark" "^2.7.1"
-    mongoose "^5.5.11"
+    mongoose "^5.6.3"
+    speakeasy "^2.0.0"
 
 "@brontosaurus/definition@^1.4.3":
   version "1.4.3"
@@ -44,10 +45,10 @@
   resolved "https://registry.yarnpkg.com/@sudoo/bark/-/bark-2.7.1.tgz#84b9db0be3aa7b4d6896ced81d9fa9aac96578ef"
   integrity sha512-0zBFbIQAtu3XNJkFPszdljYXXIPXzR63qypfTwFRupmu3gxgfBMtdPShbQebGuGG0KQEmXasGMBQVi2O0jWbbQ==
 
-"@sudoo/express@^1.10.0":
-  version "1.10.1"
-  resolved "https://registry.yarnpkg.com/@sudoo/express/-/express-1.10.1.tgz#002d1d5c16cda3b2b5d28697cf19a77d954f2264"
-  integrity sha512-DVQND05soig89DL54LolEZFNs3fMucuZX2oaQP6HvKxbG9oBbzeJ/o+QK02GEY7vAF7h5qNGBlXp6OIHCKoo8Q==
+"@sudoo/express@^1.12.0":
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/@sudoo/express/-/express-1.12.0.tgz#e1515bfc5c9265004174ec338fd00c945f02d7a7"
+  integrity sha512-pcNXFWGuzph20jSbFJKbgVMoi+0L0AAGQ6fbGdWWAv6QcabFd3tJY/39x+AwZvM/hiREcfqlwVte3xH9yfkpxw==
   dependencies:
     "@sudoo/bark" "^2.7.1"
     body-parser "^1.19.0"
@@ -261,6 +262,11 @@ balanced-match@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.0.tgz#89b4d199ab2bee49de164ea02b89ce462d71b767"
   integrity sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
+
+base32.js@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/base32.js/-/base32.js-0.0.1.tgz#d045736a57b1f6c139f0c7df42518a84e91bb2ba"
+  integrity sha1-0EVzalex9sE58MffQlGKhOkbsro=
 
 bluebird@3.5.1:
   version "3.5.1"
@@ -751,10 +757,10 @@ mongoose-legacy-pluralize@1.0.2:
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
   integrity sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
 
-mongoose@^5.5.11, mongoose@^5.5.15:
-  version "5.6.0"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.6.0.tgz#6c3984d2330bc3b28ae800d8b8025a0686d1e450"
-  integrity sha512-bhevx8u4NfZf2Un+CcKWRsiNekrLH7dSI8mBC49FcY2SUXQPZf3w+Yby+cgDrpZA46nkqRW9Qaqhs7PT0XCtYQ==
+mongoose@^5.6.3:
+  version "5.6.3"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.6.3.tgz#f61651f63b3496f82c235f819e0890bd5c1821ba"
+  integrity sha512-eMpT33DMbigFth+xdxlcHRljqFyuCJ9WfvoLkwFc4BAm4i/dAzHzis62VWUuNOMUv6yj/+MrJPqugqD4WDWPqQ==
   dependencies:
     async "2.6.2"
     bson "~1.1.1"
@@ -983,6 +989,13 @@ sparse-bitfield@^3.0.3:
   integrity sha1-/0rm5oZWBWuks+eSqzM004JzyhE=
   dependencies:
     memory-pager "^1.0.2"
+
+speakeasy@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/speakeasy/-/speakeasy-2.0.0.tgz#85c91a071b09a5cb8642590d983566165f57613a"
+  integrity sha1-hckaBxsJpcuGQlkNmDVmFl9XYTo=
+  dependencies:
+    base32.js "0.0.1"
 
 sprintf-js@~1.0.2:
   version "1.0.3"
