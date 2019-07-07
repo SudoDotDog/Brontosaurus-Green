@@ -35,7 +35,8 @@ export class SingleOrganizationRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.REQUEST_DOES_MATCH_PATTERN);
             }
 
-            const organization: IOrganizationModel | null = await OrganizationController.getOrganizationByName(name);
+            const decoded: string = decodeURIComponent(name);
+            const organization: IOrganizationModel | null = await OrganizationController.getOrganizationByName(decoded);
 
             if (!organization) {
                 throw panic.code(ERROR_CODE.ORGANIZATION_NOT_FOUND);
