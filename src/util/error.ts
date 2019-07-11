@@ -10,7 +10,6 @@ export const MODULE_NAME = 'Brontosaurus-Green';
 
 export enum ERROR_CODE {
 
-    PASSWORD_DOES_NOT_MATCH = 4001,
     TOKEN_INVALID = 4106,
     TOKEN_EXPIRED = 4107,
 
@@ -36,19 +35,10 @@ export enum ERROR_CODE {
     GROUP_NOT_FOUND = 6201,
     ACCOUNT_NOT_FOUND = 6202,
     ORGANIZATION_NOT_FOUND = 6203,
-
-    DUPLICATE_ACCOUNT = 6250,
-    DUPLICATE_APPLICATION = 6251,
-    DUPLICATE_GROUP = 6252,
-    DUPLICATE_ORGANIZATION = 6253,
-
-    NOT_ENOUGH_PERMISSION = 7001,
-    PERMISSION_USER_DOES_NOT_MATCH = 7002,
 }
 
 export const ERROR_LIST: Record<ERROR_CODE, string> = {
 
-    [ERROR_CODE.PASSWORD_DOES_NOT_MATCH]: 'Username and password not match',
     [ERROR_CODE.TOKEN_INVALID]: 'Token invalid',
     [ERROR_CODE.TOKEN_EXPIRED]: 'Token expired',
 
@@ -74,14 +64,6 @@ export const ERROR_LIST: Record<ERROR_CODE, string> = {
     [ERROR_CODE.GROUP_NOT_FOUND]: 'Group: "{}" not found',
     [ERROR_CODE.ACCOUNT_NOT_FOUND]: 'Account: "{}" not found',
     [ERROR_CODE.ORGANIZATION_NOT_FOUND]: 'Organization: "{}" not found',
-
-    [ERROR_CODE.DUPLICATE_ACCOUNT]: 'Account: "{}" already exist',
-    [ERROR_CODE.DUPLICATE_APPLICATION]: 'Application: "{}" already exist',
-    [ERROR_CODE.DUPLICATE_GROUP]: 'Group: "{}" already exist',
-    [ERROR_CODE.DUPLICATE_ORGANIZATION]: 'Organization: "{}" already exist',
-
-    [ERROR_CODE.NOT_ENOUGH_PERMISSION]: 'Permission insufficient, need "{}"',
-    [ERROR_CODE.PERMISSION_USER_DOES_NOT_MATCH]: 'Permission user does not match between: "{}" and "{}"',
 };
 
 export const panic: Panic<ERROR_CODE> = Panic.withDictionary(MODULE_NAME, ERROR_LIST);
