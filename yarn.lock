@@ -25,12 +25,12 @@
   dependencies:
     "@brontosaurus/definition" "^1.5.0"
 
-"@brontosaurus/db@^2.16.2":
-  version "2.16.2"
-  resolved "https://registry.yarnpkg.com/@brontosaurus/db/-/db-2.16.2.tgz#fde112c9d328da903b4a572c0a944e9422161ce1"
-  integrity sha512-MT2CCj9vzpxfGO58THBvEO2E6vE78udh5OBp2EZOJQzEzZ50jCpONNHr4IgbGSjDVGhQsz78c7R47Z/qNtFadQ==
+"@brontosaurus/db@^2.17.2":
+  version "2.17.2"
+  resolved "https://registry.yarnpkg.com/@brontosaurus/db/-/db-2.17.2.tgz#6c818a626a58e6a8792b77dda8c48af783adc6b9"
+  integrity sha512-dsWxORR/RlUe7UP7PYg0XTzWRrCS7WUYCBD9J9/ahA7P0seiC+C0rtnCml6mBzVheooFAdK7z07sQNonL+a5tA==
   dependencies:
-    "@brontosaurus/definition" "^1.5.0"
+    "@brontosaurus/definition" "^1.6.0"
     "@sudoo/bark" "^2.7.1"
     mongoose "^5.6.4"
     speakeasy "^2.0.0"
@@ -39,6 +39,11 @@
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/@brontosaurus/definition/-/definition-1.5.0.tgz#3b0357b3804f014f5a56eb8a247f9d632f61fa54"
   integrity sha512-6QNrQbBcRcI/ODyNc8CCvNZ0lJewDIywQX+638EOmp/BKuNwzoOmV979JOg3AClZJ95cAZQn7OTxuQXZ8J7oCw==
+
+"@brontosaurus/definition@^1.6.0":
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/@brontosaurus/definition/-/definition-1.6.0.tgz#941cb485c477575109ee69a9a6fbf6dc014d1f7f"
+  integrity sha512-FmDngdesanhIQgtE50B04lUfuE8hw8YhGgs941CDjO3Cw7ldV71cRo+k6o09agFPb1GrZCoX+fETndn8NTI4pw==
 
 "@sudoo/bark@^2.6.1", "@sudoo/bark@^2.7.1":
   version "2.7.1"

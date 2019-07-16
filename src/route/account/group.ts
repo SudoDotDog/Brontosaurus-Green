@@ -42,7 +42,10 @@ export class AccountListByGroupRoute extends BrontosaurusRoute {
             }
 
             const accounts: IAccountModel[] = await AccountController.getActiveAccountsByGroup(group._id);
-            const names: string[] = accounts.map((account: IAccountModel) => account.username);
+            const names = accounts.map((account: IAccountModel) => ({
+                username: account.username,
+                displayName: account.displayName,
+            }));
 
             res.agent.add('usernames', names);
         } catch (err) {
