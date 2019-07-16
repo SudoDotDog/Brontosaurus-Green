@@ -8,6 +8,7 @@ import { AccountListByGroupRoute } from "./account/group";
 import { OrganizationAllRoute } from "./organization/all";
 import { SingleOrganizationRoute } from "./organization/single";
 import { OrganizationListByTagRoute } from "./organization/tag";
+import { ValidateBridgeRoute } from "./validate/bridge";
 
 export const RouteList = [
 
@@ -18,4 +19,7 @@ export const RouteList = [
     new OrganizationAllRoute(),
     new OrganizationListByTagRoute(),
     new SingleOrganizationRoute(),
+
+    // Validate
+    new ValidateBridgeRoute(),
 ];
