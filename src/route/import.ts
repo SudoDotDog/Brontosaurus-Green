@@ -5,6 +5,7 @@
  */
 
 import { AccountListByGroupRoute } from "./account/group";
+import { OrganizationAllRoute } from "./organization/all";
 import { SingleOrganizationRoute } from "./organization/single";
 import { OrganizationListByTagRoute } from "./organization/tag";
 
@@ -14,6 +15,7 @@ export const RouteList = [
     new AccountListByGroupRoute(),
 
     // Organization
+    new OrganizationAllRoute(),
     new OrganizationListByTagRoute(),
     new SingleOrganizationRoute(),
 ];

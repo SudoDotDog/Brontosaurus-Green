@@ -4,7 +4,7 @@
  * @description Group
  */
 
-import { IOrganizationModel, OrganizationController } from "@brontosaurus/db";
+import { AccountController, GroupController, IAccountModel, IGroupModel } from "@brontosaurus/db";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { basicHook } from "../../handlers/hook";
@@ -29,16 +29,22 @@ export class AccountListByGroupRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.APPLICATION_GREEN_NOT_VALID);
             }
 
-            // const tag: string | undefined = req.params.tag;
+            const groupName: string | undefined = req.params.group;
 
-            // if (!tag) {
-            //     throw panic.code(ERROR_CODE.INSUFFICIENT_INFORMATION, 'tag');
-            // }
+            if (!groupName) {
+                throw panic.code(ERROR_CODE.INSUFFICIENT_INFORMATION, 'group');
+            }
 
-            // const organizations: IOrganizationModel[] = await OrganizationController.getActiveOrganizationsByTags([tag]);
-            // const names: string[] = organizations.map((organization: IOrganizationModel) => organization.name);
+            const group: IGroupModel | null = await GroupController.getGroupByName(groupName);
 
-            // res.agent.add('names', names);
+            if (!group) {
+                throw panic.code(ERROR_CODE.GROUP_NOT_FOUND, groupName);
+            }
+
+            const accounts: IAccountModel[] = await AccountController.getActiveAccountsByGroup(group._id);
+            const names: string[] = accounts.map((account: IAccountModel) => account.username);
+
+            res.agent.add('usernames', names);
         } catch (err) {
             res.agent.fail(400, err);
         } finally {
