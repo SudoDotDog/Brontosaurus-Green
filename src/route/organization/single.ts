@@ -1,15 +1,15 @@
 /**
  * @author WMXPY
- * @namespace Brontosaurus_Green_Routes
+ * @namespace Brontosaurus_Green_Organization
  * @description Single Organization
  */
 
 import { IOrganizationModel, OrganizationController } from "@brontosaurus/db";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
-import { createGreenAuthHandler } from "../handlers/handlers";
-import { basicHook } from "../handlers/hook";
-import { ERROR_CODE, panic } from "../util/error";
-import { BrontosaurusRoute } from "./basic";
+import { createGreenAuthHandler } from "../../handlers/handlers";
+import { basicHook } from "../../handlers/hook";
+import { ERROR_CODE, panic } from "../../util/error";
+import { BrontosaurusRoute } from "../basic";
 
 export class SingleOrganizationRoute extends BrontosaurusRoute {
 
