@@ -35,6 +35,7 @@ export enum ERROR_CODE {
     GROUP_NOT_FOUND = 6201,
     ACCOUNT_NOT_FOUND = 6202,
     ORGANIZATION_NOT_FOUND = 6203,
+    TAG_NOT_FOUND = 6204,
 }
 
 export const ERROR_LIST: Record<ERROR_CODE, string> = {
@@ -64,6 +65,7 @@ export const ERROR_LIST: Record<ERROR_CODE, string> = {
     [ERROR_CODE.GROUP_NOT_FOUND]: 'Group: "{}" not found',
     [ERROR_CODE.ACCOUNT_NOT_FOUND]: 'Account: "{}" not found',
     [ERROR_CODE.ORGANIZATION_NOT_FOUND]: 'Organization: "{}" not found',
+    [ERROR_CODE.TAG_NOT_FOUND]: 'Tag: "{}" not found',
 };
 
 export const panic: Panic<ERROR_CODE> = Panic.withDictionary(MODULE_NAME, ERROR_LIST);

@@ -4,7 +4,7 @@
  * @description Tag
  */
 
-import { IOrganizationModel, OrganizationController } from "@brontosaurus/db";
+import { IOrganizationModel, ITagModel, OrganizationController, TagController } from "@brontosaurus/db";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { basicHook } from "../../handlers/hook";
@@ -18,7 +18,7 @@ export class OrganizationListByTagRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         basicHook.wrap(createGreenAuthHandler(), '/organization/list/:tag - Green'),
-        basicHook.wrap(this._listOrganizationHandler.bind(this), '/organization/list/:tag - list', true),
+        basicHook.wrap(this._listOrganizationHandler.bind(this), '/organization/list/:tag - Organizations By Tag', true),
     ];
 
     private async _listOrganizationHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
@@ -29,13 +29,19 @@ export class OrganizationListByTagRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.APPLICATION_GREEN_NOT_VALID);
             }
 
-            const tag: string | undefined = req.params.tag;
+            const tagName: string | undefined = req.params.tag;
 
-            if (!tag) {
+            if (!tagName) {
                 throw panic.code(ERROR_CODE.INSUFFICIENT_INFORMATION, 'tag');
             }
 
-            const organizations: IOrganizationModel[] = await OrganizationController.getActiveOrganizationsByTags([tag]);
+            const tag: ITagModel | null = await TagController.getTagByName(tagName);
+
+            if (!tag) {
+                throw panic.code(ERROR_CODE.TAG_NOT_FOUND, tagName);
+            }
+
+            const organizations: IOrganizationModel[] = await OrganizationController.getActiveOrganizationsByTags([tag._id]);
             const names: string[] = organizations.map((organization: IOrganizationModel) => organization.name);
 
             res.agent.add('names', names);
