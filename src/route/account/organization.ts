@@ -1,10 +1,10 @@
 /**
  * @author WMXPY
  * @namespace Brontosaurus_Green_Account
- * @description Group
+ * @description Organization
  */
 
-import { AccountController, GroupController, IAccountModel, IGroupModel } from "@brontosaurus/db";
+import { AccountController, IAccountModel, IGroupModel, IOrganizationModel, OrganizationController } from "@brontosaurus/db";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { GroupAgent } from "../../agent/group";
 import { createGreenAuthHandler } from "../../handlers/handlers";
@@ -12,14 +12,14 @@ import { basicHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
 
-export class AccountListByGroupRoute extends BrontosaurusRoute {
+export class AccountListByOrganizationRoute extends BrontosaurusRoute {
 
-    public readonly path: string = '/account/group/:group';
+    public readonly path: string = '/account/organization/:organization';
     public readonly mode: ROUTE_MODE = ROUTE_MODE.GET;
 
     public readonly groups: SudooExpressHandler[] = [
-        basicHook.wrap(createGreenAuthHandler(), '/account/group/:group - Green'),
-        basicHook.wrap(this._listAccountHandler.bind(this), '/account/group/:group - List', true),
+        basicHook.wrap(createGreenAuthHandler(), '/account/organization/:organization - Green'),
+        basicHook.wrap(this._listAccountHandler.bind(this), '/account/organization/:organization - List', true),
     ];
 
     private async _listAccountHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
@@ -30,19 +30,19 @@ export class AccountListByGroupRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.APPLICATION_GREEN_NOT_VALID);
             }
 
-            const groupName: string | undefined = req.params.group;
+            const organizationName: string | undefined = req.params.organization;
 
-            if (!groupName) {
-                throw panic.code(ERROR_CODE.INSUFFICIENT_INFORMATION, 'group');
+            if (!organizationName) {
+                throw panic.code(ERROR_CODE.INSUFFICIENT_INFORMATION, 'organization');
             }
 
-            const group: IGroupModel | null = await GroupController.getGroupByName(groupName);
+            const organization: IOrganizationModel | null = await OrganizationController.getOrganizationByName(organizationName);
 
-            if (!group) {
-                throw panic.code(ERROR_CODE.GROUP_NOT_FOUND, groupName);
+            if (!organization) {
+                throw panic.code(ERROR_CODE.ORGANIZATION_NOT_FOUND, organizationName);
             }
 
-            const accounts: IAccountModel[] = await AccountController.getActiveAccountsByGroup(group._id);
+            const accounts: IAccountModel[] = await AccountController.getAccountsByOrganization(organization._id);
 
             const infos = [];
             const agent: GroupAgent = GroupAgent.create();
