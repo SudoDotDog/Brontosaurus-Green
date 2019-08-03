@@ -38,10 +38,13 @@ export class VerifyAccountRoute extends BrontosaurusRoute {
             const account: IAccount | null = await AccountController.getActiveAccountByUsernameLean(accountName);
 
             res.agent.add('valid', Boolean(account));
-            res.agent.add('account', {
-                username: account.username,
-                displayName: account.displayName,
-            });
+
+            if (account) {
+                res.agent.add('account', {
+                    username: account.username,
+                    displayName: account.displayName,
+                });
+            }
         } catch (err) {
             res.agent.fail(400, err);
         } finally {

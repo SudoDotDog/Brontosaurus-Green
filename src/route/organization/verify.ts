@@ -38,9 +38,12 @@ export class VerifyOrganizationRoute extends BrontosaurusRoute {
             const organization: IOrganization | null = await OrganizationController.getOrganizationByNameLean(organizationName);
 
             res.agent.add('valid', Boolean(organization));
-            res.agent.add('organization', {
-                name: organization.name,
-            });
+
+            if (organization) {
+                res.agent.add('organization', {
+                    name: organization.name,
+                });
+            }
         } catch (err) {
             res.agent.fail(400, err);
         } finally {
