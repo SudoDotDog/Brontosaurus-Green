@@ -19,7 +19,7 @@ export class AccountListByOrganizationRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         basicHook.wrap(createGreenAuthHandler(), '/account/organization/:organization - Green'),
-        basicHook.wrap(this._listAccountHandler.bind(this), '/account/organization/:organization - List', true),
+        basicHook.wrap(this._listAccountHandler.bind(this), '/account/organization/:organization - List Organization', true),
     ];
 
     private async _listAccountHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {

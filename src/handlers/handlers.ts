@@ -9,7 +9,7 @@ import { SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, Sud
 import { parseBearerAuthorization } from "../util/auth";
 
 export const createGreenAuthHandler = (): SudooExpressHandler =>
-    async (req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> => {
+    async (req: SudooExpressRequest, _: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> => {
 
         const authHeader: string | undefined = req.header('authorization') || req.header('Authorization');
         const auth: string | null = parseBearerAuthorization(authHeader);
