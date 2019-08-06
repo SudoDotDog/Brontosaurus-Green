@@ -4,7 +4,7 @@
  * @description Auth
  */
 
-import { Brontosaurus, BrontosaurusToken } from "@brontosaurus/core";
+import { Brontosaurus } from "@brontosaurus/core";
 import { GroupController, IGroupModel } from "@brontosaurus/db";
 import { IBrontosaurusBody, IBrontosaurusHeader } from "@brontosaurus/definition";
 import { Safe } from "@sudoo/extract";
@@ -14,28 +14,6 @@ import { createHash, Hash } from 'crypto';
 import { isArray } from "util";
 import { ERROR_CODE, MODULE_NAME } from "./error";
 import { SafeToken } from "./token";
-
-export const Throwable_ValidateToken = (secret: string, expire: number, tokenString: string): IBrontosaurusBody => {
-
-    const token: BrontosaurusToken = Brontosaurus.token(secret);
-    const createError: ErrorCreationFunction = Connor.getErrorCreator(MODULE_NAME);
-
-    if (!token.clock(tokenString, expire)) {
-        throw createError(ERROR_CODE.TOKEN_EXPIRED);
-    }
-
-    if (!token.check(tokenString)) {
-        throw createError(ERROR_CODE.TOKEN_INVALID);
-    }
-
-    const body: IBrontosaurusBody | null = token.body(tokenString);
-
-    if (!body) {
-        throw createError(ERROR_CODE.TOKEN_INVALID);
-    }
-
-    return body;
-};
 
 export const getPrincipleFromToken = (tokenString: string): SafeToken => {
 
