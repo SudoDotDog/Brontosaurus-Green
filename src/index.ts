@@ -14,6 +14,8 @@ import { BrontosaurusConfig, isDevelopment, readConfigEnvironment } from './util
 
 const setting: SudooExpressApplication = SudooExpressApplication.create('Brontosaurus-Square', '1');
 
+setting.useBodyParser();
+
 if (isDevelopment()) {
     setting.allowCrossOrigin();
     SudooLog.global.level(LOG_LEVEL.VERBOSE);

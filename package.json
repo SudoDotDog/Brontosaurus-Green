@@ -19,7 +19,7 @@
     "@brontosaurus/core": "^2.3.0",
     "@brontosaurus/db": "^3.2.0",
     "@sudoo/bark": "^2.7.1",
-    "@sudoo/express": "^1.15.2",
+    "@sudoo/express": "^2.0.1",
     "@sudoo/extract": "^1.2.1",
     "@sudoo/io": "^1.6.1",
     "@sudoo/log": "^1.2.2",
@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@sudoo/mock": "^1.2.0",
-    "@sudoo/triforce": "^1.8.2",
+    "@sudoo/triforce": "^1.8.3",
     "@sudoo/triforce-mongoose-dev": "^1.2.0",
     "@types/express": "^4.17.1"
   },
