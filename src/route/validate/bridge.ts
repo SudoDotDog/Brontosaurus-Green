@@ -8,7 +8,7 @@ import { ApplicationController } from "@brontosaurus/db";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { Safe, SafeExtract } from "@sudoo/extract";
 import { createGreenAuthHandler } from "../../handlers/handlers";
-import { basicHook } from "../../handlers/hook";
+import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
 
@@ -23,8 +23,8 @@ export class ValidateBridgeRoute extends BrontosaurusRoute {
     public readonly mode: ROUTE_MODE = ROUTE_MODE.POST;
 
     public readonly groups: SudooExpressHandler[] = [
-        basicHook.wrap(createGreenAuthHandler(), '/validate/bridge - Green'),
-        basicHook.wrap(this._validateBridgeHandler.bind(this), '/validate/bridge - Validate Bridge', true),
+        autoHook.wrap(createGreenAuthHandler(), 'Green'),
+        autoHook.wrap(this._validateBridgeHandler.bind(this), 'Validate Bridge', true),
     ];
 
     private async _validateBridgeHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {

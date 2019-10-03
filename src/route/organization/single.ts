@@ -7,7 +7,7 @@
 import { IOrganizationModel, OrganizationController } from "@brontosaurus/db";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { createGreenAuthHandler } from "../../handlers/handlers";
-import { basicHook } from "../../handlers/hook";
+import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
 
@@ -17,8 +17,8 @@ export class SingleOrganizationRoute extends BrontosaurusRoute {
     public readonly mode: ROUTE_MODE = ROUTE_MODE.GET;
 
     public readonly groups: SudooExpressHandler[] = [
-        basicHook.wrap(createGreenAuthHandler(), '/organization/single/:name - Green'),
-        basicHook.wrap(this._singleOrganizationHandler.bind(this), '/organization/single/:name - list', true),
+        autoHook.wrap(createGreenAuthHandler(), 'Green'),
+        autoHook.wrap(this._singleOrganizationHandler.bind(this), 'list', true),
     ];
 
     private async _singleOrganizationHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {

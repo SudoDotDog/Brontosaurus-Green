@@ -8,7 +8,7 @@ import { AccountController, GroupController, IAccountModel, IGroupModel, IOrgani
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { GroupAgent } from "../../agent/group";
 import { createGreenAuthHandler } from "../../handlers/handlers";
-import { basicHook } from "../../handlers/hook";
+import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
 
@@ -18,8 +18,8 @@ export class AccountListBySpecificRoute extends BrontosaurusRoute {
     public readonly mode: ROUTE_MODE = ROUTE_MODE.GET;
 
     public readonly groups: SudooExpressHandler[] = [
-        basicHook.wrap(createGreenAuthHandler(), '/account/specific/:organization/:group - Green'),
-        basicHook.wrap(this._specificAccountHandler.bind(this), '/account/specific/:organization/:group - List', true),
+        autoHook.wrap(createGreenAuthHandler(), 'Green'),
+        autoHook.wrap(this._specificAccountHandler.bind(this), 'List', true),
     ];
 
     private async _specificAccountHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {

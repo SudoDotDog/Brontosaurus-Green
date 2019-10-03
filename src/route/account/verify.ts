@@ -7,7 +7,7 @@
 import { AccountController, IAccount } from "@brontosaurus/db";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { createGreenAuthHandler } from "../../handlers/handlers";
-import { basicHook } from "../../handlers/hook";
+import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
 
@@ -17,8 +17,8 @@ export class VerifyAccountRoute extends BrontosaurusRoute {
     public readonly mode: ROUTE_MODE = ROUTE_MODE.GET;
 
     public readonly groups: SudooExpressHandler[] = [
-        basicHook.wrap(createGreenAuthHandler(), '/account/verify/:account - Green'),
-        basicHook.wrap(this._verifyAccountHandler.bind(this), '/account/verify/:account - Verify Account', true),
+        autoHook.wrap(createGreenAuthHandler(), 'Green'),
+        autoHook.wrap(this._verifyAccountHandler.bind(this), 'Verify Account', true),
     ];
 
     private async _verifyAccountHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
