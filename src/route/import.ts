@@ -4,6 +4,7 @@
  * @description Import
  */
 
+import { AccountDetailRoute } from "./account/detail";
 import { AccountListByGroupRoute } from "./account/group";
 import { AccountListByOrganizationRoute } from "./account/organization";
 import { VerifyAccountRoute } from "./account/verify";
@@ -18,6 +19,7 @@ export const RouteList = [
     // Account
     new AccountListByGroupRoute(),
     new AccountListByOrganizationRoute(),
+    new AccountDetailRoute(),
     new VerifyAccountRoute(),
 
     // Organization
