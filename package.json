@@ -1,6 +1,6 @@
 {
   "name": "@brontosaurus/green",
-  "description": ":game_die: Server for air",
+  "description": ":evergreen_tree: External API for Brontosaurus",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SudoDotDog/Brontosaurus-Green.git"
