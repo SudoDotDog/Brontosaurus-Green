@@ -10,6 +10,7 @@
         "deserialize",
         "devl",
         "ifeq",
+        "inplode",
         "jsonify",
         "lockfile",
         "mongod",

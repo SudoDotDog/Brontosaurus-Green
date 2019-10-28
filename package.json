@@ -36,7 +36,6 @@
       ".ts"
     ],
     "include": [
-      "script/**/*.ts",
       "src/**/*.ts"
     ],
     "instrument": true,
