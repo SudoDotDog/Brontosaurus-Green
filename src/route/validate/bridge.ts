@@ -4,7 +4,7 @@
  * @description Bridge
  */
 
-import { ApplicationController } from "@brontosaurus/db";
+import { ApplicationController, IApplicationModel } from "@brontosaurus/db";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { Safe, SafeExtract } from "@sudoo/extract";
 import { createGreenAuthHandler } from "../../handlers/handlers";
@@ -48,7 +48,21 @@ export class ValidateBridgeRoute extends BrontosaurusRoute {
             const applicationKey: string = splited[0];
             const green: string = splited[1];
 
-            const isValid: boolean = await ApplicationController.checkGreenApplicationMatch(applicationKey, green);
+            if (typeof applicationKey !== 'string' || typeof green !== 'string') {
+                throw panic.code(ERROR_CODE.APPLICATION_GREEN_NOT_VALID);
+            }
+
+            const application: IApplicationModel | null = await ApplicationController.getApplicationByKey(applicationKey);
+
+            if (!application) {
+                throw panic.code(ERROR_CODE.APPLICATION_NOT_FOUND, applicationKey);
+            }
+
+            if (!application.greenAccess) {
+                throw panic.code(ERROR_CODE.APPLICATION_HAS_NO_GREEN_ACCESS);
+            }
+
+            const isValid: boolean = application.green === green;
 
             res.agent.add('valid', isValid);
         } catch (err) {

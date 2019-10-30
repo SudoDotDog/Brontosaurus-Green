@@ -15,6 +15,7 @@ export enum ERROR_CODE {
 
     APPLICATION_KEY_NOT_FOUND = 4120,
     APPLICATION_GREEN_NOT_VALID = 4121,
+    APPLICATION_HAS_NO_GREEN_ACCESS = 4122,
 
     ACCOUNT_ORGANIZATION_NOT_FOUND = 4135,
 
@@ -45,6 +46,7 @@ export const ERROR_LIST: Record<ERROR_CODE, string> = {
 
     [ERROR_CODE.APPLICATION_KEY_NOT_FOUND]: 'Application key not found',
     [ERROR_CODE.APPLICATION_GREEN_NOT_VALID]: 'Application green not valid',
+    [ERROR_CODE.APPLICATION_HAS_NO_GREEN_ACCESS]: 'Application has no green access',
 
     [ERROR_CODE.ACCOUNT_ORGANIZATION_NOT_FOUND]: 'Account organization not found',
 
