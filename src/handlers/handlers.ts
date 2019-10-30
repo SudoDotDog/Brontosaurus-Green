@@ -4,9 +4,28 @@
  * @description Authenticate
  */
 
-import { ApplicationController } from "@brontosaurus/db";
+import { ApplicationController, IApplicationModel } from "@brontosaurus/db";
 import { SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { parseBearerAuthorization } from "../util/auth";
+
+const verifyGreenAccess = async (applicationKey: string, green: string): Promise<boolean> => {
+
+    if (typeof applicationKey !== 'string' || typeof green !== 'string') {
+        return false;
+    }
+
+    const application: IApplicationModel | null = await ApplicationController.getApplicationByKey(applicationKey);
+
+    if (!application) {
+        return false;
+    }
+
+    if (!application.greenAccess) {
+        return false;
+    }
+
+    return application.green === green;
+};
 
 export const createGreenAuthHandler = (): SudooExpressHandler =>
     async (req: SudooExpressRequest, _: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> => {
@@ -31,7 +50,8 @@ export const createGreenAuthHandler = (): SudooExpressHandler =>
         const applicationKey: string = splited[0];
         const green: string = splited[1];
 
-        const isValid: boolean = await ApplicationController.checkGreenApplicationMatch(applicationKey, green);
+        const isValid: boolean = await verifyGreenAccess(applicationKey, green);
+
         req.valid = isValid;
 
         next();
