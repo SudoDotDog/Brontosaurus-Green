@@ -4,7 +4,7 @@
  * @description Inplode Organization
  */
 
-import { AccountController, COMMON_NAME_VALIDATE_RESPONSE, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountModel, IGroupModel, INTERNAL_USER_GROUP, IOrganizationModel, ITagModel, OrganizationController, PHONE_VALIDATE_RESPONSE, TagController, USERNAME_VALIDATE_RESPONSE, validateCommonName, validateEmail, validatePhone, validateUsername } from "@brontosaurus/db";
+import { AccountController, COMMON_NAME_VALIDATE_RESPONSE, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountModel, IGroupModel, IOrganizationModel, isGroupModelInternalUserGroup, ITagModel, OrganizationController, PHONE_VALIDATE_RESPONSE, TagController, USERNAME_VALIDATE_RESPONSE, validateCommonName, validateEmail, validatePhone, validateUsername } from "@brontosaurus/db";
 import { Basics } from "@brontosaurus/definition";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { Safe, SafeExtract } from "@sudoo/extract";
@@ -31,7 +31,7 @@ export type InplodeOrganizationRouteBody = {
 export class InplodeOrganizationRoute extends BrontosaurusRoute {
 
     public readonly path: string = '/organization/inplode';
-    public readonly mode: ROUTE_MODE = ROUTE_MODE.GET;
+    public readonly mode: ROUTE_MODE = ROUTE_MODE.POST;
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
@@ -73,17 +73,17 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
                 throw this._error(ERROR_CODE.INVALID_COMMON_NAME, validateResult);
             }
 
-            if (req.body.email) {
+            if (req.body.ownerEmail) {
 
-                const emailValidationResult: EMAIL_VALIDATE_RESPONSE = validateEmail(req.body.email);
+                const emailValidationResult: EMAIL_VALIDATE_RESPONSE = validateEmail(req.body.ownerEmail);
                 if (emailValidationResult !== EMAIL_VALIDATE_RESPONSE.OK) {
                     throw this._error(ERROR_CODE.INVALID_EMAIL, emailValidationResult);
                 }
             }
 
-            if (req.body.phone) {
+            if (req.body.ownerPhone) {
 
-                const phoneValidationResult: PHONE_VALIDATE_RESPONSE = validatePhone(req.body.phone);
+                const phoneValidationResult: PHONE_VALIDATE_RESPONSE = validatePhone(req.body.ownerPhone);
                 if (phoneValidationResult !== PHONE_VALIDATE_RESPONSE.OK) {
                     throw this._error(ERROR_CODE.INVALID_PHONE, phoneValidationResult);
                 }
@@ -117,7 +117,7 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
             const parsedGroups: IGroupModel[] = await GroupController.getGroupByNames(groups);
 
             for (const group of parsedGroups) {
-                if (group.name in INTERNAL_USER_GROUP) {
+                if (isGroupModelInternalUserGroup(group)) {
                     throw panic.code(ERROR_CODE.CANNOT_MODIFY_INTERNAL_GROUP);
                 }
             }
@@ -127,9 +127,9 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
             const account: IAccountModel = AccountController.createOnLimboUnsavedAccount(
                 username,
                 tempPassword,
-                req.body.displayName,
-                req.body.email,
-                req.body.phone,
+                req.body.ownerDisplayName,
+                req.body.ownerEmail,
+                req.body.ownerPhone,
                 undefined,
                 [],
                 infos,
