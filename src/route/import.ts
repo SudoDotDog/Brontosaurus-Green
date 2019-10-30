@@ -10,6 +10,7 @@ import { AccountListByOrganizationRoute } from "./account/organization";
 import { AccountListBySpecificRoute } from "./account/specific";
 import { VerifyAccountRoute } from "./account/verify";
 import { OrganizationAllRoute } from "./organization/all";
+import { InplodeOrganizationRoute } from "./organization/inplode";
 import { SingleOrganizationRoute } from "./organization/single";
 import { OrganizationListByTagRoute } from "./organization/tag";
 import { VerifyOrganizationRoute } from "./organization/verify";
@@ -29,6 +30,7 @@ export const RouteList = [
     new OrganizationListByTagRoute(),
     new SingleOrganizationRoute(),
     new VerifyOrganizationRoute(),
+    new InplodeOrganizationRoute(),
 
     // Validate
     new ValidateBridgeRoute(),

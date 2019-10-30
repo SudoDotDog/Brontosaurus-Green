@@ -13,6 +13,14 @@ export enum ERROR_CODE {
     TOKEN_INVALID = 4106,
     TOKEN_EXPIRED = 4107,
 
+    INVALID_USERNAME = 4110,
+    INVALID_PASSWORD = 4111,
+    INVALID_COMMON_NAME = 4112,
+    INVALID_COMMON_KEY = 4113,
+    INVALID_EMAIL = 4114,
+    INVALID_PHONE = 4115,
+    INVALID_DISPLAY_NAME = 4116,
+
     APPLICATION_KEY_NOT_FOUND = 4120,
     APPLICATION_GREEN_NOT_VALID = 4121,
     APPLICATION_HAS_NO_GREEN_ACCESS = 4122,
@@ -37,12 +45,36 @@ export enum ERROR_CODE {
     ACCOUNT_NOT_FOUND = 6202,
     ORGANIZATION_NOT_FOUND = 6203,
     TAG_NOT_FOUND = 6204,
+
+    DUPLICATE_ACCOUNT = 6250,
+    DUPLICATE_APPLICATION = 6251,
+    DUPLICATE_GROUP = 6252,
+    DUPLICATE_ORGANIZATION = 6253,
+    DUPLICATE_DECORATOR = 6254,
+    DUPLICATE_TAG = 6255,
+
+    ORGANIZATION_LIMIT_EXCEED = 6400,
+
+    CANNOT_MODIFY_INTERNAL_GROUP = 6701,
+
+    NOT_ENOUGH_PERMISSION = 7001,
+    PERMISSION_USER_DOES_NOT_MATCH = 7002,
+
+    INTERNAL_ERROR = 8000,
 }
 
 export const ERROR_LIST: Record<ERROR_CODE, string> = {
 
     [ERROR_CODE.TOKEN_INVALID]: 'Token invalid',
     [ERROR_CODE.TOKEN_EXPIRED]: 'Token expired',
+
+    [ERROR_CODE.INVALID_USERNAME]: 'Invalid username, reason: "{}"',
+    [ERROR_CODE.INVALID_PASSWORD]: 'Invalid password, reason: "{}"',
+    [ERROR_CODE.INVALID_COMMON_NAME]: 'Invalid common name, reason: "{}"',
+    [ERROR_CODE.INVALID_COMMON_KEY]: 'Invalid common key, reason: "{}"',
+    [ERROR_CODE.INVALID_EMAIL]: 'Invalid email, reason: "{}"',
+    [ERROR_CODE.INVALID_PHONE]: 'Invalid phone, reason: "{}"',
+    [ERROR_CODE.INVALID_DISPLAY_NAME]: 'Invalid display name "{}"',
 
     [ERROR_CODE.APPLICATION_KEY_NOT_FOUND]: 'Application key not found',
     [ERROR_CODE.APPLICATION_GREEN_NOT_VALID]: 'Application green not valid',
@@ -68,6 +100,22 @@ export const ERROR_LIST: Record<ERROR_CODE, string> = {
     [ERROR_CODE.ACCOUNT_NOT_FOUND]: 'Account: "{}" not found',
     [ERROR_CODE.ORGANIZATION_NOT_FOUND]: 'Organization: "{}" not found',
     [ERROR_CODE.TAG_NOT_FOUND]: 'Tag: "{}" not found',
+
+    [ERROR_CODE.DUPLICATE_ACCOUNT]: 'Account: "{}" already exist',
+    [ERROR_CODE.DUPLICATE_APPLICATION]: 'Application: "{}" already exist',
+    [ERROR_CODE.DUPLICATE_GROUP]: 'Group: "{}" already exist',
+    [ERROR_CODE.DUPLICATE_ORGANIZATION]: 'Organization: "{}" already exist',
+    [ERROR_CODE.DUPLICATE_DECORATOR]: 'Decorator: "{}" already exist',
+    [ERROR_CODE.DUPLICATE_TAG]: 'Tag: "{}" already exist',
+
+    [ERROR_CODE.ORGANIZATION_LIMIT_EXCEED]: 'Organization limit exceed, has: "{}", max: "{}"',
+
+    [ERROR_CODE.CANNOT_MODIFY_INTERNAL_GROUP]: 'Internal group cannot be modify',
+
+    [ERROR_CODE.NOT_ENOUGH_PERMISSION]: 'Permission insufficient, need "{}"',
+    [ERROR_CODE.PERMISSION_USER_DOES_NOT_MATCH]: 'Permission user does not match between: "{}" and "{}"',
+
+    [ERROR_CODE.INTERNAL_ERROR]: 'Internal Error',
 };
 
 export const panic: Panic<ERROR_CODE> = Panic.withDictionary(MODULE_NAME, ERROR_LIST);

@@ -18,7 +18,7 @@ export class SingleOrganizationRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
-        autoHook.wrap(this._singleOrganizationHandler.bind(this), 'list', true),
+        autoHook.wrap(this._singleOrganizationHandler.bind(this), 'Single Organization', true),
     ];
 
     private async _singleOrganizationHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {

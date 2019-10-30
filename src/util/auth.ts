@@ -8,6 +8,7 @@ import { Brontosaurus } from "@brontosaurus/core";
 import { GroupController, IGroupModel } from "@brontosaurus/db";
 import { IBrontosaurusBody, IBrontosaurusHeader } from "@brontosaurus/definition";
 import { Safe } from "@sudoo/extract";
+import { random } from "@sudoo/random";
 import { ObjectID } from "bson";
 import { Connor, ErrorCreationFunction } from "connor";
 import { createHash, Hash } from 'crypto';
@@ -59,6 +60,7 @@ export const parseBearerAuthorization = (auth: string | undefined): string | nul
 };
 
 
+// tslint:disable-next-line: variable-name
 export const Throwable_GetBody = (token: string): IBrontosaurusBody => {
 
     const body: IBrontosaurusBody | null = Brontosaurus.decoupleBody(token);
@@ -72,6 +74,7 @@ export const Throwable_GetBody = (token: string): IBrontosaurusBody => {
     return body;
 };
 
+// tslint:disable-next-line: variable-name
 export const Throwable_MapGroups = async (groups: ObjectID[]): Promise<string[]> => {
 
     const createError: ErrorCreationFunction = Connor.getErrorCreator(MODULE_NAME);
@@ -92,6 +95,7 @@ export const Throwable_MapGroups = async (groups: ObjectID[]): Promise<string[]>
     return result;
 };
 
+// tslint:disable-next-line: variable-name
 export const Throwable_GetGroupsByNames = async (groups: string[]): Promise<IGroupModel[]> => {
 
     const createError: ErrorCreationFunction = Connor.getErrorCreator(MODULE_NAME);
@@ -138,4 +142,9 @@ export const garblePassword = (password: string, salt: string): string => {
     const md5: Hash = createHash('md5').update(salted);
 
     return md5.digest('hex');
+};
+
+export const createRandomTempPassword = (): string => {
+
+    return random();
 };
