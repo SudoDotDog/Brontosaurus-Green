@@ -4,10 +4,11 @@
  * @description Inplode Organization
  */
 
-import { AccountController, COMMON_NAME_VALIDATE_RESPONSE, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountModel, IGroupModel, IOrganizationModel, isGroupModelInternalUserGroup, ITagModel, OrganizationController, PHONE_VALIDATE_RESPONSE, TagController, USERNAME_VALIDATE_RESPONSE, validateCommonName, validateEmail, validatePhone, validateUsername } from "@brontosaurus/db";
+import { AccountController, COMMON_NAME_VALIDATE_RESPONSE, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountModel, IGroupModel, IOrganizationModel, isGroupModelInternalUserGroup, OrganizationController, PHONE_VALIDATE_RESPONSE, TagController, USERNAME_VALIDATE_RESPONSE, validateCommonName, validateEmail, validatePhone, validateUsername } from "@brontosaurus/db";
 import { Basics } from "@brontosaurus/definition";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { Safe, SafeExtract } from "@sudoo/extract";
+import { ObjectID } from "bson";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
 import { createRandomTempPassword } from "../../util/auth";
@@ -22,6 +23,7 @@ export type InplodeOrganizationRouteBody = {
     readonly ownerInfos: Record<string, Basics>;
     readonly ownerUsername: string;
     readonly ownerGroups: string[];
+    readonly ownerTags: string[];
 
     readonly ownerDisplayName?: string;
     readonly ownerEmail?: string;
@@ -50,11 +52,16 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
 
             const username: string = body.directEnsure('ownerUsername');
             const name: string = body.directEnsure('organizationName');
-            const tags: string[] = body.direct('organizationTags');
+            const organizationTags: string[] = body.direct('organizationTags');
+            const ownerTags: string[] = body.direct('ownerTags');
             const groups: string[] = body.direct('ownerGroups');
 
-            if (!Array.isArray(tags)) {
-                throw this._error(ERROR_CODE.INSUFFICIENT_INFORMATION, tags as any);
+            if (!Array.isArray(organizationTags)) {
+                throw this._error(ERROR_CODE.INSUFFICIENT_INFORMATION, organizationTags as any);
+            }
+
+            if (!Array.isArray(ownerTags)) {
+                throw this._error(ERROR_CODE.INSUFFICIENT_INFORMATION, ownerTags as any);
             }
 
             if (!Array.isArray(groups)) {
@@ -113,7 +120,8 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
                 throw this._error(ERROR_CODE.DUPLICATE_ORGANIZATION, name);
             }
 
-            const parsedTags: ITagModel[] = await TagController.getTagByNames(tags);
+            const parsedOrganizationTagIds: ObjectID[] = await TagController.getTagIdsByNames(organizationTags);
+            const parsedOwnerTagIds: ObjectID[] = await TagController.getTagIdsByNames(ownerTags);
             const parsedGroups: IGroupModel[] = await GroupController.getGroupByNames(groups);
 
             for (const group of parsedGroups) {
@@ -136,7 +144,9 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
             );
             const organization: IOrganizationModel = OrganizationController.createUnsavedOrganization(name, account._id);
 
-            organization.tags = parsedTags.map((tag: ITagModel) => tag._id);
+            organization.tags = parsedOrganizationTagIds;
+
+            account.tags = parsedOwnerTagIds;
             account.groups = parsedGroups.map((group: IGroupModel) => group._id);
             account.organization = organization._id;
 
