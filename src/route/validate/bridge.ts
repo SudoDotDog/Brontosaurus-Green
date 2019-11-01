@@ -65,6 +65,8 @@ export class ValidateBridgeRoute extends BrontosaurusRoute {
             const isValid: boolean = application.green === green;
 
             res.agent.add('valid', isValid);
+            res.agent.add('name', application.name);
+            res.agent.add('key', application.key);
         } catch (err) {
             res.agent.fail(400, err);
         } finally {
