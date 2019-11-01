@@ -6,6 +6,7 @@
 
 import { AccountDetailRoute } from "./account/detail";
 import { AccountListByGroupRoute } from "./account/group";
+import { LimboAccountRoute } from "./account/limbo";
 import { AccountListByOrganizationRoute } from "./account/organization";
 import { AccountListBySpecificRoute } from "./account/specific";
 import { VerifyAccountRoute } from "./account/verify";
@@ -15,6 +16,7 @@ import { SingleOrganizationRoute } from "./organization/single";
 import { OrganizationListByTagRoute } from "./organization/tag";
 import { VerifyOrganizationRoute } from "./organization/verify";
 import { ValidateBridgeRoute } from "./validate/bridge";
+import { ValidateDirectRoute } from "./validate/direct";
 
 export const RouteList = [
 
@@ -24,6 +26,7 @@ export const RouteList = [
     new AccountListBySpecificRoute(),
     new AccountDetailRoute(),
     new VerifyAccountRoute(),
+    new LimboAccountRoute(),
 
     // Organization
     new OrganizationAllRoute(),
@@ -34,4 +37,5 @@ export const RouteList = [
 
     // Validate
     new ValidateBridgeRoute(),
+    new ValidateDirectRoute(),
 ];
