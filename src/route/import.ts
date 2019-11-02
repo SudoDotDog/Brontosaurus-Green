@@ -5,9 +5,7 @@
  */
 
 import { AccountDetailRoute } from "./account/detail";
-import { AccountListByGroupRoute } from "./account/group";
 import { LimboAccountRoute } from "./account/limbo";
-import { AccountListByOrganizationRoute } from "./account/organization";
 import { AccountListBySpecificRoute } from "./account/specific";
 import { VerifyAccountRoute } from "./account/verify";
 import { OrganizationAllRoute } from "./organization/all";
@@ -21,8 +19,6 @@ import { ValidateDirectRoute } from "./validate/direct";
 export const RouteList = [
 
     // Account
-    new AccountListByGroupRoute(),
-    new AccountListByOrganizationRoute(),
     new AccountListBySpecificRoute(),
     new AccountDetailRoute(),
     new VerifyAccountRoute(),
