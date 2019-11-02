@@ -12,7 +12,6 @@ import { OrganizationAllRoute } from "./organization/all";
 import { InplodeOrganizationRoute } from "./organization/inplode";
 import { SingleOrganizationRoute } from "./organization/single";
 import { QueryOrganizationRoute } from "./organization/specific";
-import { OrganizationListByTagRoute } from "./organization/tag";
 import { VerifyOrganizationRoute } from "./organization/verify";
 import { ValidateBridgeRoute } from "./validate/bridge";
 import { ValidateDirectRoute } from "./validate/direct";
@@ -28,7 +27,6 @@ export const RouteList = [
     // Organization
     new QueryOrganizationRoute(),
     new OrganizationAllRoute(),
-    new OrganizationListByTagRoute(),
     new SingleOrganizationRoute(),
     new VerifyOrganizationRoute(),
     new InplodeOrganizationRoute(),
