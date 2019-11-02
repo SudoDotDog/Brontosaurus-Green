@@ -1,7 +1,7 @@
 /**
  * @author WMXPY
  * @namespace Brontosaurus_Green_Account
- * @description Specific
+ * @description Query
  */
 
 import { AccountController, GroupController, IAccountModel, IGroupModel, OrganizationController } from "@brontosaurus/db";
@@ -14,25 +14,25 @@ import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
 
-export type AccountListBySpecificRouteBody = {
+export type QueryAccountRouteBody = {
 
     readonly organizations: string[];
     readonly groups: string[];
 };
 
-export class AccountListBySpecificRoute extends BrontosaurusRoute {
+export class QueryAccountRoute extends BrontosaurusRoute {
 
-    public readonly path: string = '/account/specific';
+    public readonly path: string = '/account/query';
     public readonly mode: ROUTE_MODE = ROUTE_MODE.POST;
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
-        autoHook.wrap(this._specificAccountHandler.bind(this), 'Specific List', true),
+        autoHook.wrap(this._queryAccountHandler.bind(this), 'Query List', true),
     ];
 
-    private async _specificAccountHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
+    private async _queryAccountHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
 
-        const body: SafeExtract<AccountListBySpecificRouteBody> = Safe.extract(req.body as AccountListBySpecificRouteBody, this._error(ERROR_CODE.INSUFFICIENT_INFORMATION));
+        const body: SafeExtract<QueryAccountRouteBody> = Safe.extract(req.body as QueryAccountRouteBody, this._error(ERROR_CODE.INSUFFICIENT_INFORMATION));
 
         try {
 

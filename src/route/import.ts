@@ -6,7 +6,7 @@
 
 import { AccountDetailRoute } from "./account/detail";
 import { LimboAccountRoute } from "./account/limbo";
-import { AccountListBySpecificRoute } from "./account/specific";
+import { QueryAccountRoute } from "./account/query";
 import { VerifyAccountRoute } from "./account/verify";
 import { OrganizationAllRoute } from "./organization/all";
 import { InplodeOrganizationRoute } from "./organization/inplode";
@@ -19,7 +19,7 @@ import { ValidateDirectRoute } from "./validate/direct";
 export const RouteList = [
 
     // Account
-    new AccountListBySpecificRoute(),
+    new QueryAccountRoute(),
     new AccountDetailRoute(),
     new VerifyAccountRoute(),
     new LimboAccountRoute(),

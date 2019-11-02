@@ -1,7 +1,7 @@
 /**
  * @author WMXPY
  * @namespace Brontosaurus_Green_Organization
- * @description Specific
+ * @description Query
  */
 
 import { IOrganizationModel, OrganizationController, TagController } from "@brontosaurus/db";
