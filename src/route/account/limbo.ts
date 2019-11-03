@@ -53,7 +53,7 @@ export class LimboAccountRoute extends BrontosaurusRoute {
 
             await account.save();
 
-            res.agent.add('limbo', account.limbo);
+            res.agent.add('limbo', Boolean(account.limbo));
             res.agent.add('tempPassword', tempPassword);
         } catch (err) {
             res.agent.fail(400, err);
