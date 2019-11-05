@@ -8,7 +8,6 @@ import { AccountDetailRoute } from "./account/detail";
 import { LimboAccountRoute } from "./account/limbo";
 import { QueryAccountRoute } from "./account/query";
 import { VerifyAccountRoute } from "./account/verify";
-import { OrganizationAllRoute } from "./organization/all";
 import { InplodeOrganizationRoute } from "./organization/inplode";
 import { QueryOrganizationRoute } from "./organization/query";
 import { VerifyOrganizationRoute } from "./organization/verify";
@@ -25,7 +24,6 @@ export const RouteList = [
 
     // Organization
     new QueryOrganizationRoute(),
-    new OrganizationAllRoute(),
     new VerifyOrganizationRoute(),
     new InplodeOrganizationRoute(),
 
