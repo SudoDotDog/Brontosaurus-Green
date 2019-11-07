@@ -41,6 +41,7 @@ export class AccountDetailRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.ACCOUNT_NOT_FOUND, username);
             }
 
+            res.agent.add('active', account.active);
             res.agent.add('username', account.username);
             res.agent.addIfExist('email', account.email);
             res.agent.addIfExist('phone', account.phone);
