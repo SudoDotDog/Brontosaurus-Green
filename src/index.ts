@@ -27,8 +27,13 @@ const app: SudooExpress = SudooExpress.create(setting);
 
 const config: BrontosaurusConfig = readConfigEnvironment();
 
-const db: Mongoose.Connection = connect(config.database);
-db.on('error', console.log.bind(console, 'connection error:'));
+connect(config.database, {
+    connected: true,
+    disconnected: true,
+    error: true,
+    reconnected: true,
+    reconnectedFailed: true,
+});
 
 // Static
 app.static(Path.join(__dirname, '..', 'public', 'air'));
