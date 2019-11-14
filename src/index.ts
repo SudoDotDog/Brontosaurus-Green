@@ -7,7 +7,6 @@
 import { connect } from '@brontosaurus/db';
 import { SudooExpress, SudooExpressApplication } from '@sudoo/express';
 import { LOG_LEVEL, SudooLog } from '@sudoo/log';
-import * as Mongoose from "mongoose";
 import * as Path from 'path';
 import { RouteList } from './route/import';
 import { BrontosaurusConfig, isDevelopment, readConfigEnvironment } from './util/conf';
