@@ -12,7 +12,7 @@ import * as Path from 'path';
 import { RouteList } from './route/import';
 import { BrontosaurusConfig, isDevelopment, readConfigEnvironment } from './util/conf';
 
-const setting: SudooExpressApplication = SudooExpressApplication.create('Brontosaurus-Square', '1');
+const setting: SudooExpressApplication = SudooExpressApplication.create('Brontosaurus-Green', '1');
 
 setting.useBodyParser();
 
