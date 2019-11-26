@@ -1,7 +1,7 @@
 /**
  * @author WMXPY
  * @namespace Brontosaurus_Green_Organization
- * @description Inplode Organization
+ * @description Register Sub-Account
  */
 
 import { AccountController, COMMON_NAME_VALIDATE_RESPONSE, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountModel, IGroupModel, IOrganizationModel, isGroupModelInternalUserGroup, OrganizationController, PHONE_VALIDATE_RESPONSE, TagController, USERNAME_VALIDATE_RESPONSE, validateCommonName, validateEmail, validatePhone, validateUsername } from "@brontosaurus/db";
@@ -16,33 +16,33 @@ import { ERROR_CODE, panic } from "../../util/error";
 import { jsonifyBasicRecords } from "../../util/token";
 import { BrontosaurusRoute } from "../basic";
 
-export type InplodeOrganizationRouteBody = {
+export type RegisterSubAccountRouteBody = {
 
-    readonly organizationName: string;
-    readonly organizationTags: string[];
-    readonly ownerInfos: Record<string, Basics>;
-    readonly ownerUsername: string;
-    readonly ownerGroups: string[];
-    readonly ownerTags: string[];
+    readonly organization: string;
 
-    readonly ownerDisplayName?: string;
-    readonly ownerEmail?: string;
-    readonly ownerPhone?: string;
+    readonly username: string;
+    readonly userInfos: Record<string, Basics>;
+    readonly userGroups: string[];
+    readonly userTags: string[];
+
+    readonly userDisplayName?: string;
+    readonly userEmail?: string;
+    readonly userPhone?: string;
 };
 
-export class InplodeOrganizationRoute extends BrontosaurusRoute {
+export class RegisterSubAccountRoute extends BrontosaurusRoute {
 
-    public readonly path: string = '/organization/inplode';
+    public readonly path: string = '/organization/register/sub-account';
     public readonly mode: ROUTE_MODE = ROUTE_MODE.POST;
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
-        autoHook.wrap(this._inplodeOrganizationHandler.bind(this), 'Inplode Organization', true),
+        autoHook.wrap(this._registerSubAccountHandler.bind(this), 'Register Sub Account', true),
     ];
 
-    private async _inplodeOrganizationHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
+    private async _registerSubAccountHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
 
-        const body: SafeExtract<InplodeOrganizationRouteBody> = Safe.extract(req.body as InplodeOrganizationRouteBody, this._error(ERROR_CODE.INSUFFICIENT_INFORMATION));
+        const body: SafeExtract<RegisterSubAccountRouteBody> = Safe.extract(req.body as RegisterSubAccountRouteBody, this._error(ERROR_CODE.INSUFFICIENT_INFORMATION));
 
         try {
 
@@ -50,19 +50,14 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.APPLICATION_GREEN_NOT_VALID);
             }
 
-            const name: string = body.directEnsure('organizationName');
+            const username: string = body.directEnsure('username');
+            const userTags: string[] = body.direct('userTags');
+            const groups: string[] = body.direct('userGroups');
 
-            const username: string = body.directEnsure('ownerUsername');
-            const organizationTags: string[] = body.direct('organizationTags');
-            const ownerTags: string[] = body.direct('ownerTags');
-            const groups: string[] = body.direct('ownerGroups');
+            const organizationName: string = body.directEnsure('organization');
 
-            if (!Array.isArray(organizationTags)) {
-                throw this._error(ERROR_CODE.INSUFFICIENT_INFORMATION, organizationTags as any);
-            }
-
-            if (!Array.isArray(ownerTags)) {
-                throw this._error(ERROR_CODE.INSUFFICIENT_INFORMATION, ownerTags as any);
+            if (!Array.isArray(userTags)) {
+                throw this._error(ERROR_CODE.INSUFFICIENT_INFORMATION, userTags as any);
             }
 
             if (!Array.isArray(groups)) {
@@ -81,30 +76,36 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
                 throw this._error(ERROR_CODE.INVALID_COMMON_NAME, validateResult);
             }
 
-            if (req.body.ownerEmail) {
+            if (req.body.userEmail) {
 
-                const emailValidationResult: EMAIL_VALIDATE_RESPONSE = validateEmail(req.body.ownerEmail);
+                const emailValidationResult: EMAIL_VALIDATE_RESPONSE = validateEmail(req.body.userEmail);
                 if (emailValidationResult !== EMAIL_VALIDATE_RESPONSE.OK) {
                     throw this._error(ERROR_CODE.INVALID_EMAIL, emailValidationResult);
                 }
             }
 
-            if (req.body.ownerPhone) {
+            if (req.body.userPhone) {
 
-                const phoneValidationResult: PHONE_VALIDATE_RESPONSE = validatePhone(req.body.ownerPhone);
+                const phoneValidationResult: PHONE_VALIDATE_RESPONSE = validatePhone(req.body.userPhone);
                 if (phoneValidationResult !== PHONE_VALIDATE_RESPONSE.OK) {
                     throw this._error(ERROR_CODE.INVALID_PHONE, phoneValidationResult);
                 }
             }
 
-            if (req.body.ownerDisplayName) {
+            if (req.body.userDisplayName) {
 
-                if (typeof req.body.ownerDisplayName !== 'string') {
+                if (typeof req.body.userDisplayName !== 'string') {
                     throw panic.code(ERROR_CODE.INVALID_DISPLAY_NAME, req.body.displayName);
                 }
             }
 
-            const infoLine: Record<string, Basics> | string = body.direct('ownerInfos');
+            const organization: IOrganizationModel | null = await OrganizationController.getOrganizationByName(organizationName);
+
+            if (!organization) {
+                throw panic.code(ERROR_CODE.ORGANIZATION_NOT_FOUND, organizationName);
+            }
+
+            const infoLine: Record<string, Basics> | string = body.direct('userInfos');
             const infos: Record<string, Basics> = jsonifyBasicRecords(
                 infoLine,
                 this._error(ERROR_CODE.INFO_LINE_FORMAT_ERROR, infoLine.toString()));
@@ -115,14 +116,7 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
                 throw this._error(ERROR_CODE.DUPLICATE_ACCOUNT, username);
             }
 
-            const isOrganizationDuplicated: boolean = await OrganizationController.isOrganizationDuplicatedByName(name);
-
-            if (isOrganizationDuplicated) {
-                throw this._error(ERROR_CODE.DUPLICATE_ORGANIZATION, name);
-            }
-
-            const parsedOrganizationTagIds: ObjectID[] = await TagController.getTagIdsByNames(organizationTags);
-            const parsedOwnerTagIds: ObjectID[] = await TagController.getTagIdsByNames(ownerTags);
+            const parsedUserTagIds: ObjectID[] = await TagController.getTagIdsByNames(userTags);
             const parsedGroups: IGroupModel[] = await GroupController.getGroupByNames(groups);
 
             for (const group of parsedGroups) {
@@ -136,25 +130,22 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
             const account: IAccountModel = AccountController.createOnLimboUnsavedAccount(
                 username,
                 tempPassword,
-                req.body.ownerDisplayName,
-                req.body.ownerEmail,
-                req.body.ownerPhone,
+                req.body.userDisplayName,
+                req.body.userEmail,
+                req.body.userPhone,
                 undefined,
                 [],
                 infos,
             );
-            const organization: IOrganizationModel = OrganizationController.createUnsavedOrganization(name, account._id);
 
-            organization.tags = parsedOrganizationTagIds;
-
-            account.tags = parsedOwnerTagIds;
-            account.groups = parsedGroups.map((group: IGroupModel) => group._id);
             account.organization = organization._id;
 
-            await Promise.all([account.save(), organization.save()]);
+            account.tags = parsedUserTagIds;
+            account.groups = parsedGroups.map((group: IGroupModel) => group._id);
+
+            await account.save();
 
             res.agent.add('account', account.username);
-            res.agent.add('organization', organization.name);
             res.agent.add('tempPassword', tempPassword);
         } catch (err) {
             res.agent.fail(400, err);
