@@ -50,7 +50,7 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.APPLICATION_GREEN_NOT_VALID);
             }
 
-            const name: string = body.directEnsure('organizationName');
+            const organizationName: string = body.directEnsure('organizationName');
 
             const username: string = body.directEnsure('ownerUsername');
             const organizationTags: string[] = body.direct('organizationTags');
@@ -75,7 +75,7 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
                 throw this._error(ERROR_CODE.INVALID_USERNAME, usernameValidationResult);
             }
 
-            const validateResult: COMMON_NAME_VALIDATE_RESPONSE = validateCommonName(name);
+            const validateResult: COMMON_NAME_VALIDATE_RESPONSE = validateCommonName(organizationName);
 
             if (validateResult !== COMMON_NAME_VALIDATE_RESPONSE.OK) {
                 throw this._error(ERROR_CODE.INVALID_COMMON_NAME, validateResult);
@@ -115,10 +115,10 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
                 throw this._error(ERROR_CODE.DUPLICATE_ACCOUNT, username);
             }
 
-            const isOrganizationDuplicated: boolean = await OrganizationController.isOrganizationDuplicatedByName(name);
+            const isOrganizationDuplicated: boolean = await OrganizationController.isOrganizationDuplicatedByName(organizationName);
 
             if (isOrganizationDuplicated) {
-                throw this._error(ERROR_CODE.DUPLICATE_ORGANIZATION, name);
+                throw this._error(ERROR_CODE.DUPLICATE_ORGANIZATION, organizationName);
             }
 
             const parsedOrganizationTagIds: ObjectID[] = await TagController.getTagIdsByNames(organizationTags);
@@ -143,7 +143,7 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
                 [],
                 infos,
             );
-            const organization: IOrganizationModel = OrganizationController.createUnsavedOrganization(name, account._id);
+            const organization: IOrganizationModel = OrganizationController.createUnsavedOrganization(organizationName, account._id);
 
             organization.tags = parsedOrganizationTagIds;
 
