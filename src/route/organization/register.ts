@@ -70,7 +70,7 @@ export class RegisterSubAccountRoute extends BrontosaurusRoute {
                 throw this._error(ERROR_CODE.INVALID_USERNAME, usernameValidationResult);
             }
 
-            const validateResult: COMMON_NAME_VALIDATE_RESPONSE = validateCommonName(name);
+            const validateResult: COMMON_NAME_VALIDATE_RESPONSE = validateCommonName(organizationName);
 
             if (validateResult !== COMMON_NAME_VALIDATE_RESPONSE.OK) {
                 throw this._error(ERROR_CODE.INVALID_COMMON_NAME, validateResult);
