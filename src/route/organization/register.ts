@@ -110,6 +110,12 @@ export class RegisterSubAccountRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.ORGANIZATION_NOT_FOUND, organizationName);
             }
 
+            const accountCount: number = await AccountController.getAccountCountByOrganization(organization._id);
+
+            if (accountCount >= organization.limit) {
+                throw this._error(ERROR_CODE.ORGANIZATION_LIMIT_EXCEED, accountCount.toString(), organization.limit.toString());
+            }
+
             const isAccountDuplicated: boolean = await AccountController.isAccountDuplicatedByUsername(username);
 
             if (isAccountDuplicated) {
