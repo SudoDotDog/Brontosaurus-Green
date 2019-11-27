@@ -6,6 +6,7 @@
 
 import { AccountController, IAccountModel } from "@brontosaurus/db";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
+import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
@@ -47,7 +48,8 @@ export class AccountDetailRoute extends BrontosaurusRoute {
             res.agent.addIfExist('phone', account.phone);
             res.agent.addIfExist('displayName', account.displayName);
         } catch (err) {
-            res.agent.fail(400, err);
+
+            res.agent.fail(HTTP_RESPONSE_CODE.BAD_REQUEST, err);
         } finally {
             next();
         }

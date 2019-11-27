@@ -7,6 +7,7 @@
 import { ApplicationController, IApplicationModel } from "@brontosaurus/db";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { Safe, SafeExtract } from "@sudoo/extract";
+import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
@@ -68,7 +69,8 @@ export class ValidateBridgeRoute extends BrontosaurusRoute {
             res.agent.add('name', application.name);
             res.agent.add('key', application.key);
         } catch (err) {
-            res.agent.fail(400, err);
+
+            res.agent.fail(HTTP_RESPONSE_CODE.BAD_REQUEST, err);
         } finally {
             next();
         }

@@ -7,6 +7,7 @@
 import { IOrganizationModel, OrganizationController, TagController } from "@brontosaurus/db";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { Safe, SafeExtract } from "@sudoo/extract";
+import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
 import { ObjectID } from "bson";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
@@ -53,7 +54,8 @@ export class QueryOrganizationRoute extends BrontosaurusRoute {
 
             res.agent.add('names', names);
         } catch (err) {
-            res.agent.fail(400, err);
+
+            res.agent.fail(HTTP_RESPONSE_CODE.BAD_REQUEST, err);
         } finally {
             next();
         }
