@@ -56,6 +56,11 @@ export class RegisterSubAccountRoute extends BrontosaurusRoute {
 
             const organizationName: string = body.directEnsure('organization');
 
+            const infoLine: Record<string, Basics> | string = body.direct('userInfos');
+            const infos: Record<string, Basics> = jsonifyBasicRecords(
+                infoLine,
+                this._error(ERROR_CODE.INFO_LINE_FORMAT_ERROR, infoLine.toString()));
+
             if (!Array.isArray(userTags)) {
                 throw this._error(ERROR_CODE.INSUFFICIENT_INFORMATION, userTags as any);
             }
@@ -104,11 +109,6 @@ export class RegisterSubAccountRoute extends BrontosaurusRoute {
             if (!organization) {
                 throw panic.code(ERROR_CODE.ORGANIZATION_NOT_FOUND, organizationName);
             }
-
-            const infoLine: Record<string, Basics> | string = body.direct('userInfos');
-            const infos: Record<string, Basics> = jsonifyBasicRecords(
-                infoLine,
-                this._error(ERROR_CODE.INFO_LINE_FORMAT_ERROR, infoLine.toString()));
 
             const isAccountDuplicated: boolean = await AccountController.isAccountDuplicatedByUsername(username);
 
