@@ -50,32 +50,12 @@ export class UpdateAccountRoute extends BrontosaurusRoute {
                 throw this._error(ERROR_CODE.ACCOUNT_NOT_FOUND, username);
             }
 
-            if (req.body.email) {
+            if (this._updateEmail(account, req.body.email)
+                || this._updatePhone(account, req.body.phone)
+                || this._updateDisplayName(account, req.body.displayName)) {
 
-                const emailValidationResult: EMAIL_VALIDATE_RESPONSE = validateEmail(req.body.email);
-                if (emailValidationResult !== EMAIL_VALIDATE_RESPONSE.OK) {
-                    throw this._error(ERROR_CODE.INVALID_EMAIL, emailValidationResult);
-                }
-
-                account.email = req.body.email;
+                await account.save();
             }
-
-            if (req.body.phone) {
-
-                const phoneValidationResult: PHONE_VALIDATE_RESPONSE = validatePhone(req.body.phone);
-                if (phoneValidationResult !== PHONE_VALIDATE_RESPONSE.OK) {
-                    throw this._error(ERROR_CODE.INVALID_PHONE, phoneValidationResult);
-                }
-
-                account.phone = req.body.phone;
-            }
-
-            if (req.body.displayName) {
-
-                account.displayName = req.body.displayName;
-            }
-
-            await account.save();
 
             res.agent.add('active', account.active);
             res.agent.add('username', account.username);
@@ -88,5 +68,45 @@ export class UpdateAccountRoute extends BrontosaurusRoute {
         } finally {
             next();
         }
+    }
+
+    private _updateEmail(account: IAccountModel, email?: string): boolean {
+
+        if (email) {
+
+            const emailValidationResult: EMAIL_VALIDATE_RESPONSE = validateEmail(email);
+            if (emailValidationResult !== EMAIL_VALIDATE_RESPONSE.OK) {
+                throw this._error(ERROR_CODE.INVALID_EMAIL, emailValidationResult);
+            }
+
+            account.email = email;
+            return true;
+        }
+        return false;
+    }
+
+    private _updatePhone(account: IAccountModel, phone?: string): boolean {
+
+        if (phone) {
+
+            const phoneValidationResult: PHONE_VALIDATE_RESPONSE = validatePhone(phone);
+            if (phoneValidationResult !== PHONE_VALIDATE_RESPONSE.OK) {
+                throw this._error(ERROR_CODE.INVALID_PHONE, phoneValidationResult);
+            }
+
+            account.phone = phone;
+            return true;
+        }
+        return false;
+    }
+
+    private _updateDisplayName(account: IAccountModel, displayName?: string): boolean {
+
+        if (displayName) {
+
+            account.displayName = displayName;
+            return true;
+        }
+        return false;
     }
 }
