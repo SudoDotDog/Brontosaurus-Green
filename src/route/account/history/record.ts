@@ -16,10 +16,10 @@ import { BrontosaurusRoute } from "../../basic";
 export type AccountHistoryRecordRouteBody = {
 
     readonly target: string;
-    readonly type: keyof AccountActions;
-    readonly application: string;
-    readonly by: string;
 
+    readonly type: keyof AccountActions;
+    readonly by: string;
+    readonly application: string;
     readonly content: string;
 };
 
