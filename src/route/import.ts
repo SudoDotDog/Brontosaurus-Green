@@ -5,6 +5,7 @@
  */
 
 import { AccountDetailRoute } from "./account/detail";
+import { AccountHistoryRecordRoute } from "./account/history/record";
 import { LimboAccountRoute } from "./account/limbo";
 import { QueryAccountRoute } from "./account/query";
 import { RegisterAccountRoute } from "./account/register";
@@ -26,6 +27,9 @@ export const RouteList = [
     new RegisterAccountRoute(),
     new UpdateAccountRoute(),
     new VerifyAccountRoute(),
+
+    // Account - History
+    new AccountHistoryRecordRoute(),
 
     // Organization
     new InplodeOrganizationRoute(),
