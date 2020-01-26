@@ -18,28 +18,26 @@
     esutils "^2.0.2"
     js-tokens "^4.0.0"
 
-"@brontosaurus/core@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@brontosaurus/core/-/core-3.0.0.tgz#1a428baf10a19215cc137e3e2756e299b236149d"
-  integrity sha512-TYVbKTVvA/dJv+Clm5FmMAia1cMHYwZ1gbSh44D9nwy53GqBA8qRdkNMSBvEfbUf2UQX2bPfroFiMGaVzEzB3w==
-  dependencies:
-    "@brontosaurus/definition" "^3.0.0"
+"@brontosaurus/core@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@brontosaurus/core/-/core-3.1.0.tgz#60eddd4e268d94fc3150e98b62e32b1de0b7c911"
+  integrity sha512-4IqRzuoDs/AuYF7NAB7fK5VOD18cUJJ7cJLs0t/nwmEc6sLwmc7h+smRzlKCvGBFxUCIvRNwMoHiAilBKodbvQ==
 
-"@brontosaurus/db@^3.6.5":
-  version "3.6.5"
-  resolved "https://registry.yarnpkg.com/@brontosaurus/db/-/db-3.6.5.tgz#b4f0452ef15afb6bb76d974ab966c5e46fe43ffc"
-  integrity sha512-mv6uAPJHpMGY7vblB8yTSK02py/OtH+NgZm8v5J9alI9BbA4vWcf7gNmynucL5j/HvFXhxcr1yZY3GxgYwtwcA==
+"@brontosaurus/db@^3.7.0":
+  version "3.7.0"
+  resolved "https://registry.yarnpkg.com/@brontosaurus/db/-/db-3.7.0.tgz#c7854e80b4bf5ac7072fc8f4861a9e6b66ecfd43"
+  integrity sha512-Tl7bfNI7dAdgmRNtoI4f+BWxUc/mftlaR+lqzw2MDeqJcwL1l/f2c3l+WnZBJMVh3HWWqd+3X17JoQaUO9C39A==
   dependencies:
-    "@brontosaurus/core" "^3.0.0"
-    "@brontosaurus/definition" "^3.0.0"
+    "@brontosaurus/core" "^3.1.0"
+    "@brontosaurus/definition" "^3.1.0"
     "@sudoo/bark" "^2.7.1"
-    mongoose "^5.7.13"
+    mongoose "^5.8.9"
     speakeasy "^2.0.0"
 
-"@brontosaurus/definition@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@brontosaurus/definition/-/definition-3.0.0.tgz#363293f1a7b7e1310f33325aeb6a32236cbbbdd7"
-  integrity sha512-7S8DnlKgOE8pmZKBoD2pm7pkTZzmkaT6ML0WxxuvtuQhalbUKIq2C8U4YGxlY62UUF7TlElsptFvVwlKH0JStg==
+"@brontosaurus/definition@^3.1.0":
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/@brontosaurus/definition/-/definition-3.1.0.tgz#f5ec1ce1d048b5e3a69662033b0eaa288bbe45ad"
+  integrity sha512-Ds3SeM7PKyFXTEnBNBDpI6bz3BstwKMUSpeK+93LLd2lbSuxyNjXsdm/i78860o6JmcL6xL3U4zY4liJpmLeUQ==
 
 "@sudoo/bark@^2.7.1":
   version "2.7.1"
@@ -57,38 +55,38 @@
     cookie-parser "^1.4.4"
     express "^4.17.1"
 
-"@sudoo/extract@^1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@sudoo/extract/-/extract-1.2.1.tgz#3602980cff44116e897a186ffdc5250af99b2f5c"
-  integrity sha512-oMAvUcPRZq4FlxuBjJXLsfPvZJ7UJUL0xEmh6l3eyW8E4A9USoFiMFTKovk2bPexBCQbC9lARWXo6KfbGMKGRw==
+"@sudoo/extract@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@sudoo/extract/-/extract-1.3.0.tgz#186434f69372ce3b9ebb77e452377d21695f98e5"
+  integrity sha512-ZkZWARfYxIIOwyqGiaVzUqMWdCR1dsJJLkuXG0gNWPxH/6VIAKQFC/2MNqCVqSjCbn/jnYox39YO7Rg5gpGFcg==
 
-"@sudoo/io@^1.6.1":
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@sudoo/io/-/io-1.6.1.tgz#d8d18d17ed61f36eafa6aa7e4b22562f2bd801a5"
-  integrity sha512-dJPWaZocnnDtZL5kaxbpSQD02GxURxaQC6SmQ8FaPGuijv2cnURqVoSwpZmVexkMMymOmTzWEd7NqK+KfgJuAA==
+"@sudoo/io@^1.6.2":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@sudoo/io/-/io-1.6.2.tgz#f76b4ed1162467b04dd81600bbe1e5eda3102cf0"
+  integrity sha512-aX9XpyZ7Ebh+1Afix662pmYd0gYNG0D49GIDTvDD9DbkZJvKpzUPEndtmDf6rq2kVzvbOezt0BuQPnexYhgq3w==
   dependencies:
     "@sudoo/bark" "^2.7.1"
-    connor "^2.6.0"
+    connor "^2.6.1"
 
-"@sudoo/log@^1.2.2":
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/@sudoo/log/-/log-1.2.2.tgz#936acb5017c957a10a17052f11a51485edb3ba54"
-  integrity sha512-5dgkXkchOSZwsFEazUsNmUV0/XjmX9yc7mkqauPCYOJWQHxcko6fKHh10mg5COUKMoAB9uPUL4M86o/HeHk8oA==
+"@sudoo/log@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@sudoo/log/-/log-1.3.0.tgz#3cf49b99303d02d1640afa465ea9006bb0bbb53e"
+  integrity sha512-44LyMWpzgmQOqGzWVdcKc9mDPCmyDqhP/g1lIXf9TkxRaAub0xW+Vxk+E66WlxV94NjTAH2H8heRxkFZ20td4Q==
 
-"@sudoo/magic@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@sudoo/magic/-/magic-1.2.0.tgz#3c6d2294f3e26ec8fa144f97ce36c66d812fa7db"
-  integrity sha512-fYf+mtLP49Blt+2w66CsfLU/iBoOfSGGGGZS4B/3BWgvwOnpswz8jO6sQel9y6FtSuNVc/oEqV/KBE8EzY7fSA==
+"@sudoo/magic@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/@sudoo/magic/-/magic-1.4.1.tgz#fe846322fbef356a4d30db41051069862fb4e02f"
+  integrity sha512-E5L/O1vpzxl9riScrW2/3ubYJyEPRu9slVzI/2QDcJwB9URtDGrWXPiBud2DparZtUmLWQqsI/7ZaMT7yCC57g==
 
 "@sudoo/mock@^1.2.0":
   version "1.2.0"
   resolved "https://registry.yarnpkg.com/@sudoo/mock/-/mock-1.2.0.tgz#7c3c5ff731ddaeb8839dac7a1384b8ef9d95948b"
   integrity sha512-k0JtsW2rrbwpjbuVQPCPq3cu+CeRWTP2ksFUnrNwlVbSwWcxzE/NdAajWFRP1tvQQNQ01tj/c4lnOV5IZmZaTg==
 
-"@sudoo/random@^2.0.2":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@sudoo/random/-/random-2.0.3.tgz#3c6f5d42e2a8acf176bb8b60f194957e7fa9a1b3"
-  integrity sha512-qeY+Deqai1l7DQZbWsO4F2yq3PAcNQgeRIQOw1mClofiqZx7j/Se8B6mTr8p5m7/VUNf0HJBjok6UfMH6Pigjw==
+"@sudoo/random@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@sudoo/random/-/random-2.1.0.tgz#ea4c571c9366e41ccf56f0dec45af284f4a82917"
+  integrity sha512-93W+l7jr9jGv8H9epP0bc93Dpv0nFPYw3qBJZJ2pbaJ7Wj+EYeMJd59zmJLIacvLHhvtVpSs7PD0xtSdnGPGGA==
 
 "@sudoo/triforce-mongoose-dev@^1.3.1":
   version "1.3.1"
@@ -98,22 +96,22 @@
     "@types/mongodb" "3.3.7"
     "@types/mongoose" "5.5.27"
 
-"@sudoo/triforce@^2.0.4":
-  version "2.0.4"
-  resolved "https://registry.yarnpkg.com/@sudoo/triforce/-/triforce-2.0.4.tgz#f5f61afd7f3bf44d1f9788c23aa4d0f6eaea1834"
-  integrity sha512-EFh1eMTxezw5LkIn07HPT7HMk/ba99ed4voqOiqoNOVgdkVtIn7DYUGQaB2EyWdip+mSQHsf4SIRKKFmq/alMg==
+"@sudoo/triforce@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@sudoo/triforce/-/triforce-2.1.0.tgz#6fd673bbf638d97311219ae65f0740dcca1df69a"
+  integrity sha512-s3xaz709b07C2pvtweH+l3A4pcW7VHd0GXJUT7BzGIOZIYjuKAHgQ5BSnUQaAiwwno6WsSaodKasbki24VlJWw==
   dependencies:
     "@sudoo/tslint-config" "1.5.7"
-    "@types/chai" "4.2.5"
-    "@types/chance" "1.0.7"
+    "@types/chai" "4.2.7"
+    "@types/chance" "1.0.8"
     "@types/mocha" "5.2.7"
-    "@types/node" "12.12.9"
+    "@types/node" "13.1.0"
     chai "4.2.0"
-    chance "1.1.3"
+    chance "1.1.4"
     mocha "5.2.0"
-    ts-node "8.5.2"
+    ts-node "8.5.4"
     tslint "5.20.1"
-    typescript "3.7.2"
+    typescript "3.7.4"
 
 "@sudoo/tslint-config@1.5.7":
   version "1.5.7"
@@ -135,15 +133,15 @@
   dependencies:
     "@types/node" "*"
 
-"@types/chai@4.2.5":
-  version "4.2.5"
-  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.2.5.tgz#f8da153ebbe30babb0adc9a528b9ad32be3175a2"
-  integrity sha512-YvbLiIc0DbbhiANrfVObdkLEHJksQZVq0Uvfg550SRAKVYaEJy+V70j65BVe2WNp6E3HtKsUczeijHFCjba3og==
+"@types/chai@4.2.7":
+  version "4.2.7"
+  resolved "https://registry.yarnpkg.com/@types/chai/-/chai-4.2.7.tgz#1c8c25cbf6e59ffa7d6b9652c78e547d9a41692d"
+  integrity sha512-luq8meHGYwvky0O7u0eQZdA7B4Wd9owUCqvbw2m3XCrCU8mplYOujMBbvyS547AxJkC+pGnd0Cm15eNxEUNU8g==
 
-"@types/chance@1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@types/chance/-/chance-1.0.7.tgz#c680a3891a505d8c626ec3a46bb1c0496419dfb6"
-  integrity sha512-LBOkJ7899SSLm08KicLYX3DqWUhfDspMLWNGuV1UPpL3iUENSvI0THGlf05n9yNHTR7zDlV/mCGZ7ZJ0ws8v3Q==
+"@types/chance@1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@types/chance/-/chance-1.0.8.tgz#48e0a5648f54487a9128915fe090154fb1a2f348"
+  integrity sha512-S1VWROFGexiUYyBFsP0NRjp6PkJ4rKECQ3HQJ0cJKW/2BcNyas9lXATRdnTNnN4CsICjEXTltAalAo8dJQQLKg==
 
 "@types/connect@*":
   version "3.4.32"
@@ -208,10 +206,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.14.tgz#1c1d6e3c75dba466e0326948d56e8bd72a1903d2"
   integrity sha512-u/SJDyXwuihpwjXy7hOOghagLEV1KdAST6syfnOk6QZAMzZuWZqXy5aYYZbh8Jdpd4escVFP0MvftHNDb9pruA==
 
-"@types/node@12.12.9":
-  version "12.12.9"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.9.tgz#0b5ae05516b757cbff2e82c04500190aef986c7b"
-  integrity sha512-kV3w4KeLsRBW+O2rKhktBwENNJuqAUQHS3kf4ia2wIaF/MN6U7ANgTsx7tGremcA0Pk3Yh0Hl0iKiLPuBdIgmw==
+"@types/node@13.1.0":
+  version "13.1.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.1.0.tgz#225cbaac5fdb2b9ac651b02c070d8aa3c37cc812"
+  integrity sha512-zwrxviZS08kRX40nqBrmERElF2vpw4IUTd5khkhBTfFH8AOaeoLVx48EC4+ZzS2/Iga7NevncqnsUSYjM4OWYA==
 
 "@types/range-parser@*":
   version "1.2.3"
@@ -348,10 +346,10 @@ chalk@^2.0.0, chalk@^2.3.0:
     escape-string-regexp "^1.0.5"
     supports-color "^5.3.0"
 
-chance@1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/chance/-/chance-1.1.3.tgz#414f08634ee479c7a316b569050ea20751b82dd3"
-  integrity sha512-XeJsdoVAzDb1WRPRuMBesRSiWpW1uNTo5Fd7mYxPJsAfgX71+jfuCOHOdbyBz2uAUZ8TwKcXgWk3DMedFfJkbg==
+chance@1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/chance/-/chance-1.1.4.tgz#d8743bf8e40bb05e024c305ca1ff441195eb23db"
+  integrity sha512-pXPDSu3knKlb6H7ahQfpq//J9mSOxYK8SMtp8MV/nRJh8aLRDIl0ipLH8At8+nVogVwtvPZzyIzY/EbcY/cLuQ==
 
 check-error@^1.0.2:
   version "1.0.2"
@@ -757,10 +755,10 @@ mocha@5.2.0:
     mkdirp "0.5.1"
     supports-color "5.4.0"
 
-mongodb@3.3.5:
-  version "3.3.5"
-  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-3.3.5.tgz#38d531013afede92b0dd282e3b9f3c08c9bdff3b"
-  integrity sha512-6NAv5gTFdwRyVfCz+O+KDszvjpyxmZw+VlmqmqKR2GmpkeKrKFRv/ZslgTtZba2dc9JYixIf99T5Gih7TIWv7Q==
+mongodb@3.4.1:
+  version "3.4.1"
+  resolved "https://registry.yarnpkg.com/mongodb/-/mongodb-3.4.1.tgz#0d15e57e0ea0fc85b7a4fb9291b374c2e71652dc"
+  integrity sha512-juqt5/Z42J4DcE7tG7UdVaTKmUC6zinF4yioPfpeOSNBieWSK6qCY+0tfGQcHLKrauWPDdMZVROHJOa8q2pWsA==
   dependencies:
     bson "^1.1.1"
     require_optional "^1.0.1"
@@ -773,14 +771,14 @@ mongoose-legacy-pluralize@1.0.2:
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
   integrity sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
 
-mongoose@^5.7.13:
-  version "5.7.13"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.7.13.tgz#d8ebbc15cfb19d014cf1fbd4b7af413d75952d46"
-  integrity sha512-MoTCETTIfXU1PqIYc+YAkhSB3uzK5xseh6ysAUnoOowkqS66OjBJtsL/bcgAKi6XfMYkFU6M1abKyuL7k//xeg==
+mongoose@^5.8.9:
+  version "5.8.9"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.8.9.tgz#616ae9df4cd7f41f7d2d77d037ad94784485bd74"
+  integrity sha512-gRazoLTQ0yuv4bk2z+nZEarKCyJ7WilFBkgrRqpOczUZUhk3i/FCe0rp8Mjc87dGXaHx54j8AjPJ0UKqJDXWMA==
   dependencies:
     bson "~1.1.1"
     kareem "2.3.1"
-    mongodb "3.3.5"
+    mongodb "3.4.1"
     mongoose-legacy-pluralize "1.0.2"
     mpath "0.6.0"
     mquery "3.2.2"
@@ -1045,10 +1043,10 @@ toidentifier@1.0.0:
   resolved "https://registry.yarnpkg.com/toidentifier/-/toidentifier-1.0.0.tgz#7e1be3470f1e77948bc43d94a3c8f4d7752ba553"
   integrity sha512-yaOH/Pk/VEhBWWTlhI+qXxDFXlejDGcQipMlyxda9nthulaxLZUNcUqFxokp0vcYnvteJln5FNQDRrxj3YcbVw==
 
-ts-node@8.5.2:
-  version "8.5.2"
-  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-8.5.2.tgz#434f6c893bafe501a30b32ac94ee36809ba2adce"
-  integrity sha512-W1DK/a6BGoV/D4x/SXXm6TSQx6q3blECUzd5TN+j56YEMX3yPVMpHsICLedUw3DvGF3aTQ8hfdR9AKMaHjIi+A==
+ts-node@8.5.4:
+  version "8.5.4"
+  resolved "https://registry.yarnpkg.com/ts-node/-/ts-node-8.5.4.tgz#a152add11fa19c221d0b48962c210cf467262ab2"
+  integrity sha512-izbVCRV68EasEPQ8MSIGBNK9dc/4sYJJKYA+IarMQct1RtEot6Xp0bXuClsbUSnKpg50ho+aOAx8en5c+y4OFw==
   dependencies:
     arg "^4.1.0"
     diff "^4.0.1"
@@ -1100,10 +1098,10 @@ type-is@~1.6.17, type-is@~1.6.18:
     media-typer "0.3.0"
     mime-types "~2.1.24"
 
-typescript@3.7.2:
-  version "3.7.2"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.2.tgz#27e489b95fa5909445e9fef5ee48d81697ad18fb"
-  integrity sha512-ml7V7JfiN2Xwvcer+XAf2csGO1bPBdRbFCkYBczNZggrBZ9c7G3riSUeJmqEU5uOtXNPMhE3n+R4FA/3YOAWOQ==
+typescript@3.7.4:
+  version "3.7.4"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.7.4.tgz#1743a5ec5fef6a1fa9f3e4708e33c81c73876c19"
+  integrity sha512-A25xv5XCtarLwXpcDNZzCGvW2D1S3/bACratYBx2sax8PefsFhlYmkQicKHvpYflFS8if4zne5zT5kpJ7pzuvw==
 
 unpipe@1.0.0, unpipe@~1.0.0:
   version "1.0.0"
