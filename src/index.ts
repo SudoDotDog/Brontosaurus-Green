@@ -43,5 +43,6 @@ app.routeList(RouteList);
 // Health
 app.health('/health');
 
+// tslint:disable-next-line: no-magic-numbers
 app.host(8500);
 SudooLog.global.critical('Hosting at 8500');
