@@ -25,7 +25,7 @@ export class ValidateDirectRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
-        autoHook.wrap(this._validateDirectHandler.bind(this), 'Validate Direct', true),
+        autoHook.wrap(this._validateDirectHandler.bind(this), 'Validate Direct'),
     ];
 
     private async _validateDirectHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {

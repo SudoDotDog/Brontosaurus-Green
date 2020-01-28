@@ -19,7 +19,7 @@ export class AccountDetailRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
-        autoHook.wrap(this._detailHandler.bind(this), 'Account Detail', true),
+        autoHook.wrap(this._detailHandler.bind(this), 'Account Detail'),
     ];
 
     private async _detailHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {

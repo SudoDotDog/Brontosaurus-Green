@@ -19,7 +19,7 @@ export class VerifyAccountRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
-        autoHook.wrap(this._verifyAccountHandler.bind(this), 'Verify Account', true),
+        autoHook.wrap(this._verifyAccountHandler.bind(this), 'Verify Account'),
     ];
 
     private async _verifyAccountHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {

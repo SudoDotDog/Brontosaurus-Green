@@ -25,7 +25,7 @@ export class ValidateBridgeRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
-        autoHook.wrap(this._validateBridgeHandler.bind(this), 'Validate Bridge', true),
+        autoHook.wrap(this._validateBridgeHandler.bind(this), 'Validate Bridge'),
     ];
 
     private async _validateBridgeHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {

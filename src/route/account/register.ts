@@ -36,7 +36,7 @@ export class RegisterAccountRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
-        autoHook.wrap(this._registerAccountHandler.bind(this), 'Register Account', true),
+        autoHook.wrap(this._registerAccountHandler.bind(this), 'Register Account'),
     ];
 
     private async _registerAccountHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {

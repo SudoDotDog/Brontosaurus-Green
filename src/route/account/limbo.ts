@@ -26,7 +26,7 @@ export class LimboAccountRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
-        autoHook.wrap(this._limboAccountHandler.bind(this), 'Limbo Account', true),
+        autoHook.wrap(this._limboAccountHandler.bind(this), 'Limbo Account'),
     ];
 
     private async _limboAccountHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {

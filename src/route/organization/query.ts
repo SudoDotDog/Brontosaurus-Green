@@ -26,7 +26,7 @@ export class QueryOrganizationRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
-        autoHook.wrap(this._queryOrganizationRoute.bind(this), 'Query Organization', true),
+        autoHook.wrap(this._queryOrganizationRoute.bind(this), 'Query Organization'),
     ];
 
     private async _queryOrganizationRoute(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {

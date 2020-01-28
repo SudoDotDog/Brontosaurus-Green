@@ -38,7 +38,7 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
-        autoHook.wrap(this._inplodeOrganizationHandler.bind(this), 'Inplode Organization', true),
+        autoHook.wrap(this._inplodeOrganizationHandler.bind(this), 'Inplode Organization'),
     ];
 
     private async _inplodeOrganizationHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {

@@ -30,7 +30,7 @@ export class AccountHistoryRecordRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
-        autoHook.wrap(this._accountHistoryRecordHandler.bind(this), 'Account History Record', true),
+        autoHook.wrap(this._accountHistoryRecordHandler.bind(this), 'Account History Record'),
     ];
 
     private async _accountHistoryRecordHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
