@@ -23,10 +23,10 @@
   resolved "https://registry.yarnpkg.com/@brontosaurus/core/-/core-3.1.0.tgz#60eddd4e268d94fc3150e98b62e32b1de0b7c911"
   integrity sha512-4IqRzuoDs/AuYF7NAB7fK5VOD18cUJJ7cJLs0t/nwmEc6sLwmc7h+smRzlKCvGBFxUCIvRNwMoHiAilBKodbvQ==
 
-"@brontosaurus/db@^3.8.8":
-  version "3.8.8"
-  resolved "https://registry.yarnpkg.com/@brontosaurus/db/-/db-3.8.8.tgz#278eff78e69cf8973d379e167f7260c2e3a2694b"
-  integrity sha512-y1twOkWUlWRsyuCetqbU3iRZN+mAAViCWjLYrn5Yb08ozAcMODSvwQOKRFcmYsi3wzQazf1O9MnoswUkpc0pBQ==
+"@brontosaurus/db@^3.9.0":
+  version "3.9.0"
+  resolved "https://registry.yarnpkg.com/@brontosaurus/db/-/db-3.9.0.tgz#0136544559bae6aa103d47c55da4d57488b28022"
+  integrity sha512-M2Ava8TCWpFfKSqHlTk3hvsF21MFtdqGbcHZUPkps8zPFNmlaHiwfPiPmdmXmrZLNTZ226JIrA5RA5DYuLauVg==
   dependencies:
     "@brontosaurus/core" "^3.1.0"
     "@brontosaurus/definition" "^3.1.0"
@@ -40,10 +40,10 @@
   resolved "https://registry.yarnpkg.com/@brontosaurus/definition/-/definition-3.1.0.tgz#f5ec1ce1d048b5e3a69662033b0eaa288bbe45ad"
   integrity sha512-Ds3SeM7PKyFXTEnBNBDpI6bz3BstwKMUSpeK+93LLd2lbSuxyNjXsdm/i78860o6JmcL6xL3U4zY4liJpmLeUQ==
 
-"@sudoo/bark@^2.7.1":
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/@sudoo/bark/-/bark-2.7.1.tgz#84b9db0be3aa7b4d6896ced81d9fa9aac96578ef"
-  integrity sha512-0zBFbIQAtu3XNJkFPszdljYXXIPXzR63qypfTwFRupmu3gxgfBMtdPShbQebGuGG0KQEmXasGMBQVi2O0jWbbQ==
+"@sudoo/bark@^2.7.1", "@sudoo/bark@^2.7.2":
+  version "2.7.2"
+  resolved "https://registry.yarnpkg.com/@sudoo/bark/-/bark-2.7.2.tgz#961c4b482dbc00d7c762607c63f7a3eaa8f8811e"
+  integrity sha512-COaH8iYTyutU0bgqhklIQShops+NYHRlCb+XEXkMimlkQuiw2dUY6yATSyiq89vIy74W39FAs/FgHAG4+aJVKA==
 
 "@sudoo/express@^2.1.1":
   version "2.1.1"
@@ -912,9 +912,9 @@ resolve-from@^2.0.0:
   integrity sha1-lICrIOlP+h2egKgEx+oUdhGWa1c=
 
 resolve@^1.3.2:
-  version "1.15.0"
-  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.15.0.tgz#1b7ca96073ebb52e741ffd799f6b39ea462c67f5"
-  integrity sha512-+hTmAldEGE80U2wJJDC1lebb5jWqvTYAfm3YZ1ckk1gBr0MnCqUKlwK1e+anaFljIl+F5tR5IoZcm4ZDA1zMQw==
+  version "1.15.1"
+  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.15.1.tgz#27bdcdeffeaf2d6244b95bb0f9f4b4653451f3e8"
+  integrity sha512-84oo6ZTtoTUpjgNEr5SJyzQhzL72gaRodsSfyxC/AXRvwu0Yse9H8eF9IpGo7b8YetZhlI6v7ZQ6bKBFV/6S7w==
   dependencies:
     path-parse "^1.0.6"
 
