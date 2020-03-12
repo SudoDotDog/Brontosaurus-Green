@@ -13,6 +13,7 @@ import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
 
+// TODO: ADD Namespace
 export type UpdateAccountRouteBody = {
 
     readonly username: string;

@@ -12,6 +12,7 @@ import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
 
+// TODO: ADD Namespace
 export class VerifyAccountRoute extends BrontosaurusRoute {
 
     public readonly path: string = '/account/verify/:account';
