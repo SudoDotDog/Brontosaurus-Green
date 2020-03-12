@@ -4,7 +4,7 @@
  * @description Register Account
  */
 
-import { AccountController, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountModel, IGroupModel, isGroupModelInternalUserGroup, PHONE_VALIDATE_RESPONSE, TagController, USERNAME_VALIDATE_RESPONSE, validateEmail, validatePhone, validateUsername } from "@brontosaurus/db";
+import { AccountController, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountModel, IGroupModel, INamespaceModel, isGroupModelInternalUserGroup, NamespaceController, PHONE_VALIDATE_RESPONSE, TagController, USERNAME_VALIDATE_RESPONSE, validateEmail, validatePhone, validateUsername } from "@brontosaurus/db";
 import { Basics } from "@brontosaurus/definition";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { Safe, SafeExtract } from "@sudoo/extract";
@@ -20,6 +20,7 @@ import { BrontosaurusRoute } from "../basic";
 export type RegisterAccountRouteBody = {
 
     readonly username: string;
+    readonly namespace: string;
     readonly userInfos: Record<string, Basics>;
     readonly userGroups: string[];
     readonly userTags: string[];
@@ -50,6 +51,7 @@ export class RegisterAccountRoute extends BrontosaurusRoute {
             }
 
             const username: string = body.directEnsure('username');
+            const namespace: string = body.directEnsure('namespace');
             const userTags: string[] = body.direct('userTags');
             const groups: string[] = body.direct('userGroups');
 
@@ -64,6 +66,12 @@ export class RegisterAccountRoute extends BrontosaurusRoute {
 
             if (!Array.isArray(groups)) {
                 throw this._error(ERROR_CODE.INSUFFICIENT_INFORMATION, groups as any);
+            }
+
+            const namespaceInstance: INamespaceModel | null = await NamespaceController.getNamespaceByNamespace(namespace);
+
+            if (!namespaceInstance) {
+                throw panic.code(ERROR_CODE.NAMESPACE_NOT_FOUND, namespace);
             }
 
             const usernameValidationResult: USERNAME_VALIDATE_RESPONSE = validateUsername(username);
@@ -115,6 +123,7 @@ export class RegisterAccountRoute extends BrontosaurusRoute {
             const account: IAccountModel = AccountController.createOnLimboUnsavedAccount(
                 username,
                 tempPassword,
+                namespaceInstance._id,
                 req.body.userDisplayName,
                 req.body.userEmail,
                 req.body.userPhone,

@@ -47,6 +47,7 @@ export enum ERROR_CODE {
     ACCOUNT_NOT_FOUND = 6202,
     ORGANIZATION_NOT_FOUND = 6203,
     TAG_NOT_FOUND = 6204,
+    NAMESPACE_NOT_FOUND = 6205,
 
     DUPLICATE_ACCOUNT = 6250,
     DUPLICATE_APPLICATION = 6251,
@@ -104,6 +105,7 @@ export const ERROR_LIST: Record<ERROR_CODE, string> = {
     [ERROR_CODE.ACCOUNT_NOT_FOUND]: 'Account: "{}" not found',
     [ERROR_CODE.ORGANIZATION_NOT_FOUND]: 'Organization: "{}" not found',
     [ERROR_CODE.TAG_NOT_FOUND]: 'Tag: "{}" not found',
+    [ERROR_CODE.NAMESPACE_NOT_FOUND]: 'Namespace: "{}" not found',
 
     [ERROR_CODE.DUPLICATE_ACCOUNT]: 'Account: "{}" already exist',
     [ERROR_CODE.DUPLICATE_APPLICATION]: 'Application: "{}" already exist',

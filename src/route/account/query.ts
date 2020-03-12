@@ -67,6 +67,7 @@ export class QueryAccountRoute extends BrontosaurusRoute {
                 const groupTexts: string[] = groups.map((each: IGroupModel) => each.name);
                 infos.push({
                     username: account.username,
+                    namespace: account.namespace,
                     groups: groupTexts,
                     displayName: account.displayName,
                 });
