@@ -4,7 +4,7 @@
  * @description Inplode Organization
  */
 
-import { AccountController, COMMON_NAME_VALIDATE_RESPONSE, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountModel, IGroupModel, IOrganizationModel, isGroupModelInternalUserGroup, OrganizationController, PHONE_VALIDATE_RESPONSE, TagController, USERNAME_VALIDATE_RESPONSE, validateCommonName, validateEmail, validatePhone, validateUsername } from "@brontosaurus/db";
+import { AccountController, COMMON_NAME_VALIDATE_RESPONSE, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountModel, IGroupModel, INamespaceModel, IOrganizationModel, isGroupModelInternalUserGroup, NamespaceController, OrganizationController, PHONE_VALIDATE_RESPONSE, TagController, USERNAME_VALIDATE_RESPONSE, validateCommonName, validateEmail, validatePhone, validateUsername } from "@brontosaurus/db";
 import { Basics } from "@brontosaurus/definition";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { Safe, SafeExtract } from "@sudoo/extract";
@@ -23,6 +23,7 @@ export type InplodeOrganizationRouteBody = {
     readonly organizationTags: string[];
     readonly ownerInfos: Record<string, Basics>;
     readonly ownerUsername: string;
+    readonly ownerNamespace: string;
     readonly ownerGroups: string[];
     readonly ownerTags: string[];
 
@@ -54,6 +55,7 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
             const organizationName: string = body.directEnsure('organizationName');
 
             const username: string = body.directEnsure('ownerUsername');
+            const namespace: string = body.directEnsure('ownerNamespace');
             const organizationTags: string[] = body.direct('organizationTags');
             const ownerTags: string[] = body.direct('ownerTags');
             const groups: string[] = body.direct('ownerGroups');
@@ -110,6 +112,12 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
                 infoLine,
                 this._error(ERROR_CODE.INFO_LINE_FORMAT_ERROR, infoLine.toString()));
 
+            const namespaceInstance: INamespaceModel | null = await NamespaceController.getNamespaceByNamespace(namespace);
+
+            if (!namespaceInstance) {
+                throw panic.code(ERROR_CODE.NAMESPACE_NOT_FOUND, namespace);
+            }
+
             const isAccountDuplicated: boolean = await AccountController.isAccountDuplicatedByUsername(username);
 
             if (isAccountDuplicated) {
@@ -137,6 +145,7 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
             const account: IAccountModel = AccountController.createOnLimboUnsavedAccount(
                 username,
                 tempPassword,
+                namespaceInstance._id,
                 req.body.ownerDisplayName,
                 req.body.ownerEmail,
                 req.body.ownerPhone,

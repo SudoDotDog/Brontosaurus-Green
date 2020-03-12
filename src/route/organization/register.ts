@@ -4,7 +4,7 @@
  * @description Register Sub-Account
  */
 
-import { AccountController, COMMON_NAME_VALIDATE_RESPONSE, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountModel, IGroupModel, IOrganizationModel, isGroupModelInternalUserGroup, OrganizationController, PHONE_VALIDATE_RESPONSE, TagController, USERNAME_VALIDATE_RESPONSE, validateCommonName, validateEmail, validatePhone, validateUsername } from "@brontosaurus/db";
+import { AccountController, COMMON_NAME_VALIDATE_RESPONSE, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountModel, IGroupModel, INamespaceModel, IOrganizationModel, isGroupModelInternalUserGroup, NamespaceController, OrganizationController, PHONE_VALIDATE_RESPONSE, TagController, USERNAME_VALIDATE_RESPONSE, validateCommonName, validateEmail, validatePhone, validateUsername } from "@brontosaurus/db";
 import { Basics } from "@brontosaurus/definition";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { Safe, SafeExtract } from "@sudoo/extract";
@@ -22,6 +22,7 @@ export type RegisterSubAccountRouteBody = {
     readonly organization: string;
 
     readonly username: string;
+    readonly namespace: string;
     readonly userInfos: Record<string, Basics>;
     readonly userGroups: string[];
     readonly userTags: string[];
@@ -52,6 +53,7 @@ export class RegisterSubAccountRoute extends BrontosaurusRoute {
             }
 
             const username: string = body.directEnsure('username');
+            const namespace: string = body.directEnsure('namespace');
             const userTags: string[] = body.direct('userTags');
             const groups: string[] = body.direct('userGroups');
 
@@ -80,6 +82,12 @@ export class RegisterSubAccountRoute extends BrontosaurusRoute {
 
             if (validateResult !== COMMON_NAME_VALIDATE_RESPONSE.OK) {
                 throw this._error(ERROR_CODE.INVALID_COMMON_NAME, validateResult);
+            }
+
+            const namespaceInstance: INamespaceModel | null = await NamespaceController.getNamespaceByNamespace(namespace);
+
+            if (!namespaceInstance) {
+                throw panic.code(ERROR_CODE.NAMESPACE_NOT_FOUND, namespace);
             }
 
             if (req.body.userEmail) {
@@ -137,6 +145,7 @@ export class RegisterSubAccountRoute extends BrontosaurusRoute {
             const account: IAccountModel = AccountController.createOnLimboUnsavedAccount(
                 username,
                 tempPassword,
+                namespaceInstance._id,
                 req.body.userDisplayName,
                 req.body.userEmail,
                 req.body.userPhone,
