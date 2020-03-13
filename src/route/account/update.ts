@@ -4,7 +4,7 @@
  * @description Update
  */
 
-import { AccountController, EMAIL_VALIDATE_RESPONSE, IAccountModel, PHONE_VALIDATE_RESPONSE, validateEmail, validatePhone } from "@brontosaurus/db";
+import { EMAIL_VALIDATE_RESPONSE, IAccountModel, MatchController, PHONE_VALIDATE_RESPONSE, validateEmail, validatePhone } from "@brontosaurus/db";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { Safe, SafeExtract } from "@sudoo/extract";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
@@ -13,10 +13,10 @@ import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
 
-// TODO: ADD Namespace
 export type UpdateAccountRouteBody = {
 
     readonly username: string;
+    readonly namespace: string;
 
     readonly displayName?: string;
     readonly email?: string;
@@ -44,8 +44,9 @@ export class UpdateAccountRoute extends BrontosaurusRoute {
             }
 
             const username: string = body.directEnsure('username');
+            const namespace: string = body.directEnsure('namespace');
 
-            const account: IAccountModel | null = await AccountController.getAccountByUsername(username);
+            const account: IAccountModel | null = await MatchController.getAccountByUsernameAndNamespaceName(username, namespace);
 
             if (!account) {
                 throw this._error(ERROR_CODE.ACCOUNT_NOT_FOUND, username);

@@ -4,7 +4,7 @@
  * @description Record
  */
 
-import { AccountActions, AccountController, ApplicationController, IAccountModel, IApplicationModel, validateAccountAction } from "@brontosaurus/db";
+import { AccountActions, ApplicationController, IAccountModel, IApplicationModel, MatchController, validateAccountAction } from "@brontosaurus/db";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { Safe, SafeExtract } from "@sudoo/extract";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
@@ -15,10 +15,12 @@ import { BrontosaurusRoute } from "../../basic";
 
 export type AccountHistoryRecordRouteBody = {
 
-    readonly target: string;
+    readonly username: string;
+    readonly namespace: string;
 
     readonly type: keyof AccountActions;
-    readonly by: string;
+    readonly byUsername: string;
+    readonly byNamespace: string;
     readonly application: string;
     readonly content: string;
 };
@@ -43,27 +45,30 @@ export class AccountHistoryRecordRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.APPLICATION_GREEN_NOT_VALID);
             }
 
-            const target: string = body.directEnsure('target');
+            const username: string = body.directEnsure('username');
+            const namespace: string = body.directEnsure('namespace');
+
             const type: keyof AccountActions = body.directEnsure('type');
             const application: string = body.directEnsure('application');
             const content: string = body.directEnsure('content');
 
-            const by: string = body.directEnsure('by');
+            const byUsername: string = body.directEnsure('byUsername');
+            const byNamespace: string = body.directEnsure('byNamespace');
 
             if (!validateAccountAction(type)) {
                 throw panic.code(ERROR_CODE.INVALID_ACCOUNT_ACTION, type);
             }
 
-            const account: IAccountModel | null = await AccountController.getAccountByUsername(target);
+            const account: IAccountModel | null = await MatchController.getAccountByUsernameAndNamespaceName(username, namespace);
 
             if (!account) {
-                throw this._error(ERROR_CODE.ACCOUNT_NOT_FOUND, target);
+                throw this._error(ERROR_CODE.ACCOUNT_NOT_FOUND, username);
             }
 
-            const self: IAccountModel | null = await AccountController.getAccountByUsername(by);
+            const self: IAccountModel | null = await MatchController.getAccountByUsernameAndNamespaceName(byUsername, byNamespace);
 
             if (!self) {
-                throw this._error(ERROR_CODE.ACCOUNT_NOT_FOUND, by);
+                throw this._error(ERROR_CODE.ACCOUNT_NOT_FOUND, byUsername);
             }
 
             const actionApplication: IApplicationModel | null = await ApplicationController.getApplicationByKey(application);
