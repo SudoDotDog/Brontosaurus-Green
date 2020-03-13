@@ -171,6 +171,7 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
             await Promise.all([account.save(), organization.save()]);
 
             res.agent.add('account', account.username);
+            res.agent.add('namespace', namespaceInstance.namespace);
             res.agent.add('organization', organization.name);
             res.agent.add('tempPassword', tempPassword);
         } catch (err) {

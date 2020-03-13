@@ -4,7 +4,7 @@
  * @description Verify
  */
 
-import { IAccountModel, MatchController } from "@brontosaurus/db";
+import { AccountNamespaceMatch, IAccountModel, INamespaceModel, MatchController } from "@brontosaurus/db";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { Safe, SafeExtract } from "@sudoo/extract";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
@@ -42,14 +42,22 @@ export class VerifyAccountRoute extends BrontosaurusRoute {
             const username: string = body.directEnsure('username');
             const namespace: string = body.directEnsure('namespace');
 
-            const account: IAccountModel | null = await MatchController.getAccountByUsernameAndNamespaceName(username, namespace);
+            const matchResult: AccountNamespaceMatch = await MatchController.getAccountNamespaceMatchByUsernameAndNamespace(username, namespace);
 
-            res.agent.add('valid', Boolean(account));
+            if (matchResult.succeed === false) {
+
+                res.agent.add('valid', false);
+                return;
+            }
+
+            const account: IAccountModel = matchResult.account;
+            const namespaceInstance: INamespaceModel = matchResult.namespace;
+            res.agent.add('valid', true);
 
             if (account) {
                 res.agent.add('account', {
                     username: account.username,
-                    namespace: account.namespace,
+                    namespace: namespaceInstance.namespace,
                     displayName: account.displayName,
                 });
             }

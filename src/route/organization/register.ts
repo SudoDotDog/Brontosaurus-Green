@@ -162,6 +162,7 @@ export class RegisterSubAccountRoute extends BrontosaurusRoute {
             await account.save();
 
             res.agent.add('account', account.username);
+            res.agent.add('namespace', namespaceInstance.namespace);
             res.agent.add('tempPassword', tempPassword);
         } catch (err) {
 
