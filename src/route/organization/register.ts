@@ -125,7 +125,7 @@ export class RegisterSubAccountRoute extends BrontosaurusRoute {
                 throw this._error(ERROR_CODE.ORGANIZATION_LIMIT_EXCEED, accountCount.toString(), organization.limit.toString());
             }
 
-            const isAccountDuplicated: boolean = await AccountController.isAccountDuplicatedByUsername(username);
+            const isAccountDuplicated: boolean = await AccountController.isAccountDuplicatedByUsernameAndNamespace(username, namespaceInstance._id);
 
             if (isAccountDuplicated) {
                 throw this._error(ERROR_CODE.DUPLICATE_ACCOUNT, username);

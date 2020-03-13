@@ -20,6 +20,7 @@ export enum ERROR_CODE {
     INVALID_EMAIL = 4114,
     INVALID_PHONE = 4115,
     INVALID_DISPLAY_NAME = 4116,
+    INVALID_NAMESPACE = 4117,
 
     APPLICATION_KEY_NOT_FOUND = 4120,
     APPLICATION_GREEN_NOT_VALID = 4121,
@@ -78,6 +79,7 @@ export const ERROR_LIST: Record<ERROR_CODE, string> = {
     [ERROR_CODE.INVALID_EMAIL]: 'Invalid email, reason: "{}"',
     [ERROR_CODE.INVALID_PHONE]: 'Invalid phone, reason: "{}"',
     [ERROR_CODE.INVALID_DISPLAY_NAME]: 'Invalid display name "{}"',
+    [ERROR_CODE.INVALID_NAMESPACE]: 'Invalid namespace "{}"',
 
     [ERROR_CODE.APPLICATION_KEY_NOT_FOUND]: 'Application key not found',
     [ERROR_CODE.APPLICATION_GREEN_NOT_VALID]: 'Application green not valid',

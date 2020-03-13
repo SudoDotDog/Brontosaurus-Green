@@ -4,7 +4,7 @@
  * @description Inplode Organization
  */
 
-import { AccountController, COMMON_NAME_VALIDATE_RESPONSE, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountModel, IGroupModel, INamespaceModel, IOrganizationModel, isGroupModelInternalUserGroup, NamespaceController, OrganizationController, PHONE_VALIDATE_RESPONSE, TagController, USERNAME_VALIDATE_RESPONSE, validateCommonName, validateEmail, validatePhone, validateUsername } from "@brontosaurus/db";
+import { AccountController, COMMON_NAME_VALIDATE_RESPONSE, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountModel, IGroupModel, INamespaceModel, IOrganizationModel, isGroupModelInternalUserGroup, NamespaceController, OrganizationController, PHONE_VALIDATE_RESPONSE, TagController, USERNAME_VALIDATE_RESPONSE, validateCommonName, validateEmail, validateNamespace, validatePhone, validateUsername } from "@brontosaurus/db";
 import { Basics } from "@brontosaurus/definition";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { Safe, SafeExtract } from "@sudoo/extract";
@@ -56,6 +56,7 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
 
             const username: string = body.directEnsure('ownerUsername');
             const namespace: string = body.directEnsure('ownerNamespace');
+
             const organizationTags: string[] = body.direct('organizationTags');
             const ownerTags: string[] = body.direct('ownerTags');
             const groups: string[] = body.direct('ownerGroups');
@@ -76,6 +77,12 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
 
             if (usernameValidationResult !== USERNAME_VALIDATE_RESPONSE.OK) {
                 throw this._error(ERROR_CODE.INVALID_USERNAME, usernameValidationResult);
+            }
+
+            const namespaceValidationResult: boolean = validateNamespace(namespace);
+
+            if (!namespaceValidationResult) {
+                throw this._error(ERROR_CODE.INVALID_NAMESPACE, usernameValidationResult);
             }
 
             const validateResult: COMMON_NAME_VALIDATE_RESPONSE = validateCommonName(organizationName);
@@ -118,7 +125,7 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.NAMESPACE_NOT_FOUND, namespace);
             }
 
-            const isAccountDuplicated: boolean = await AccountController.isAccountDuplicatedByUsername(username);
+            const isAccountDuplicated: boolean = await AccountController.isAccountDuplicatedByUsernameAndNamespace(username, namespaceInstance._id);
 
             if (isAccountDuplicated) {
                 throw this._error(ERROR_CODE.DUPLICATE_ACCOUNT, username);
