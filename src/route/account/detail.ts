@@ -4,19 +4,25 @@
  * @description Detail
  */
 
-import { AccountController, IAccountModel } from "@brontosaurus/db";
+import { IAccountModel, MatchController } from "@brontosaurus/db";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
+import { Safe, SafeExtract } from "@sudoo/extract";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
 
-// TODO: ADD Namespace
+export type AccountDetailRouteBody = {
+
+    readonly username: string;
+    readonly namespace: string;
+};
+
 export class AccountDetailRoute extends BrontosaurusRoute {
 
-    public readonly path: string = '/account/detail/:username';
-    public readonly mode: ROUTE_MODE = ROUTE_MODE.GET;
+    public readonly path: string = '/account/detail';
+    public readonly mode: ROUTE_MODE = ROUTE_MODE.POST;
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
@@ -25,19 +31,18 @@ export class AccountDetailRoute extends BrontosaurusRoute {
 
     private async _detailHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
 
+        const body: SafeExtract<AccountDetailRouteBody> = Safe.extract(req.body as AccountDetailRouteBody, this._error(ERROR_CODE.INSUFFICIENT_INFORMATION));
+
         try {
 
             if (!req.valid) {
                 throw panic.code(ERROR_CODE.APPLICATION_GREEN_NOT_VALID);
             }
 
-            const username: string | undefined = req.params.username;
+            const username: string = body.directEnsure('username');
+            const namespace: string = body.directEnsure('namespace');
 
-            if (!username) {
-                throw panic.code(ERROR_CODE.INSUFFICIENT_INFORMATION, 'username');
-            }
-
-            const account: IAccountModel | null = await AccountController.getAccountByUsername(username);
+            const account: IAccountModel | null = await MatchController.getAccountByUsernameAndNamespaceName(username, namespace);
 
             if (!account) {
                 throw panic.code(ERROR_CODE.ACCOUNT_NOT_FOUND, username);
@@ -45,6 +50,7 @@ export class AccountDetailRoute extends BrontosaurusRoute {
 
             res.agent.add('active', account.active);
             res.agent.add('username', account.username);
+            res.agent.add('namespace', namespace);
             res.agent.add('limbo', Boolean(account.limbo));
             res.agent.add('twoFA', Boolean(account.twoFA));
             res.agent.addIfExist('email', account.email);
