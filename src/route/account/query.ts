@@ -4,12 +4,13 @@
  * @description Query
  */
 
-import { AccountController, GroupController, IAccountModel, IGroupModel, OrganizationController } from "@brontosaurus/db";
+import { AccountController, GroupController, IAccountModel, IGroupModel, INamespaceModel, OrganizationController } from "@brontosaurus/db";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { Safe, SafeExtract } from "@sudoo/extract";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
 import { ObjectID } from "bson";
 import { GroupAgent } from "../../agent/group";
+import { NamespaceAgent } from "../../agent/namespace";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
@@ -59,15 +60,19 @@ export class QueryAccountRoute extends BrontosaurusRoute {
             const accounts: IAccountModel[] = await AccountController.getAccountsByQuery(query);
 
             const infos = [];
-            const agent: GroupAgent = GroupAgent.create();
+            const groupAgent: GroupAgent = GroupAgent.create();
+            const namespaceAgent: NamespaceAgent = NamespaceAgent.create();
 
             for (const account of accounts) {
 
-                const groups: IGroupModel[] = await agent.getGroups(account.groups);
+                const groups: IGroupModel[] = await groupAgent.getGroups(account.groups);
+                const namespace: INamespaceModel = await namespaceAgent.getNamespace(account.namespace);
+
                 const groupTexts: string[] = groups.map((each: IGroupModel) => each.name);
+
                 infos.push({
                     username: account.username,
-                    namespace: account.namespace,
+                    namespace: namespace.namespace,
                     groups: groupTexts,
                     displayName: account.displayName,
                 });

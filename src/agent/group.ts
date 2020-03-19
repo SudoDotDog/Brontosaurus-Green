@@ -21,7 +21,7 @@ export class GroupAgent {
         this._groups = new Map<string, IGroupModel>();
     }
 
-    public async getGroup(id: ObjectID): Promise<IGroupModel | null> {
+    public async getGroup(id: ObjectID | string): Promise<IGroupModel | null> {
 
         const strId: string = typeof id === 'string' ? id : id.toHexString();
         if (this._groups.has(strId)) {
@@ -36,7 +36,7 @@ export class GroupAgent {
         return null;
     }
 
-    public async getGroups(ids: ObjectID[]): Promise<IGroupModel[]> {
+    public async getGroups(ids: Array<ObjectID | string>): Promise<IGroupModel[]> {
 
         const response: IGroupModel[] = [];
         for (const id of ids) {

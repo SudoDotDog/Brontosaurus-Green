@@ -4,7 +4,7 @@
  * @description Detail
  */
 
-import { IAccountModel, MatchController } from "@brontosaurus/db";
+import { AccountNamespaceMatch, IAccountModel, INamespaceModel, MatchController } from "@brontosaurus/db";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { Safe, SafeExtract } from "@sudoo/extract";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
@@ -42,15 +42,18 @@ export class AccountDetailRoute extends BrontosaurusRoute {
             const username: string = body.directEnsure('username');
             const namespace: string = body.directEnsure('namespace');
 
-            const account: IAccountModel | null = await MatchController.getAccountByUsernameAndNamespaceName(username, namespace);
+            const match: AccountNamespaceMatch = await MatchController.getAccountNamespaceMatchByUsernameAndNamespace(username, namespace);
 
-            if (!account) {
+            if (match.succeed === false) {
                 throw panic.code(ERROR_CODE.ACCOUNT_NOT_FOUND, username);
             }
 
+            const account: IAccountModel = match.account;
+            const namespaceInstance: INamespaceModel = match.namespace;
+
             res.agent.add('active', account.active);
             res.agent.add('username', account.username);
-            res.agent.add('namespace', namespace);
+            res.agent.add('namespace', namespaceInstance.namespace);
             res.agent.add('limbo', Boolean(account.limbo));
             res.agent.add('twoFA', Boolean(account.twoFA));
             res.agent.addIfExist('email', account.email);
