@@ -66,7 +66,11 @@ export class QueryAccountRoute extends BrontosaurusRoute {
             for (const account of accounts) {
 
                 const groups: IGroupModel[] = await groupAgent.getGroups(account.groups);
-                const namespace: INamespaceModel = await namespaceAgent.getNamespace(account.namespace);
+                const namespace: INamespaceModel | null = await namespaceAgent.getNamespace(account.namespace);
+
+                if (!namespace) {
+                    throw panic.code(ERROR_CODE.NAMESPACE_NOT_FOUND, account.namespace.toHexString());
+                }
 
                 const groupTexts: string[] = groups.map((each: IGroupModel) => each.name);
 
