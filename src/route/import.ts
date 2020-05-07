@@ -5,10 +5,12 @@
  */
 
 import { AccountDetailRoute } from "./account/detail";
+import { ReplaceAccountGroupRoute } from "./account/group/replace";
 import { AccountHistoryRecordRoute } from "./account/history/record";
 import { LimboAccountRoute } from "./account/limbo";
 import { QueryAccountRoute } from "./account/query";
 import { RegisterAccountRoute } from "./account/register";
+import { ReplaceAccountTagRoute } from "./account/tag/replace";
 import { UpdateAccountRoute } from "./account/update";
 import { VerifyAccountRoute } from "./account/verify";
 import { InplodeOrganizationRoute } from "./organization/inplode";
@@ -30,6 +32,12 @@ export const RouteList = [
 
     // Account - History
     new AccountHistoryRecordRoute(),
+
+    // Account - Tag
+    new ReplaceAccountTagRoute(),
+
+    // Account - Group
+    new ReplaceAccountGroupRoute(),
 
     // Organization
     new InplodeOrganizationRoute(),
