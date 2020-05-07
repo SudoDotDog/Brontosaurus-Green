@@ -1,10 +1,10 @@
 /**
  * @author WMXPY
- * @namespace Brontosaurus_Green_Account_Group
- * @description Update
+ * @namespace Brontosaurus_Green_Account_Tag
+ * @description Replace
  */
 
-import { GroupController, IAccountModel, IGroupModel, MatchController } from "@brontosaurus/db";
+import { IAccountModel, ITagModel, MatchController, TagController } from "@brontosaurus/db";
 import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
 import { fillStringedResult, Pattern, StringedResult } from "@sudoo/verify";
@@ -19,34 +19,34 @@ const bodyPattern: Pattern = {
     map: {
         username: { type: 'string' },
         namespace: { type: 'string' },
-        groups: {
+        tags: {
             type: 'list',
             element: { type: 'string' },
         },
     },
 };
 
-export type UpdateAccountGroupBody = {
+export type ReplaceAccountTagBody = {
 
     readonly username: string;
     readonly namespace: string;
-    readonly groups: string[];
+    readonly tags: string[];
 };
 
-export class UpdateAccountGroup extends BrontosaurusRoute {
+export class ReplaceAccountTagRoute extends BrontosaurusRoute {
 
-    public readonly path: string = '/account/query';
+    public readonly path: string = '/account/tag/replace';
     public readonly mode: ROUTE_MODE = ROUTE_MODE.POST;
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
         autoHook.wrap(createStringedBodyVerifyHandler(bodyPattern), 'Body Verify'),
-        autoHook.wrap(this._queryAccountHandler.bind(this), 'Query List'),
+        autoHook.wrap(this._replaceAccountTagHandler.bind(this), 'Replace Tag'),
     ];
 
-    private async _queryAccountHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
+    private async _replaceAccountTagHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
 
-        const body: UpdateAccountGroupBody = req.body as any;
+        const body: ReplaceAccountTagBody = req.body as any;
 
         try {
 
@@ -66,16 +66,16 @@ export class UpdateAccountGroup extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.ACCOUNT_NOT_FOUND, body.username);
             }
 
-            const groups: IGroupModel[] | null = await this._getGroups(body.groups);
+            const tags: ITagModel[] | null = await this._getTags(body.tags);
 
-            if (!groups) {
-                throw panic.code(ERROR_CODE.GROUP_NOT_FOUND, 'multiple');
+            if (!tags) {
+                throw panic.code(ERROR_CODE.TAG_NOT_FOUND, 'multiple');
             }
 
-            account.groups = groups.map((each: IGroupModel) => each._id);
+            account.tags = tags.map((each: ITagModel) => each._id);
 
             await account.save();
-            res.agent.add('groups', body.groups);
+            res.agent.add('tags', body.tags);
         } catch (err) {
 
             res.agent.fail(HTTP_RESPONSE_CODE.BAD_REQUEST, err);
@@ -84,12 +84,12 @@ export class UpdateAccountGroup extends BrontosaurusRoute {
         }
     }
 
-    private async _getGroups(groups: string[]): Promise<IGroupModel[] | null> {
+    private async _getTags(tags: string[]): Promise<ITagModel[] | null> {
 
-        const result: IGroupModel[] = [];
-        for (const group of groups) {
+        const result: ITagModel[] = [];
+        for (const tag of tags) {
 
-            const instance: IGroupModel | null = await GroupController.getGroupByName(group);
+            const instance: ITagModel | null = await TagController.getTagByName(tag);
 
             if (!instance) {
                 return null;
