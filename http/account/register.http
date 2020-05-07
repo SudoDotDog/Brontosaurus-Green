@@ -1,0 +1,16 @@
+POST http://localhost:8500/account/register
+content-type: application/json
+Authorization: bearer <Auth Token>
+
+{
+    "username": "register-test-1",
+    "namespace": "brontosaurus.default",
+    "userInfos": {
+        "hello": "world"
+    },
+    "userGroups": ["Example"],
+    "userTags": [],
+    "userDisplayName": "Display Name",
+    "userEmail": "a@test.com",
+    "userPhone": "string"
+}
