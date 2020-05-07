@@ -99,7 +99,7 @@ export const ERROR_LIST: Record<ERROR_CODE, string> = {
 
     [ERROR_CODE.INVALID_ACCOUNT_ACTION]: 'Invalid account action type: "{}"',
 
-    [ERROR_CODE.REQUEST_DOES_MATCH_PATTERN]: 'Request does not match pattern',
+    [ERROR_CODE.REQUEST_DOES_MATCH_PATTERN]: 'Request does not match pattern: "{}"',
     [ERROR_CODE.REQUEST_FORMAT_ERROR]: 'Request format error: "{}", should be: "{}", but: "{}"',
 
     [ERROR_CODE.APPLICATION_NOT_FOUND]: 'Application: "{}" not found',
