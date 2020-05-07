@@ -6,9 +6,9 @@
 
 import { AccountController, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountModel, IGroupModel, INamespaceModel, isGroupModelInternalUserGroup, NamespaceController, PHONE_VALIDATE_RESPONSE, TagController, USERNAME_VALIDATE_RESPONSE, validateEmail, validatePhone, validateUsername } from "@brontosaurus/db";
 import { Basics } from "@brontosaurus/definition";
-import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
-import { Safe, SafeExtract } from "@sudoo/extract";
+import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
+import { fillStringedResult, Pattern, StringedResult } from "@sudoo/verify";
 import { ObjectID } from "bson";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
@@ -17,11 +17,52 @@ import { ERROR_CODE, panic } from "../../util/error";
 import { jsonifyBasicRecords } from "../../util/token";
 import { BrontosaurusRoute } from "../basic";
 
+const bodyPattern: Pattern = {
+    type: 'map',
+    strict: true,
+    map: {
+        username: { type: 'string' },
+        namespace: { type: 'string' },
+        userInfos: {
+            type: 'or',
+            options: [
+                { type: 'string' },
+                {
+                    type: 'record',
+                    key: { type: 'string' },
+                    value: { type: 'any' },
+                },
+            ],
+        },
+        userGroups: {
+            type: 'list',
+            element: { type: 'string' },
+        },
+        userTags: {
+            type: 'list',
+            element: { type: 'string' },
+        },
+
+        userDisplayName: {
+            type: 'string',
+            optional: true,
+        },
+        userEmail: {
+            type: 'string',
+            optional: true,
+        },
+        userPhone: {
+            type: 'string',
+            optional: true,
+        },
+    },
+};
+
 export type RegisterAccountRouteBody = {
 
     readonly username: string;
     readonly namespace: string;
-    readonly userInfos: Record<string, Basics>;
+    readonly userInfos: Record<string, Basics> | string;
     readonly userGroups: string[];
     readonly userTags: string[];
 
@@ -37,12 +78,13 @@ export class RegisterAccountRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
+        autoHook.wrap(createStringedBodyVerifyHandler(bodyPattern), 'Body Verify'),
         autoHook.wrap(this._registerAccountHandler.bind(this), 'Register Account'),
     ];
 
     private async _registerAccountHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
 
-        const body: SafeExtract<RegisterAccountRouteBody> = Safe.extract(req.body as RegisterAccountRouteBody, this._error(ERROR_CODE.INSUFFICIENT_INFORMATION));
+        const body: RegisterAccountRouteBody = req.body as any;
 
         try {
 
@@ -50,67 +92,60 @@ export class RegisterAccountRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.APPLICATION_GREEN_NOT_VALID);
             }
 
-            const username: string = body.directEnsure('username');
-            const namespace: string = body.directEnsure('namespace');
-            const userTags: string[] = body.direct('userTags');
-            const groups: string[] = body.direct('userGroups');
+            const verify: StringedResult = fillStringedResult(req.stringedBodyVerify);
 
-            const infoLine: Record<string, Basics> | string = body.direct('userInfos');
+            if (!verify.succeed) {
+                throw panic.code(ERROR_CODE.REQUEST_DOES_MATCH_PATTERN, verify.invalids[0]);
+            }
+
             const infos: Record<string, Basics> = jsonifyBasicRecords(
-                infoLine,
-                this._error(ERROR_CODE.INFO_LINE_FORMAT_ERROR, infoLine.toString()));
+                body.userInfos,
+                this._error(ERROR_CODE.INFO_LINE_FORMAT_ERROR, body.userInfos.toString()),
+            );
 
-            if (!Array.isArray(userTags)) {
-                throw this._error(ERROR_CODE.INSUFFICIENT_INFORMATION, userTags as any);
-            }
-
-            if (!Array.isArray(groups)) {
-                throw this._error(ERROR_CODE.INSUFFICIENT_INFORMATION, groups as any);
-            }
-
-            const namespaceInstance: INamespaceModel | null = await NamespaceController.getNamespaceByNamespace(namespace);
+            const namespaceInstance: INamespaceModel | null = await NamespaceController.getNamespaceByNamespace(body.namespace);
 
             if (!namespaceInstance) {
-                throw panic.code(ERROR_CODE.NAMESPACE_NOT_FOUND, namespace);
+                throw panic.code(ERROR_CODE.NAMESPACE_NOT_FOUND, body.namespace);
             }
 
-            const usernameValidationResult: USERNAME_VALIDATE_RESPONSE = validateUsername(username);
+            const usernameValidationResult: USERNAME_VALIDATE_RESPONSE = validateUsername(body.username);
 
             if (usernameValidationResult !== USERNAME_VALIDATE_RESPONSE.OK) {
                 throw this._error(ERROR_CODE.INVALID_USERNAME, usernameValidationResult);
             }
 
-            if (req.body.userEmail) {
+            if (body.userEmail) {
 
-                const emailValidationResult: EMAIL_VALIDATE_RESPONSE = validateEmail(req.body.userEmail);
+                const emailValidationResult: EMAIL_VALIDATE_RESPONSE = validateEmail(body.userEmail);
                 if (emailValidationResult !== EMAIL_VALIDATE_RESPONSE.OK) {
                     throw this._error(ERROR_CODE.INVALID_EMAIL, emailValidationResult);
                 }
             }
 
-            if (req.body.userPhone) {
+            if (body.userPhone) {
 
-                const phoneValidationResult: PHONE_VALIDATE_RESPONSE = validatePhone(req.body.userPhone);
+                const phoneValidationResult: PHONE_VALIDATE_RESPONSE = validatePhone(body.userPhone);
                 if (phoneValidationResult !== PHONE_VALIDATE_RESPONSE.OK) {
                     throw this._error(ERROR_CODE.INVALID_PHONE, phoneValidationResult);
                 }
             }
 
-            if (req.body.userDisplayName) {
+            if (body.userDisplayName) {
 
-                if (typeof req.body.userDisplayName !== 'string') {
-                    throw panic.code(ERROR_CODE.INVALID_DISPLAY_NAME, req.body.displayName);
+                if (typeof body.userDisplayName !== 'string') {
+                    throw panic.code(ERROR_CODE.INVALID_DISPLAY_NAME, body.userDisplayName);
                 }
             }
 
-            const isAccountDuplicated: boolean = await AccountController.isAccountDuplicatedByUsernameAndNamespace(username, namespaceInstance._id);
+            const isAccountDuplicated: boolean = await AccountController.isAccountDuplicatedByUsernameAndNamespace(body.username, namespaceInstance._id);
 
             if (isAccountDuplicated) {
-                throw this._error(ERROR_CODE.DUPLICATE_ACCOUNT, username);
+                throw this._error(ERROR_CODE.DUPLICATE_ACCOUNT, body.username);
             }
 
-            const parsedUserTagIds: ObjectID[] = await TagController.getTagIdsByNames(userTags);
-            const parsedGroups: IGroupModel[] = await GroupController.getGroupByNames(groups);
+            const parsedUserTagIds: ObjectID[] = await TagController.getTagIdsByNames(body.userTags);
+            const parsedGroups: IGroupModel[] = await GroupController.getGroupByNames(body.userGroups);
 
             for (const group of parsedGroups) {
                 if (isGroupModelInternalUserGroup(group)) {
@@ -121,7 +156,7 @@ export class RegisterAccountRoute extends BrontosaurusRoute {
             const tempPassword: string = createRandomTempPassword();
 
             const account: IAccountModel = AccountController.createOnLimboUnsavedAccount(
-                username,
+                body.username,
                 tempPassword,
                 namespaceInstance._id,
                 req.body.userDisplayName,
