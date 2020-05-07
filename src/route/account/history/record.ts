@@ -1,6 +1,6 @@
 /**
  * @author WMXPY
- * @namespace Brontosaurus_Green_Account
+ * @namespace Brontosaurus_Green_Account_History
  * @description Record
  */
 
