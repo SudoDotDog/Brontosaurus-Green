@@ -8,6 +8,7 @@ import { AccountController, GroupController, IAccountModel, IGroupModel, INamesp
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { Safe, SafeExtract } from "@sudoo/extract";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
+import { Pattern } from "@sudoo/verify";
 import { ObjectID } from "bson";
 import { GroupAgent } from "../../agent/group";
 import { NamespaceAgent } from "../../agent/namespace";
@@ -15,6 +16,21 @@ import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
+
+const bodyPattern: Pattern = {
+    type: 'map',
+    strict: true,
+    map: {
+        organizations: {
+            type: 'list',
+            element: { type: 'string' },
+        },
+        groups: {
+            type: 'list',
+            element: { type: 'string' },
+        },
+    },
+};
 
 export type QueryAccountRouteBody = {
 
