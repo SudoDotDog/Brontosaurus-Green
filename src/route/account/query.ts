@@ -5,10 +5,9 @@
  */
 
 import { AccountController, GroupController, IAccountModel, IGroupModel, INamespaceModel, OrganizationController } from "@brontosaurus/db";
-import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
-import { Safe, SafeExtract } from "@sudoo/extract";
+import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
-import { Pattern } from "@sudoo/verify";
+import { fillStringedResult, Pattern, StringedResult } from "@sudoo/verify";
 import { ObjectID } from "bson";
 import { GroupAgent } from "../../agent/group";
 import { NamespaceAgent } from "../../agent/namespace";
@@ -45,12 +44,13 @@ export class QueryAccountRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
+        autoHook.wrap(createStringedBodyVerifyHandler(bodyPattern), 'Body Verify'),
         autoHook.wrap(this._queryAccountHandler.bind(this), 'Query List'),
     ];
 
     private async _queryAccountHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
 
-        const body: SafeExtract<QueryAccountRouteBody> = Safe.extract(req.body as QueryAccountRouteBody, this._error(ERROR_CODE.INSUFFICIENT_INFORMATION));
+        const body: QueryAccountRouteBody = req.body as any;
 
         try {
 
@@ -58,20 +58,16 @@ export class QueryAccountRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.APPLICATION_GREEN_NOT_VALID);
             }
 
+            const verify: StringedResult = fillStringedResult(req.stringedBodyVerify);
+
+            if (!verify.succeed) {
+                throw panic.code(ERROR_CODE.REQUEST_DOES_MATCH_PATTERN, verify.invalids[0]);
+            }
+
             let query: Record<string, any> = {};
 
-            const groupNames: string[] = body.direct('groups');
-            if (!Array.isArray(groupNames)) {
-                throw panic.code(ERROR_CODE.INSUFFICIENT_SPECIFIC_INFORMATION, 'groups');
-            }
-
-            query = await this._attachGroup(groupNames, query);
-
-            const organizationNames: string[] = body.direct('organizations');
-            if (!Array.isArray(organizationNames)) {
-                throw panic.code(ERROR_CODE.INSUFFICIENT_SPECIFIC_INFORMATION, 'organizations');
-            }
-            query = await this._attachOrganization(organizationNames, query);
+            query = await this._attachGroup(body.groups, query);
+            query = await this._attachOrganization(body.organizations, query);
 
             const accounts: IAccountModel[] = await AccountController.getAccountsByQuery(query);
 
