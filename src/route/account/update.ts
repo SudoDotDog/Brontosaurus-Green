@@ -18,6 +18,7 @@ export type UpdateAccountRouteBody = {
     readonly username: string;
     readonly namespace: string;
 
+    readonly avatar?: string;
     readonly displayName?: string;
     readonly email?: string;
     readonly phone?: string;
@@ -52,7 +53,8 @@ export class UpdateAccountRoute extends BrontosaurusRoute {
                 throw this._error(ERROR_CODE.ACCOUNT_NOT_FOUND, username);
             }
 
-            if (this._updateEmail(account, req.body.email)
+            if (this._updateAvatar(account, req.body.avatar)
+                || this._updateEmail(account, req.body.email)
                 || this._updatePhone(account, req.body.phone)
                 || this._updateDisplayName(account, req.body.displayName)) {
 
@@ -72,6 +74,16 @@ export class UpdateAccountRoute extends BrontosaurusRoute {
         } finally {
             next();
         }
+    }
+
+    private _updateAvatar(account: IAccountModel, avatar?: string): boolean {
+
+        if (avatar) {
+
+            account.avatar = avatar;
+            return true;
+        }
+        return false;
     }
 
     private _updateEmail(account: IAccountModel, email?: string): boolean {
