@@ -23,37 +23,37 @@
     chalk "^2.0.0"
     js-tokens "^4.0.0"
 
-"@brontosaurus/core@^3.3.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@brontosaurus/core/-/core-3.3.0.tgz#b02688ff009a1ecb7f05da4e255aefa904acca7c"
-  integrity sha512-/O0xX4KpzcxHEqtigsE8ojqN9unFWhfgQc8x1Rsrl5UsZ/xFFVWObm0NQlZnXtbIRVaWLy8ox0ki+baXhPzcYQ==
+"@brontosaurus/core@^3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@brontosaurus/core/-/core-3.4.0.tgz#e15554154d8654d405daa0260577eca5442c896e"
+  integrity sha512-Zo+vpKEXMBzZdShn1dwOyKg/xwuQlCoD60fiXsP2etQTTiVKsuBljKCFATZjAsMNP9LlMibCrjlnvtCwWZLGZg==
 
-"@brontosaurus/db@^3.14.0":
-  version "3.14.0"
-  resolved "https://registry.yarnpkg.com/@brontosaurus/db/-/db-3.14.0.tgz#7abbd613f790511d39b72b9786c5ce155a714729"
-  integrity sha512-df2yU+fCvunzjH0Tz+vgiGp5ZStX1teB/FUuFayuZfEZIuvDggDZKwaMbIzwXTkWpdDXyf+gtGnbFsDGAwKmww==
+"@brontosaurus/db@^3.16.0":
+  version "3.16.0"
+  resolved "https://registry.yarnpkg.com/@brontosaurus/db/-/db-3.16.0.tgz#2ed0d2fffd14d199eb882a2417993a57f152d99f"
+  integrity sha512-saNTLOq+agVBjHb/QWl/KAQORx2VDlOq5z64A3vwXx6JP0AEqycKplkRdWRecFXHzH+KdcgtAe5cxz6MPTP4PQ==
   dependencies:
-    "@brontosaurus/core" "^3.3.0"
-    "@brontosaurus/definition" "^3.3.0"
+    "@brontosaurus/core" "^3.4.0"
+    "@brontosaurus/definition" "^3.4.0"
     "@sudoo/bark" "^2.7.2"
     "@sudoo/random" "^2.1.1"
-    mongoose "^5.9.13"
+    mongoose "^5.9.15"
     speakeasy "^2.0.0"
 
-"@brontosaurus/definition@^3.3.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@brontosaurus/definition/-/definition-3.3.0.tgz#9002ac50ae48c23b16c53cad458e9185e0d3c1c5"
-  integrity sha512-TRGnv2vSkQ9tvetOaIlcuvNvwIAMNlNXqPyXZosPIUxAngnCpnPeflAwWKvjubH9oCibyOm3NYAy/WZ+NtQVQw==
+"@brontosaurus/definition@^3.4.0":
+  version "3.4.0"
+  resolved "https://registry.yarnpkg.com/@brontosaurus/definition/-/definition-3.4.0.tgz#05f362da522fad8a15f053b2811ec125ad024bf8"
+  integrity sha512-QmL5pCIEMQK8WtrpjxG3Zf0RuocVotXEC+jcUgfr01wOtlkEh4U7qsMra4ZuFzgQx9fTVcvmfuEZsjVz2baRtA==
 
 "@sudoo/bark@^2.7.2":
   version "2.7.2"
   resolved "https://registry.yarnpkg.com/@sudoo/bark/-/bark-2.7.2.tgz#961c4b482dbc00d7c762607c63f7a3eaa8f8811e"
   integrity sha512-COaH8iYTyutU0bgqhklIQShops+NYHRlCb+XEXkMimlkQuiw2dUY6yATSyiq89vIy74W39FAs/FgHAG4+aJVKA==
 
-"@sudoo/express@^2.7.4":
-  version "2.7.4"
-  resolved "https://registry.yarnpkg.com/@sudoo/express/-/express-2.7.4.tgz#5c3d815960d94975e31d0204141174f5297dd215"
-  integrity sha512-KBszoHoPOWXIw4gkL8dml8HIuC3ImjPKvpQICzt0O2xqkQGPkwJ7Ci8MrDawdGyw696C0mhMdDH+ZhK2DLVhtg==
+"@sudoo/express@^2.8.0":
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/@sudoo/express/-/express-2.8.0.tgz#166095e363a42f08f69840b746a9f321d500c3a6"
+  integrity sha512-5J0vIGO7y/vo4/EPecUmLiqTl0SOvgNeJ6SINM3oAALHTUSMa8alKWW6SLwju1Au+ZEP5VqR/UZNAIWJJk1x/g==
   dependencies:
     "@sudoo/io" "^1.7.0"
     "@sudoo/magic" "^1.8.0"
@@ -97,20 +97,20 @@
   resolved "https://registry.yarnpkg.com/@sudoo/random/-/random-2.1.1.tgz#acc6a9a5257d1ce6ea0bfe2c87a3696d873492ac"
   integrity sha512-OQE1ea2d7RyTlocWorCcJurMDPUcs6XZiPBOjA/x2Bq1p10YUZNbQZtF+X4OXyjsDH36RxbWvU8P49uRicxq1w==
 
-"@sudoo/triforce-mongoose-dev@^1.4.1":
-  version "1.4.1"
-  resolved "https://registry.yarnpkg.com/@sudoo/triforce-mongoose-dev/-/triforce-mongoose-dev-1.4.1.tgz#b0c8d4c726999058bc18886fb2ad633cfbb125d9"
-  integrity sha512-IA6Y2e3WbhFxVO9yxmvoDLsVBaQB7KmWDqg5fq6IJsvPlT3j40N90HtBY+U/pP9B5h6SSQpJ8hS0vdwcNcjTkg==
+"@sudoo/triforce-mongoose-dev@^1.4.2":
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/@sudoo/triforce-mongoose-dev/-/triforce-mongoose-dev-1.4.2.tgz#532b224f8ce7d600240198ef519b40e541b5d200"
+  integrity sha512-CSryDYpvpUqjaoyromAoq5jUVVXZ5Xco7XvZjaeVLz3klaIVMy5WhRwQbIS7a/wBL3E45EifDE4AbPHS+2rSyQ==
   dependencies:
-    "@types/mongodb" "3.5.4"
-    "@types/mongoose" "5.7.8"
+    "@types/mongodb" "3.5.18"
+    "@types/mongoose" "5.7.21"
 
-"@sudoo/triforce@^2.4.0":
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/@sudoo/triforce/-/triforce-2.4.0.tgz#a7e7f96eaef6ecb4e723d34b337a1fe68640313c"
-  integrity sha512-6gWUlvXnm83G2P3ywWHIo24HJdgcQtHVn4iy38eSFU72/H9opuj5+DbT3dHpY4P4ePT4cMn5cOSD3aK7hILqOA==
+"@sudoo/triforce@^2.4.1":
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/@sudoo/triforce/-/triforce-2.4.1.tgz#3a93096e03440e3cbf8369a8f1d7a7d3c338900f"
+  integrity sha512-sMpjU+bPrCBTg2l8shQK7l7ZhlHS+ZXEkFJjRkBNOknwhw4NXtxHAvUqtpeEi0/xBum3Aul+Bj1EgeNMosfZ+g==
   dependencies:
-    "@sudoo/tslint-config" "1.6.1"
+    "@sudoo/tslint-config" "1.6.2"
     "@types/chai" "4.2.11"
     "@types/chance" "1.1.0"
     "@types/mocha" "5.2.7"
@@ -122,10 +122,10 @@
     tslint "5.20.1"
     typescript "3.9.2"
 
-"@sudoo/tslint-config@1.6.1":
-  version "1.6.1"
-  resolved "https://registry.yarnpkg.com/@sudoo/tslint-config/-/tslint-config-1.6.1.tgz#4bca6141cc596f79c64f014832d58a65874b8ade"
-  integrity sha512-qrKPhIscCPioJoi/EnFPATTpjXDU5l7kCcJCfbx/lf8BGvZdUY/XshEuTtsgzRWrMtEH39R4aXsfpsKKM6aZOw==
+"@sudoo/tslint-config@1.6.2":
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/@sudoo/tslint-config/-/tslint-config-1.6.2.tgz#465cf609a35283a6cc602b7741bbcecd75d6ef28"
+  integrity sha512-ndrpc3qcvwsNS1lIiPzjxMVxKm0dBdfMC227NYVMOyCwDg1i2/bOJMGIbd+xdgKGcgS1wUcPEQI7WE7gs3S5RA==
 
 "@sudoo/verify@^1.10.0":
   version "1.10.0"
@@ -201,18 +201,18 @@
     "@types/bson" "*"
     "@types/node" "*"
 
-"@types/mongodb@3.5.4":
-  version "3.5.4"
-  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.5.4.tgz#3c54abf6340fd2fe7c83fb8c3f1848497db8e55d"
-  integrity sha512-1Q781+rC+hYB34Ped9dRLOWsw1yTNwqphqkRyJR/yFuoWoZ3664s6RxilVSkqEm3lwFmpTYCXtGudxSpHHGDIQ==
+"@types/mongodb@3.5.18":
+  version "3.5.18"
+  resolved "https://registry.yarnpkg.com/@types/mongodb/-/mongodb-3.5.18.tgz#79b1b8119e035980a4b4412239e0d05b367ec647"
+  integrity sha512-fEmnRmwXt4pEFhqWB/ZlyNaDhLfQv5GALaZAlH9Pb0kEttvsCr66umJ9pfBEEP3ks1hjlwAuMtqk/+DyZDLAXQ==
   dependencies:
     "@types/bson" "*"
     "@types/node" "*"
 
-"@types/mongoose@5.7.8":
-  version "5.7.8"
-  resolved "https://registry.yarnpkg.com/@types/mongoose/-/mongoose-5.7.8.tgz#684e168d605d61be28fe1f1932f0b8b0e17115eb"
-  integrity sha512-nLyVONnGou1DfNwyP70FUVG+teusG8Whlwbke5BZrZ03iG6Iyu5gowzfuKpN7pu8BW/SOcF+Gcpny08FJdGuWw==
+"@types/mongoose@5.7.21":
+  version "5.7.21"
+  resolved "https://registry.yarnpkg.com/@types/mongoose/-/mongoose-5.7.21.tgz#a3f0b6875f85c2afae6a5f0f1a7991732329e7e8"
+  integrity sha512-KPJ4zVHWZK5vKlnJj2YDDCTmesYkW9iGB95ATfFYcdvx394Xuyh9/Cq0NSJnJ8J8PFVlhx9iBQ+Q425tEuEJvA==
   dependencies:
     "@types/mongodb" "*"
     "@types/node" "*"
@@ -814,10 +814,10 @@ mongoose-legacy-pluralize@1.0.2:
   resolved "https://registry.yarnpkg.com/mongoose-legacy-pluralize/-/mongoose-legacy-pluralize-1.0.2.tgz#3ba9f91fa507b5186d399fb40854bff18fb563e4"
   integrity sha512-Yo/7qQU4/EyIS8YDFSeenIvXxZN+ld7YdV9LqFVQJzTLye8unujAWPZ4NWKfFA+RNjh+wvTWKY9Z3E5XM6ZZiQ==
 
-mongoose@^5.9.13:
-  version "5.9.13"
-  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.9.13.tgz#fa4af761a0b1d10471daa23aafcc775b04b6db42"
-  integrity sha512-MsFdJAaCTVbDA3gYskUEpUN1kThL7sp4zh8N9rGt0+9vYMn28q92NLK90vGssM9qjOGWp8HqLeT1fBgfMZDnKA==
+mongoose@^5.9.15:
+  version "5.9.16"
+  resolved "https://registry.yarnpkg.com/mongoose/-/mongoose-5.9.16.tgz#6aa688a6b7b444d10f60ac539b92556cae20475e"
+  integrity sha512-b4HNndgh+dacoLE/2SBF3iBBofeaKL+aGVZH7jnPRc2RXRCplX4sfH5sgoz03ryCSXJ+RQNIfqKAADt/ZBzPDA==
   dependencies:
     bson "^1.1.4"
     kareem "2.3.1"
