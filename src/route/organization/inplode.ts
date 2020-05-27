@@ -7,6 +7,7 @@
 import { AccountController, COMMON_NAME_VALIDATE_RESPONSE, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountModel, IGroupModel, INamespaceModel, IOrganizationModel, isGroupModelInternalUserGroup, NamespaceController, OrganizationController, PASSWORD_VALIDATE_RESPONSE, PHONE_VALIDATE_RESPONSE, TagController, USERNAME_VALIDATE_RESPONSE, validateCommonName, validateEmail, validateNamespace, validatePassword, validatePhone, validateUsername } from "@brontosaurus/db";
 import { Basics } from "@brontosaurus/definition";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
+import { SudooExpressResponseAgent } from "@sudoo/express/agent";
 import { Safe, SafeExtract } from "@sudoo/extract";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
 import { ObjectID } from "bson";
@@ -157,31 +158,15 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
                 }
             }
 
-            const tempPassword: string = createRandomTempPassword();
-
-            const account: IAccountModel = req.body.ownerPassword ?
-                AccountController.createUnsavedAccount(
-                    username,
-                    req.body.ownerPassword,
-                    namespaceInstance._id,
-                    req.body.ownerDisplayName,
-                    req.body.ownerEmail,
-                    req.body.ownerPhone,
-                    undefined,
-                    [],
-                    infos,
-                )
-                : AccountController.createOnLimboUnsavedAccount(
-                    username,
-                    tempPassword,
-                    namespaceInstance._id,
-                    req.body.ownerDisplayName,
-                    req.body.ownerEmail,
-                    req.body.ownerPhone,
-                    undefined,
-                    [],
-                    infos,
-                );
+            const account: IAccountModel = this._createAccount({
+                username,
+                namespace: namespaceInstance,
+                displayName: req.body.ownerDisplayName,
+                ownerEmail: req.body.ownerEmail,
+                ownerPhone: req.body.ownerPhone,
+                ownerPassword: req.body.ownerPassword,
+                infos,
+            }, res.agent);
 
             const organization: IOrganizationModel = OrganizationController.createUnsavedOrganization(organizationName, account._id);
 
@@ -196,12 +181,50 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
             res.agent.add('account', account.username);
             res.agent.add('namespace', namespaceInstance.namespace);
             res.agent.add('organization', organization.name);
-            res.agent.add('tempPassword', tempPassword);
         } catch (err) {
-
             res.agent.fail(HTTP_RESPONSE_CODE.BAD_REQUEST, err);
         } finally {
             next();
         }
+    }
+
+    private _createAccount(config: {
+        readonly username: string;
+        readonly namespace: INamespaceModel;
+        readonly displayName?: string;
+        readonly ownerEmail?: string;
+        readonly ownerPhone?: string;
+        readonly ownerPassword?: string;
+        readonly infos?: Record<string, any>;
+    }, agent: SudooExpressResponseAgent) {
+
+        if (config.ownerPassword) {
+            return AccountController.createUnsavedAccount(
+                config.username,
+                config.ownerPassword,
+                config.namespace._id,
+                config.displayName,
+                config.ownerEmail,
+                config.ownerPhone,
+                undefined,
+                [],
+                config.infos,
+            );
+        }
+
+        const tempPassword: string = createRandomTempPassword();
+        agent.add('tempPassword', tempPassword);
+
+        return AccountController.createOnLimboUnsavedAccount(
+            config.username,
+            tempPassword,
+            config.namespace._id,
+            config.displayName,
+            config.ownerEmail,
+            config.ownerPhone,
+            undefined,
+            [],
+            config.infos,
+        );
     }
 }
