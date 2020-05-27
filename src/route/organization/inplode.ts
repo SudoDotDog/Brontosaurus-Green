@@ -4,7 +4,7 @@
  * @description Inplode Organization
  */
 
-import { AccountController, COMMON_NAME_VALIDATE_RESPONSE, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountModel, IGroupModel, INamespaceModel, IOrganizationModel, isGroupModelInternalUserGroup, NamespaceController, OrganizationController, PHONE_VALIDATE_RESPONSE, TagController, USERNAME_VALIDATE_RESPONSE, validateCommonName, validateEmail, validateNamespace, validatePhone, validateUsername } from "@brontosaurus/db";
+import { AccountController, COMMON_NAME_VALIDATE_RESPONSE, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountModel, IGroupModel, INamespaceModel, IOrganizationModel, isGroupModelInternalUserGroup, NamespaceController, OrganizationController, PASSWORD_VALIDATE_RESPONSE, PHONE_VALIDATE_RESPONSE, TagController, USERNAME_VALIDATE_RESPONSE, validateCommonName, validateEmail, validateNamespace, validatePassword, validatePhone, validateUsername } from "@brontosaurus/db";
 import { Basics } from "@brontosaurus/definition";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { Safe, SafeExtract } from "@sudoo/extract";
@@ -30,6 +30,8 @@ export type InplodeOrganizationRouteBody = {
     readonly ownerDisplayName?: string;
     readonly ownerEmail?: string;
     readonly ownerPhone?: string;
+
+    readonly ownerPassword?: string;
 };
 
 export class InplodeOrganizationRoute extends BrontosaurusRoute {
@@ -114,6 +116,14 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
                 }
             }
 
+            if (req.body.ownerPassword) {
+
+                const passwordValidationResult: PASSWORD_VALIDATE_RESPONSE = validatePassword(req.body.ownerPassword);
+                if (passwordValidationResult !== PASSWORD_VALIDATE_RESPONSE.OK) {
+                    throw panic.code(ERROR_CODE.INVALID_PASSWORD, passwordValidationResult);
+                }
+            }
+
             const infoLine: Record<string, Basics> | string = body.direct('ownerInfos');
             const infos: Record<string, Basics> = jsonifyBasicRecords(
                 infoLine,
@@ -149,17 +159,30 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
 
             const tempPassword: string = createRandomTempPassword();
 
-            const account: IAccountModel = AccountController.createOnLimboUnsavedAccount(
-                username,
-                tempPassword,
-                namespaceInstance._id,
-                req.body.ownerDisplayName,
-                req.body.ownerEmail,
-                req.body.ownerPhone,
-                undefined,
-                [],
-                infos,
-            );
+            const account: IAccountModel = req.body.ownerPassword ?
+                AccountController.createUnsavedAccount(
+                    username,
+                    req.body.ownerPassword,
+                    namespaceInstance._id,
+                    req.body.ownerDisplayName,
+                    req.body.ownerEmail,
+                    req.body.ownerPhone,
+                    undefined,
+                    [],
+                    infos,
+                )
+                : AccountController.createOnLimboUnsavedAccount(
+                    username,
+                    tempPassword,
+                    namespaceInstance._id,
+                    req.body.ownerDisplayName,
+                    req.body.ownerEmail,
+                    req.body.ownerPhone,
+                    undefined,
+                    [],
+                    infos,
+                );
+
             const organization: IOrganizationModel = OrganizationController.createUnsavedOrganization(organizationName, account._id);
 
             organization.tags = parsedOrganizationTagIds;
