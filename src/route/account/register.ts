@@ -84,7 +84,7 @@ export class RegisterAccountRoute extends BrontosaurusRoute {
 
     private async _registerAccountHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
 
-        const body: RegisterAccountRouteBody = req.body as any;
+        const body: RegisterAccountRouteBody = req.body;
 
         try {
 

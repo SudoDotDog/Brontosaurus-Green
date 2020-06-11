@@ -50,7 +50,7 @@ export class QueryAccountRoute extends BrontosaurusRoute {
 
     private async _queryAccountHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
 
-        const body: QueryAccountRouteBody = req.body as any;
+        const body: QueryAccountRouteBody = req.body;
 
         try {
 

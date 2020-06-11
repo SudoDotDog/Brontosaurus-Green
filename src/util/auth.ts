@@ -40,7 +40,7 @@ export const getPrincipleFromToken = (tokenString: string): SafeToken => {
 
 export const parseBearerAuthorization = (auth: string | undefined): string | null => {
 
-    // tslint:disable-next-line: no-magic-numbers
+    // eslint-disable-next-line @typescript-eslint/no-magic-numbers
     if (!auth || auth.length <= 7) {
         return null;
     }
@@ -61,7 +61,7 @@ export const parseBearerAuthorization = (auth: string | undefined): string | nul
 };
 
 
-// tslint:disable-next-line: variable-name
+// eslint-disable-next-line camelcase
 export const Throwable_GetBody = (token: string): IBrontosaurusBody => {
 
     const body: IBrontosaurusBody | null = Brontosaurus.decoupleBody(token);
@@ -75,7 +75,7 @@ export const Throwable_GetBody = (token: string): IBrontosaurusBody => {
     return body;
 };
 
-// tslint:disable-next-line: variable-name
+// eslint-disable-next-line camelcase
 export const Throwable_MapGroups = async (groups: ObjectID[]): Promise<string[]> => {
 
     const createError: ErrorCreationFunction = Connor.getErrorCreator(MODULE_NAME);
@@ -96,7 +96,7 @@ export const Throwable_MapGroups = async (groups: ObjectID[]): Promise<string[]>
     return result;
 };
 
-// tslint:disable-next-line: variable-name
+// eslint-disable-next-line camelcase
 export const Throwable_GetGroupsByNames = async (groups: string[]): Promise<IGroupModel[]> => {
 
     const createError: ErrorCreationFunction = Connor.getErrorCreator(MODULE_NAME);
@@ -134,9 +134,9 @@ export const compareGroups = (userGroups: string[], targetGroups: any): boolean 
     return true;
 };
 
-// tslint:disable-next-line: no-magic-numbers
+// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 export const createSalt = (): string => Math.random().toString(36).substring(2, 9);
-// tslint:disable-next-line: no-magic-numbers
+// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 export const createGreen = (): string => Math.random().toString(36).substring(2, 9);
 
 export const garblePassword = (password: string, salt: string): string => {

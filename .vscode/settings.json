@@ -4,6 +4,7 @@
         "Encryptable",
         "WMXPY",
         "bson",
+        "camelcase",
         "codecov",
         "connor",
         "dbpath",

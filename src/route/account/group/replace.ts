@@ -46,7 +46,7 @@ export class ReplaceAccountGroupRoute extends BrontosaurusRoute {
 
     private async _replaceAccountGroupHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
 
-        const body: ReplaceAccountGroupBody = req.body as any;
+        const body: ReplaceAccountGroupBody = req.body;
 
         try {
 

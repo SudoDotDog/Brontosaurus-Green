@@ -5,6 +5,7 @@ dev := typescript/tsconfig.dev.json
 # NPX functions
 tsc := node_modules/.bin/tsc
 mocha := node_modules/.bin/mocha
+eslint := node_modules/.bin/eslint
 
 main: run
 

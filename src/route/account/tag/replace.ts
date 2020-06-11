@@ -46,7 +46,7 @@ export class ReplaceAccountTagRoute extends BrontosaurusRoute {
 
     private async _replaceAccountTagHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
 
-        const body: ReplaceAccountTagBody = req.body as any;
+        const body: ReplaceAccountTagBody = req.body;
 
         try {
 
