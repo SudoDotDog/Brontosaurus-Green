@@ -8,7 +8,8 @@ import { AccountController, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountMo
 import { Basics } from "@brontosaurus/definition";
 import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
-import { fillStringedResult, Pattern, StringedResult } from "@sudoo/verify";
+import { Pattern } from "@sudoo/pattern";
+import { fillStringedResult, StringedResult } from "@sudoo/verify";
 import { ObjectID } from "bson";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";

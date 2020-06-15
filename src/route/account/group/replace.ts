@@ -7,7 +7,8 @@
 import { GroupController, IAccountModel, IGroupModel, MatchController } from "@brontosaurus/db";
 import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
-import { fillStringedResult, Pattern, StringedResult } from "@sudoo/verify";
+import { Pattern } from "@sudoo/pattern";
+import { fillStringedResult, StringedResult } from "@sudoo/verify";
 import { createGreenAuthHandler } from "../../../handlers/handlers";
 import { autoHook } from "../../../handlers/hook";
 import { ERROR_CODE, panic } from "../../../util/error";

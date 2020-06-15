@@ -7,7 +7,8 @@
 import { AccountController, GroupController, IAccountModel, IGroupModel, INamespaceModel, OrganizationController } from "@brontosaurus/db";
 import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
-import { fillStringedResult, Pattern, StringedResult } from "@sudoo/verify";
+import { Pattern } from "@sudoo/pattern";
+import { fillStringedResult, StringedResult } from "@sudoo/verify";
 import { ObjectID } from "bson";
 import { GroupAgent } from "../../agent/group";
 import { NamespaceAgent } from "../../agent/namespace";
