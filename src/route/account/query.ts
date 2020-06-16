@@ -4,7 +4,7 @@
  * @description Query
  */
 
-import { AccountController, GroupController, IAccountModel, IGroupModel, INamespaceModel, OrganizationController, TagController } from "@brontosaurus/db";
+import { AccountController, GroupController, IAccountModel, IGroupModel, INamespaceModel, OrganizationController, TagController, IOrganizationModel, ITagModel } from "@brontosaurus/db";
 import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
 import { Pattern } from "@sudoo/pattern";
@@ -16,6 +16,8 @@ import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
+import { OrganizationAgent } from "../../agent/organization";
+import { TagAgent } from "../../agent/tag";
 
 const bodyPattern: Pattern = {
     type: 'map',
@@ -29,9 +31,19 @@ const bodyPattern: Pattern = {
             type: 'list',
             element: { type: 'string' },
         },
+        groupsMode: {
+            type: 'string',
+            enum: ['and', 'or'],
+            optional: true,
+        },
         tags: {
             type: 'list',
             element: { type: 'string' },
+        },
+        tagsMode: {
+            type: 'string',
+            enum: ['and', 'or'],
+            optional: true,
         },
     },
 };
@@ -40,7 +52,9 @@ export type QueryAccountRouteBody = {
 
     readonly organizations: string[];
     readonly groups: string[];
+    readonly groupsMode?: 'and' | 'or';
     readonly tags: string[];
+    readonly tagsMode?: 'and' | 'or';
 };
 
 export class QueryAccountRoute extends BrontosaurusRoute {
@@ -72,19 +86,36 @@ export class QueryAccountRoute extends BrontosaurusRoute {
 
             let query: Record<string, any> = {};
 
-            query = await this._attachGroup(body.groups, query);
-            query = await this._attachOrganization(body.organizations, query);
-            query = await this._attachTag(body.tags, query);
+            query = await this._attachOrganization(
+                body.organizations,
+                query,
+            );
+            query = await this._attachGroup(
+                body.groups,
+                body.groupsMode ?? 'or',
+                query,
+            );
+            query = await this._attachTag(
+                body.tags,
+                body.tagsMode ?? 'or',
+                query,
+            );
 
             const accounts: IAccountModel[] = await AccountController.getAccountsByQuery(query);
 
             const infos = [];
             const groupAgent: GroupAgent = GroupAgent.create();
+            const tagAgent: TagAgent = TagAgent.create();
+            const organizationAgent: OrganizationAgent = OrganizationAgent.create();
             const namespaceAgent: NamespaceAgent = NamespaceAgent.create();
 
             for (const account of accounts) {
 
                 const groups: IGroupModel[] = await groupAgent.getGroups(account.groups);
+                const tags: ITagModel[] = await tagAgent.getTags(account.tags);
+                const organization: IOrganizationModel | null = account.organization ?
+                    await organizationAgent.getOrganization(account.organization)
+                    : null;
                 const namespace: INamespaceModel | null = await namespaceAgent.getNamespace(account.namespace);
 
                 if (!namespace) {
@@ -92,11 +123,14 @@ export class QueryAccountRoute extends BrontosaurusRoute {
                 }
 
                 const groupTexts: string[] = groups.map((each: IGroupModel) => each.name);
+                const tagTexts: string[] = tags.map((each: ITagModel) => each.name);
 
                 infos.push({
                     username: account.username,
                     namespace: namespace.namespace,
                     groups: groupTexts,
+                    tags: tagTexts,
+                    organization: organization ? organization.name : null,
                     displayName: account.displayName,
                 });
             }
@@ -110,21 +144,10 @@ export class QueryAccountRoute extends BrontosaurusRoute {
         }
     }
 
-    private async _attachGroup(groupNames: string[], query: Record<string, any>): Promise<Record<string, any>> {
-
-        if (groupNames.length === 0) {
-            return query;
-        }
-        const groups: ObjectID[] = await GroupController.getGroupIdsByNames(groupNames);
-        return {
-            ...query,
-            groups: {
-                $in: groups,
-            },
-        };
-    }
-
-    private async _attachOrganization(organizationNames: string[], query: Record<string, any>): Promise<Record<string, any>> {
+    private async _attachOrganization(
+        organizationNames: string[],
+        query: Record<string, any>,
+    ): Promise<Record<string, any>> {
 
         if (organizationNames.length === 0) {
             return query;
@@ -138,12 +161,54 @@ export class QueryAccountRoute extends BrontosaurusRoute {
         };
     }
 
-    private async _attachTag(tagNames: string[], query: Record<string, any>): Promise<Record<string, any>> {
+    private async _attachGroup(
+        groupNames: string[],
+        mode: 'and' | 'or',
+        query: Record<string, any>,
+    ): Promise<Record<string, any>> {
+
+        if (groupNames.length === 0) {
+            return query;
+        }
+        const groups: ObjectID[] = await GroupController.getGroupIdsByNames(groupNames);
+
+        if (mode === 'and') {
+            return {
+                ...query,
+                groups: {
+                    $all: groups,
+                },
+            };
+        }
+
+        return {
+            ...query,
+            groups: {
+                $in: groups,
+            },
+        };
+    }
+
+    private async _attachTag(
+        tagNames: string[],
+        mode: 'and' | 'or',
+        query: Record<string, any>,
+    ): Promise<Record<string, any>> {
 
         if (tagNames.length === 0) {
             return query;
         }
         const tags: ObjectID[] = await TagController.getTagIdsByNames(tagNames);
+
+        if (mode === 'and') {
+            return {
+                ...query,
+                tags: {
+                    $all: tags,
+                },
+            };
+        }
+
         return {
             ...query,
             tags: {
