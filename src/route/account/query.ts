@@ -4,7 +4,7 @@
  * @description Query
  */
 
-import { AccountController, GroupController, IAccountModel, IGroupModel, INamespaceModel, OrganizationController } from "@brontosaurus/db";
+import { AccountController, GroupController, IAccountModel, IGroupModel, INamespaceModel, OrganizationController, TagController } from "@brontosaurus/db";
 import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
 import { Pattern } from "@sudoo/pattern";
@@ -29,6 +29,10 @@ const bodyPattern: Pattern = {
             type: 'list',
             element: { type: 'string' },
         },
+        tags: {
+            type: 'list',
+            element: { type: 'string' },
+        },
     },
 };
 
@@ -36,6 +40,7 @@ export type QueryAccountRouteBody = {
 
     readonly organizations: string[];
     readonly groups: string[];
+    readonly tags: string[];
 };
 
 export class QueryAccountRoute extends BrontosaurusRoute {
@@ -69,6 +74,7 @@ export class QueryAccountRoute extends BrontosaurusRoute {
 
             query = await this._attachGroup(body.groups, query);
             query = await this._attachOrganization(body.organizations, query);
+            query = await this._attachTag(body.tags, query);
 
             const accounts: IAccountModel[] = await AccountController.getAccountsByQuery(query);
 
@@ -128,6 +134,20 @@ export class QueryAccountRoute extends BrontosaurusRoute {
             ...query,
             organization: {
                 $in: organizations,
+            },
+        };
+    }
+
+    private async _attachTag(tagNames: string[], query: Record<string, any>): Promise<Record<string, any>> {
+
+        if (tagNames.length === 0) {
+            return query;
+        }
+        const tags: ObjectID[] = await TagController.getTagIdsByNames(tagNames);
+        return {
+            ...query,
+            tags: {
+                $in: tags,
             },
         };
     }
