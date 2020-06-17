@@ -4,10 +4,11 @@
  * @description Detail
  */
 
-import { AccountNamespaceMatch, IAccountModel, INamespaceModel, MatchController } from "@brontosaurus/db";
+import { AccountNamespaceMatch, GroupController, IAccountModel, IGroupModel, INamespaceModel, IOrganizationModel, ITagModel, MatchController, OrganizationController, TagController } from "@brontosaurus/db";
 import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { Safe, SafeExtract } from "@sudoo/extract";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
+import { ObjectID } from "bson";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
@@ -51,11 +52,21 @@ export class AccountDetailRoute extends BrontosaurusRoute {
             const account: IAccountModel = match.account;
             const namespaceInstance: INamespaceModel = match.namespace;
 
+            const groups: IGroupModel[] = await GroupController.getGroupsByIds(account.groups);
+            const tags: ITagModel[] = await TagController.getTagsByIds(account.tags);
+            const organization: IOrganizationModel | null = await this._getOrganization(account.organization);
+
+            const groupTexts: string[] = groups.map((each: IGroupModel) => each.name);
+            const tagTexts: string[] = tags.map((each: ITagModel) => each.name);
+
             res.agent.add('active', account.active);
             res.agent.add('username', account.username);
             res.agent.add('namespace', namespaceInstance.namespace);
             res.agent.add('limbo', Boolean(account.limbo));
             res.agent.add('twoFA', Boolean(account.twoFA));
+            res.agent.add('groups', groupTexts);
+            res.agent.add('tags', tagTexts);
+            res.agent.add('organization', organization ? organization.name : null);
             res.agent.addIfExist('email', account.email);
             res.agent.addIfExist('phone', account.phone);
             res.agent.addIfExist('displayName', account.displayName);
@@ -65,5 +76,15 @@ export class AccountDetailRoute extends BrontosaurusRoute {
         } finally {
             next();
         }
+    }
+
+    private async _getOrganization(organization?: ObjectID): Promise<IOrganizationModel | null> {
+
+        if (!organization) {
+            return null;
+        }
+
+        const instance: IOrganizationModel | null = await OrganizationController.getOrganizationById(organization);
+        return instance;
     }
 }
