@@ -130,7 +130,9 @@ export class QueryAccountRoute extends BrontosaurusRoute {
                     namespace: namespace.namespace,
                     groups: groupTexts,
                     tags: tagTexts,
-                    organization: organization ? organization.name : null,
+                    organization: organization
+                        ? organization.name
+                        : undefined,
                     displayName: account.displayName,
                 });
             }
