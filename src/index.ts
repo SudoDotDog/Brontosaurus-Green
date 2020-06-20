@@ -10,8 +10,9 @@ import { LOG_LEVEL, SudooLog } from '@sudoo/log';
 import * as Path from 'path';
 import { RouteList } from './route/import';
 import { BrontosaurusConfig, isDevelopment, readConfigEnvironment } from './util/conf';
+import { getVersion } from './util/version';
 
-const setting: SudooExpressApplication = SudooExpressApplication.create('Brontosaurus-Green', '1');
+const setting: SudooExpressApplication = SudooExpressApplication.create('Brontosaurus-Green', getVersion());
 
 setting.useBodyParser();
 
