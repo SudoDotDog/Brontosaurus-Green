@@ -120,10 +120,10 @@
   resolved "https://registry.yarnpkg.com/@sudoo/mock/-/mock-1.3.0.tgz#84e8c26724b74045539d26a2c1673ab1c08de6c7"
   integrity sha512-ufWn6iRX3J5Q/3kyGUaku5BAe73QxofTosmdIyn397OtUI0NFQ/luGBFlG3af7Y4oR1f6LEOVI8n7fIYiw8Neg==
 
-"@sudoo/pattern@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@sudoo/pattern/-/pattern-1.0.0.tgz#f32cfc790dda0ebd3634d5ae5fa6e26ca7c4b374"
-  integrity sha512-FAWani/fuZz6lkmXBwI/qbXVA26+CKA9WkgkBhQf/yV+f9LYZw1V1OWdPNONDctRl0RK1aBqeABV8PcMs0w5qw==
+"@sudoo/pattern@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@sudoo/pattern/-/pattern-1.1.0.tgz#cb89371e6fca209a39c37d7eefcca2c88215f2f8"
+  integrity sha512-5jUV0BN8rFLbhx1ngwdcMOSJp4eanPIzDj+5MbWLTFglj/MvLXO5gYBYEF8w1aGnCb152T3aUFn2XXRYuPPhTA==
 
 "@sudoo/random@^2.1.1":
   version "2.1.1"
@@ -138,10 +138,10 @@
     "@types/mongodb" "3.5.18"
     "@types/mongoose" "5.7.21"
 
-"@sudoo/triforce@^2.7.2":
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/@sudoo/triforce/-/triforce-2.7.2.tgz#a1a47718fdfa6ab0c28923d2b5c893d9caee1e81"
-  integrity sha512-Zlm8q48/DhFT2vHwuT9NhtxxgfHp5qkz8Baqqjav/JnXo9SPZJ9QMv4PnDLzjJ7RdrFENKzm+YlkmWcqoEFHMg==
+"@sudoo/triforce@^2.7.4":
+  version "2.7.4"
+  resolved "https://registry.yarnpkg.com/@sudoo/triforce/-/triforce-2.7.4.tgz#89aeb5e0771a714de22f1b36c8d00ce0f4877d24"
+  integrity sha512-unum5phmizYJ4hJy/o2ToKYl5I1BHND2sFhX9A0FMBuk/QK2wuYrPJhOcdblFj1dC7EJwedtLli4DN/Nd/ePCw==
   dependencies:
     "@sudoo/eslint-config" "1.2.0"
     "@sudoo/eslint-config-react" "1.2.0"
@@ -151,20 +151,20 @@
     "@types/chance" "1.1.0"
     "@types/mocha" "7.0.2"
     "@types/node" "14.0.13"
-    "@typescript-eslint/eslint-plugin" "3.2.0"
-    "@typescript-eslint/parser" "^3.2.0"
+    "@typescript-eslint/eslint-plugin" "3.3.0"
+    "@typescript-eslint/parser" "3.3.0"
     chai "4.2.0"
     chance "1.1.6"
-    eslint "^7.2.0"
+    eslint "^7.3.0"
     eslint-plugin-react "7.20.0"
     mocha "8.0.1"
     ts-node "8.10.2"
     typescript "3.9.5"
 
-"@sudoo/verify@^1.13.0":
-  version "1.13.0"
-  resolved "https://registry.yarnpkg.com/@sudoo/verify/-/verify-1.13.0.tgz#26953041d7211dcc008a6b5030bf71a20288bc94"
-  integrity sha512-5HgSXQSMNthyvkq9EjnnFkjPBazlH0f+yHxDCukWOPZHg2nLeyi0UX4PC1FfU0BEqDHQKV9A605gCfbZ1n2N0g==
+"@sudoo/verify@^1.14.0":
+  version "1.14.0"
+  resolved "https://registry.yarnpkg.com/@sudoo/verify/-/verify-1.14.0.tgz#db3341ccb283019289634c11c2ed561d280aac5c"
+  integrity sha512-83zurGVZk7WWqw58M580FX6NGg0U+OGE58KCKsu69Mp0Iga1MFknTT6p9Zs1L6L4cj/V5lk3cifyL0TJibydYg==
 
 "@types/body-parser@*":
   version "1.19.0"
@@ -289,26 +289,16 @@
     "@types/express-serve-static-core" "*"
     "@types/mime" "*"
 
-"@typescript-eslint/eslint-plugin@3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-3.2.0.tgz#7fb997f391af32ae6ca1dbe56bcefe4dd30bda14"
-  integrity sha512-t9RTk/GyYilIXt6BmZurhBzuMT9kLKw3fQoJtK9ayv0tXTlznXEAnx07sCLXdkN3/tZDep1s1CEV95CWuARYWA==
+"@typescript-eslint/eslint-plugin@3.3.0":
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-3.3.0.tgz#89518e5c5209a349bde161c3489b0ec187ae5d37"
+  integrity sha512-Ybx/wU75Tazz6nU2d7nN6ll0B98odoiYLXwcuwS5WSttGzK46t0n7TPRQ4ozwcTv82UY6TQoIvI+sJfTzqK9dQ==
   dependencies:
-    "@typescript-eslint/experimental-utils" "3.2.0"
+    "@typescript-eslint/experimental-utils" "3.3.0"
     functional-red-black-tree "^1.0.1"
     regexpp "^3.0.0"
     semver "^7.3.2"
     tsutils "^3.17.1"
-
-"@typescript-eslint/experimental-utils@3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/experimental-utils/-/experimental-utils-3.2.0.tgz#4dab8fc9f44f059ec073470a81bb4d7d7d51e6c5"
-  integrity sha512-UbJBsk+xO9dIFKtj16+m42EvUvsjZbbgQ2O5xSTSfVT1Z3yGkL90DVu0Hd3029FZ5/uBgl+F3Vo8FAcEcqc6aQ==
-  dependencies:
-    "@types/json-schema" "^7.0.3"
-    "@typescript-eslint/typescript-estree" "3.2.0"
-    eslint-scope "^5.0.0"
-    eslint-utils "^2.0.0"
 
 "@typescript-eslint/experimental-utils@3.3.0":
   version "3.3.0"
@@ -320,7 +310,7 @@
     eslint-scope "^5.0.0"
     eslint-utils "^2.0.0"
 
-"@typescript-eslint/parser@^3.2.0":
+"@typescript-eslint/parser@3.3.0":
   version "3.3.0"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/parser/-/parser-3.3.0.tgz#fcae40012ded822aa8b2739a1a03a4e3c5bbb7bb"
   integrity sha512-a7S0Sqn/+RpOOWTcaLw6RD4obsharzxmgMfdK24l364VxuBODXjuJM7ImCkSXEN7oz52aiZbXSbc76+2EsE91w==
@@ -329,19 +319,6 @@
     "@typescript-eslint/experimental-utils" "3.3.0"
     "@typescript-eslint/typescript-estree" "3.3.0"
     eslint-visitor-keys "^1.1.0"
-
-"@typescript-eslint/typescript-estree@3.2.0":
-  version "3.2.0"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/typescript-estree/-/typescript-estree-3.2.0.tgz#c735f1ca6b4d3cd671f30de8c9bde30843e7ead8"
-  integrity sha512-uh+Y2QO7dxNrdLw7mVnjUqkwO/InxEqwN0wF+Za6eo3coxls9aH9kQ/5rSvW2GcNanebRTmsT5w1/92lAOb1bA==
-  dependencies:
-    debug "^4.1.1"
-    eslint-visitor-keys "^1.1.0"
-    glob "^7.1.6"
-    is-glob "^4.0.1"
-    lodash "^4.17.15"
-    semver "^7.3.2"
-    tsutils "^3.17.1"
 
 "@typescript-eslint/typescript-estree@3.3.0":
   version "3.3.0"
@@ -912,7 +889,7 @@ eslint-visitor-keys@^1.1.0, eslint-visitor-keys@^1.2.0:
   resolved "https://registry.yarnpkg.com/eslint-visitor-keys/-/eslint-visitor-keys-1.2.0.tgz#74415ac884874495f78ec2a97349525344c981fa"
   integrity sha512-WFb4ihckKil6hu3Dp798xdzSfddwKKU3+nGniKF6HfeW6OLd2OUDEPP7TcHtB5+QXOKg2s6B2DaMPE1Nn/kxKQ==
 
-eslint@^7.2.0:
+eslint@^7.3.0:
   version "7.3.0"
   resolved "https://registry.yarnpkg.com/eslint/-/eslint-7.3.0.tgz#f9f1fc3dc1227985d0db88769f2bbac7b4b875d7"
   integrity sha512-dJMVXwfU5PT1cj2Nv2VPPrKahKTGdX+5Dh0Q3YuKt+Y2UhdL2YbzsVaBMyG9HC0tBismlv/r1+eZqs6SMIV38Q==
