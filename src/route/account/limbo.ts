@@ -51,7 +51,7 @@ export class LimboAccountRoute extends BrontosaurusRoute {
 
             const tempPassword: string = createRandomTempPassword();
             account.limbo = true;
-            account.setPassword(tempPassword);
+            account.setPassword(tempPassword, 'temp');
             account.resetAttempt();
 
             await account.save();
