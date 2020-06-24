@@ -5,28 +5,22 @@
  */
 
 import { AccountNamespaceMatch, GroupController, IAccountModel, IGroupModel, INamespaceModel, IOrganizationModel, ITagModel, MatchController, OrganizationController, TagController } from "@brontosaurus/db";
-import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
-import { Safe, SafeExtract } from "@sudoo/extract";
+import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
+import { createMapPattern, createStringPattern, Pattern } from "@sudoo/pattern";
+import { fillStringedResult, StringedResult } from "@sudoo/verify";
 import { ObjectID } from "bson";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
-import { Pattern } from "@sudoo/pattern";
 
-const bodyPattern: Pattern = {
-    type: 'map',
+const bodyPattern: Pattern = createMapPattern({
+    username: createStringPattern(),
+    namespace: createStringPattern(),
+}, {
     strict: true,
-    map: {
-        username: { type: 'string' },
-        namespace: { type: 'string' },
-        tags: {
-            type: 'list',
-            element: { type: 'string' },
-        },
-    },
-};
+});
 
 export type AccountDetailRouteBody = {
 
@@ -41,12 +35,13 @@ export class AccountDetailRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
+        autoHook.wrap(createStringedBodyVerifyHandler(bodyPattern), 'Body Verify'),
         autoHook.wrap(this._detailHandler.bind(this), 'Account Detail'),
     ];
 
     private async _detailHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
 
-        const body: SafeExtract<AccountDetailRouteBody> = Safe.extract(req.body as AccountDetailRouteBody, this._error(ERROR_CODE.INSUFFICIENT_INFORMATION));
+        const body: AccountDetailRouteBody = req.body;
 
         try {
 
@@ -54,13 +49,16 @@ export class AccountDetailRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.APPLICATION_GREEN_NOT_VALID);
             }
 
-            const username: string = body.directEnsure('username');
-            const namespace: string = body.directEnsure('namespace');
+            const verify: StringedResult = fillStringedResult(req.stringedBodyVerify);
 
-            const match: AccountNamespaceMatch = await MatchController.getAccountNamespaceMatchByUsernameAndNamespace(username, namespace);
+            if (!verify.succeed) {
+                throw panic.code(ERROR_CODE.REQUEST_DOES_MATCH_PATTERN, verify.invalids[0]);
+            }
+
+            const match: AccountNamespaceMatch = await MatchController.getAccountNamespaceMatchByUsernameAndNamespace(body.username, body.namespace);
 
             if (match.succeed === false) {
-                throw panic.code(ERROR_CODE.ACCOUNT_NOT_FOUND, username);
+                throw panic.code(ERROR_CODE.ACCOUNT_NOT_FOUND, body.username);
             }
 
             const account: IAccountModel = match.account;
