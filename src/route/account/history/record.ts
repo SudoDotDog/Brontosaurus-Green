@@ -7,7 +7,7 @@
 import { AccountActions, ApplicationController, IAccountModel, IApplicationModel, MatchController, validateAccountAction } from "@brontosaurus/db";
 import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
-import { createListPattern, createStrictMapPattern, createStringPattern, Pattern } from "@sudoo/pattern";
+import { createStrictMapPattern, createStringPattern, Pattern } from "@sudoo/pattern";
 import { fillStringedResult, StringedResult } from "@sudoo/verify";
 import { createGreenAuthHandler } from "../../../handlers/handlers";
 import { autoHook } from "../../../handlers/hook";
@@ -17,7 +17,14 @@ import { BrontosaurusRoute } from "../../basic";
 const bodyPattern: Pattern = createStrictMapPattern({
     username: createStringPattern(),
     namespace: createStringPattern(),
-    groups: createListPattern(createStringPattern()),
+
+    type: createStringPattern({
+        enum: ['CREATE', 'RESET_PASSWORD', 'UPDATE_CONTACT', 'UPDATE_GROUP'],
+    }),
+    byUsername: createStringPattern(),
+    byNamespace: createStringPattern(),
+    application: createStringPattern(),
+    content: createStringPattern(),
 });
 
 export type AccountHistoryRecordRouteBody = {
