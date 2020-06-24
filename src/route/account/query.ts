@@ -7,7 +7,7 @@
 import { AccountController, GroupController, IAccountModel, IGroupModel, INamespaceModel, IOrganizationModel, ITagModel, OrganizationController, TagController } from "@brontosaurus/db";
 import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
-import { createListPattern, createMapPattern, createStringPattern, Pattern } from "@sudoo/pattern";
+import { createListPattern, createStrictMapPattern, createStringPattern, Pattern } from "@sudoo/pattern";
 import { fillStringedResult, StringedResult } from "@sudoo/verify";
 import { ObjectID } from "bson";
 import { GroupAgent } from "../../agent/group";
@@ -19,7 +19,7 @@ import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
 
-const bodyPattern: Pattern = createMapPattern({
+const bodyPattern: Pattern = createStrictMapPattern({
     organizations: createListPattern(createStringPattern()),
     groups: createListPattern(createStringPattern()),
     groupsMode: createStringPattern({
@@ -31,8 +31,6 @@ const bodyPattern: Pattern = createMapPattern({
         enum: ['and', 'or'],
         optional: true,
     }),
-}, {
-    strict: true,
 });
 
 export type QueryAccountRouteBody = {

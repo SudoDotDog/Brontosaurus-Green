@@ -7,7 +7,7 @@
 import { IAccountModel, MatchController } from "@brontosaurus/db";
 import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
-import { createMapPattern, createStringPattern, Pattern } from "@sudoo/pattern";
+import { createStrictMapPattern, createStringPattern, Pattern } from "@sudoo/pattern";
 import { fillStringedResult, StringedResult } from "@sudoo/verify";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
@@ -15,11 +15,9 @@ import { createRandomTempPassword } from "../../util/auth";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
 
-const bodyPattern: Pattern = createMapPattern({
+const bodyPattern: Pattern = createStrictMapPattern({
     username: createStringPattern(),
     namespace: createStringPattern(),
-}, {
-    strict: true,
 });
 
 export type LimboAccountRouteBody = {
