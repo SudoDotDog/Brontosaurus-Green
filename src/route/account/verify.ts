@@ -5,13 +5,20 @@
  */
 
 import { AccountNamespaceMatch, IAccountModel, INamespaceModel, MatchController } from "@brontosaurus/db";
-import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
-import { Safe, SafeExtract } from "@sudoo/extract";
+import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
+import { createStrictMapPattern, createStringPattern, Pattern } from "@sudoo/pattern";
+import { fillStringedResult, StringedResult } from "@sudoo/verify";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
+
+const bodyPattern: Pattern = createStrictMapPattern({
+
+    username: createStringPattern(),
+    namespace: createStringPattern(),
+});
 
 export type VerifyAccountRouteBody = {
 
@@ -26,12 +33,13 @@ export class VerifyAccountRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
+        autoHook.wrap(createStringedBodyVerifyHandler(bodyPattern), 'Body Verify'),
         autoHook.wrap(this._verifyAccountHandler.bind(this), 'Verify Account'),
     ];
 
     private async _verifyAccountHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
 
-        const body: SafeExtract<VerifyAccountRouteBody> = Safe.extract(req.body as VerifyAccountRouteBody, this._error(ERROR_CODE.INSUFFICIENT_INFORMATION));
+        const body: VerifyAccountRouteBody = req.body;
 
         try {
 
@@ -39,10 +47,13 @@ export class VerifyAccountRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.APPLICATION_GREEN_NOT_VALID);
             }
 
-            const username: string = body.directEnsure('username');
-            const namespace: string = body.directEnsure('namespace');
+            const verify: StringedResult = fillStringedResult(req.stringedBodyVerify);
 
-            const matchResult: AccountNamespaceMatch = await MatchController.getAccountNamespaceMatchByUsernameAndNamespace(username, namespace);
+            if (!verify.succeed) {
+                throw panic.code(ERROR_CODE.REQUEST_DOES_MATCH_PATTERN, verify.invalids[0]);
+            }
+
+            const matchResult: AccountNamespaceMatch = await MatchController.getAccountNamespaceMatchByUsernameAndNamespace(body.username, body.namespace);
 
             if (matchResult.succeed === false) {
 

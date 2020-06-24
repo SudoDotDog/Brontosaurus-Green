@@ -5,13 +5,33 @@
  */
 
 import { EMAIL_VALIDATE_RESPONSE, IAccountModel, MatchController, PHONE_VALIDATE_RESPONSE, validateEmail, validatePhone } from "@brontosaurus/db";
-import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
-import { Safe, SafeExtract } from "@sudoo/extract";
+import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
+import { createStrictMapPattern, createStringPattern, Pattern } from "@sudoo/pattern";
+import { fillStringedResult, StringedResult } from "@sudoo/verify";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
+
+const bodyPattern: Pattern = createStrictMapPattern({
+
+    username: createStringPattern(),
+    namespace: createStringPattern(),
+
+    avatar: createStringPattern({
+        optional: true,
+    }),
+    displayName: createStringPattern({
+        optional: true,
+    }),
+    email: createStringPattern({
+        optional: true,
+    }),
+    phone: createStringPattern({
+        optional: true,
+    }),
+});
 
 export type UpdateAccountRouteBody = {
 
@@ -31,12 +51,13 @@ export class UpdateAccountRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
+        autoHook.wrap(createStringedBodyVerifyHandler(bodyPattern), 'Body Verify'),
         autoHook.wrap(this._updateAccountHandler.bind(this), 'Update Account'),
     ];
 
     private async _updateAccountHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
 
-        const body: SafeExtract<UpdateAccountRouteBody> = Safe.extract(req.body as UpdateAccountRouteBody, this._error(ERROR_CODE.INSUFFICIENT_INFORMATION));
+        const body: UpdateAccountRouteBody = req.body;
 
         try {
 
@@ -44,19 +65,22 @@ export class UpdateAccountRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.APPLICATION_GREEN_NOT_VALID);
             }
 
-            const username: string = body.directEnsure('username');
-            const namespace: string = body.directEnsure('namespace');
+            const verify: StringedResult = fillStringedResult(req.stringedBodyVerify);
 
-            const account: IAccountModel | null = await MatchController.getAccountByUsernameAndNamespaceName(username, namespace);
-
-            if (!account) {
-                throw this._error(ERROR_CODE.ACCOUNT_NOT_FOUND, username);
+            if (!verify.succeed) {
+                throw panic.code(ERROR_CODE.REQUEST_DOES_MATCH_PATTERN, verify.invalids[0]);
             }
 
-            if (this._updateAvatar(account, req.body.avatar)
-                || this._updateEmail(account, req.body.email)
-                || this._updatePhone(account, req.body.phone)
-                || this._updateDisplayName(account, req.body.displayName)) {
+            const account: IAccountModel | null = await MatchController.getAccountByUsernameAndNamespaceName(body.username, body.namespace);
+
+            if (!account) {
+                throw this._error(ERROR_CODE.ACCOUNT_NOT_FOUND, body.username);
+            }
+
+            if (this._updateAvatar(account, body.avatar)
+                || this._updateEmail(account, body.email)
+                || this._updatePhone(account, body.phone)
+                || this._updateDisplayName(account, body.displayName)) {
 
                 await account.save();
             }

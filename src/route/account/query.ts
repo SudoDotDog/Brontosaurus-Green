@@ -20,6 +20,7 @@ import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
 
 const bodyPattern: Pattern = createStrictMapPattern({
+
     organizations: createListPattern(createStringPattern()),
     groups: createListPattern(createStringPattern()),
     groupsMode: createStringPattern({
