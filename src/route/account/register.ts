@@ -8,11 +8,12 @@ import { AccountController, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountMo
 import { Basics } from "@brontosaurus/definition";
 import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
-import { Pattern, createStrictMapPattern, createListPattern, createStringPattern, createRecordPattern } from "@sudoo/pattern";
+import { createListPattern, createStrictMapPattern, createStringPattern, Pattern } from "@sudoo/pattern";
 import { fillStringedResult, StringedResult } from "@sudoo/verify";
 import { ObjectID } from "bson";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
+import { createInfoPattern } from "../../pattern/info";
 import { createRandomTempPassword } from "../../util/auth";
 import { ERROR_CODE, panic } from "../../util/error";
 import { jsonifyBasicRecords } from "../../util/token";
@@ -22,16 +23,7 @@ const bodyPattern: Pattern = createStrictMapPattern({
 
     username: createStringPattern(),
     namespace: createStringPattern(),
-    userInfos: {
-        type: 'or',
-        options: [
-            createStringPattern(),
-            createRecordPattern(
-                createStringPattern(),
-                { type: 'any' },
-            ),
-        ],
-    },
+    userInfos: createInfoPattern(),
     userGroups: createListPattern(createStringPattern()),
     userTags: createListPattern(createStringPattern()),
 

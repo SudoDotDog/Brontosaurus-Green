@@ -9,11 +9,12 @@ import { Basics } from "@brontosaurus/definition";
 import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { SudooExpressResponseAgent } from "@sudoo/express/agent";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
-import { createListPattern, createRecordPattern, createStrictMapPattern, createStringPattern, Pattern } from "@sudoo/pattern";
+import { createListPattern, createStrictMapPattern, createStringPattern, Pattern } from "@sudoo/pattern";
 import { fillStringedResult, StringedResult } from "@sudoo/verify";
 import { ObjectID } from "bson";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
+import { createInfoPattern } from "../../pattern/info";
 import { createRandomTempPassword } from "../../util/auth";
 import { ERROR_CODE, panic } from "../../util/error";
 import { jsonifyBasicRecords } from "../../util/token";
@@ -23,16 +24,7 @@ const bodyPattern: Pattern = createStrictMapPattern({
 
     organizationName: createStringPattern(),
     organizationTags: createListPattern(createStringPattern()),
-    ownerInfos: {
-        type: 'or',
-        options: [
-            createStringPattern(),
-            createRecordPattern(
-                createStringPattern(),
-                { type: 'any' },
-            ),
-        ],
-    },
+    ownerInfos: createInfoPattern(),
     ownerUsername: createStringPattern(),
     ownerNamespace: createStringPattern(),
     ownerGroups: createListPattern(createStringPattern()),
