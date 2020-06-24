@@ -13,6 +13,20 @@ import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
+import { Pattern } from "@sudoo/pattern";
+
+const bodyPattern: Pattern = {
+    type: 'map',
+    strict: true,
+    map: {
+        username: { type: 'string' },
+        namespace: { type: 'string' },
+        tags: {
+            type: 'list',
+            element: { type: 'string' },
+        },
+    },
+};
 
 export type AccountDetailRouteBody = {
 
