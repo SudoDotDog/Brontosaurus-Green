@@ -15,6 +15,7 @@ import { ERROR_CODE, panic } from "../../../util/error";
 import { BrontosaurusRoute } from "../../basic";
 
 const bodyPattern: Pattern = createStrictMapPattern({
+
     username: createStringPattern(),
     namespace: createStringPattern(),
 

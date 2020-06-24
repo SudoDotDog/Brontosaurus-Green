@@ -8,7 +8,7 @@ import { AccountController, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountMo
 import { Basics } from "@brontosaurus/definition";
 import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
-import { Pattern } from "@sudoo/pattern";
+import { Pattern, createStrictMapPattern, createListPattern, createStringPattern, createRecordPattern } from "@sudoo/pattern";
 import { fillStringedResult, StringedResult } from "@sudoo/verify";
 import { ObjectID } from "bson";
 import { createGreenAuthHandler } from "../../handlers/handlers";
@@ -18,46 +18,33 @@ import { ERROR_CODE, panic } from "../../util/error";
 import { jsonifyBasicRecords } from "../../util/token";
 import { BrontosaurusRoute } from "../basic";
 
-const bodyPattern: Pattern = {
-    type: 'map',
-    strict: true,
-    map: {
-        username: { type: 'string' },
-        namespace: { type: 'string' },
-        userInfos: {
-            type: 'or',
-            options: [
-                { type: 'string' },
-                {
-                    type: 'record',
-                    key: { type: 'string' },
-                    value: { type: 'any' },
-                },
-            ],
-        },
-        userGroups: {
-            type: 'list',
-            element: { type: 'string' },
-        },
-        userTags: {
-            type: 'list',
-            element: { type: 'string' },
-        },
+const bodyPattern: Pattern = createStrictMapPattern({
 
-        userDisplayName: {
-            type: 'string',
-            optional: true,
-        },
-        userEmail: {
-            type: 'string',
-            optional: true,
-        },
-        userPhone: {
-            type: 'string',
-            optional: true,
-        },
+    username: createStringPattern(),
+    namespace: createStringPattern(),
+    userInfos: {
+        type: 'or',
+        options: [
+            createStringPattern(),
+            createRecordPattern(
+                createStringPattern(),
+                { type: 'any' },
+            ),
+        ],
     },
-};
+    userGroups: createListPattern(createStringPattern()),
+    userTags: createListPattern(createStringPattern()),
+
+    userDisplayName: createStringPattern({
+        optional: true,
+    }),
+    userEmail: createStringPattern({
+        optional: true,
+    }),
+    userPhone: createStringPattern({
+        optional: true,
+    }),
+});
 
 export type RegisterAccountRouteBody = {
 
