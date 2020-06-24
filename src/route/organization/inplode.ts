@@ -6,10 +6,11 @@
 
 import { AccountController, COMMON_NAME_VALIDATE_RESPONSE, EMAIL_VALIDATE_RESPONSE, GroupController, IAccountModel, IGroupModel, INamespaceModel, IOrganizationModel, isGroupModelInternalUserGroup, NamespaceController, OrganizationController, PASSWORD_VALIDATE_RESPONSE, PHONE_VALIDATE_RESPONSE, TagController, USERNAME_VALIDATE_RESPONSE, validateCommonName, validateEmail, validateNamespace, validatePassword, validatePhone, validateUsername } from "@brontosaurus/db";
 import { Basics } from "@brontosaurus/definition";
-import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
+import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { SudooExpressResponseAgent } from "@sudoo/express/agent";
-import { Safe, SafeExtract } from "@sudoo/extract";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
+import { createListPattern, createRecordPattern, createStrictMapPattern, createStringPattern, Pattern } from "@sudoo/pattern";
+import { fillStringedResult, StringedResult } from "@sudoo/verify";
 import { ObjectID } from "bson";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
@@ -18,11 +19,45 @@ import { ERROR_CODE, panic } from "../../util/error";
 import { jsonifyBasicRecords } from "../../util/token";
 import { BrontosaurusRoute } from "../basic";
 
+const bodyPattern: Pattern = createStrictMapPattern({
+
+    organizationName: createStringPattern(),
+    organizationTags: createListPattern(createStringPattern()),
+    ownerInfos: {
+        type: 'or',
+        options: [
+            createStringPattern(),
+            createRecordPattern(
+                createStringPattern(),
+                { type: 'any' },
+            ),
+        ],
+    },
+    ownerUsername: createStringPattern(),
+    ownerNamespace: createStringPattern(),
+    ownerGroups: createListPattern(createStringPattern()),
+    ownerTags: createListPattern(createStringPattern()),
+
+    ownerDisplayName: createStringPattern({
+        optional: true,
+    }),
+    ownerEmail: createStringPattern({
+        optional: true,
+    }),
+    ownerPhone: createStringPattern({
+        optional: true,
+    }),
+
+    ownerPassword: createStringPattern({
+        optional: true,
+    }),
+});
+
 export type InplodeOrganizationRouteBody = {
 
     readonly organizationName: string;
     readonly organizationTags: string[];
-    readonly ownerInfos: Record<string, Basics>;
+    readonly ownerInfos: Record<string, Basics> | string;
     readonly ownerUsername: string;
     readonly ownerNamespace: string;
     readonly ownerGroups: string[];
@@ -42,12 +77,13 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
+        autoHook.wrap(createStringedBodyVerifyHandler(bodyPattern), 'Body Verify'),
         autoHook.wrap(this._inplodeOrganizationHandler.bind(this), 'Inplode Organization'),
     ];
 
     private async _inplodeOrganizationHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
 
-        const body: SafeExtract<InplodeOrganizationRouteBody> = Safe.extract(req.body as InplodeOrganizationRouteBody, this._error(ERROR_CODE.INSUFFICIENT_INFORMATION));
+        const body: InplodeOrganizationRouteBody = req.body;
 
         try {
 
@@ -55,40 +91,37 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.APPLICATION_GREEN_NOT_VALID);
             }
 
-            const organizationName: string = body.directEnsure('organizationName');
+            const verify: StringedResult = fillStringedResult(req.stringedBodyVerify);
 
-            const username: string = body.directEnsure('ownerUsername');
-            const namespace: string = body.directEnsure('ownerNamespace');
-
-            const organizationTags: string[] = body.direct('organizationTags');
-            const ownerTags: string[] = body.direct('ownerTags');
-            const groups: string[] = body.direct('ownerGroups');
-
-            if (!Array.isArray(organizationTags)) {
-                throw this._error(ERROR_CODE.INSUFFICIENT_INFORMATION, organizationTags as any);
+            if (!verify.succeed) {
+                throw panic.code(ERROR_CODE.REQUEST_DOES_MATCH_PATTERN, verify.invalids[0]);
             }
 
-            if (!Array.isArray(ownerTags)) {
-                throw this._error(ERROR_CODE.INSUFFICIENT_INFORMATION, ownerTags as any);
+            if (!Array.isArray(body.organizationTags)) {
+                throw this._error(ERROR_CODE.INSUFFICIENT_INFORMATION, body.organizationTags as any);
             }
 
-            if (!Array.isArray(groups)) {
-                throw this._error(ERROR_CODE.INSUFFICIENT_INFORMATION, groups as any);
+            if (!Array.isArray(body.ownerTags)) {
+                throw this._error(ERROR_CODE.INSUFFICIENT_INFORMATION, body.ownerTags as any);
             }
 
-            const usernameValidationResult: USERNAME_VALIDATE_RESPONSE = validateUsername(username);
+            if (!Array.isArray(body.ownerGroups)) {
+                throw this._error(ERROR_CODE.INSUFFICIENT_INFORMATION, body.ownerGroups as any);
+            }
+
+            const usernameValidationResult: USERNAME_VALIDATE_RESPONSE = validateUsername(body.ownerUsername);
 
             if (usernameValidationResult !== USERNAME_VALIDATE_RESPONSE.OK) {
                 throw this._error(ERROR_CODE.INVALID_USERNAME, usernameValidationResult);
             }
 
-            const namespaceValidationResult: boolean = validateNamespace(namespace);
+            const namespaceValidationResult: boolean = validateNamespace(body.ownerNamespace);
 
             if (!namespaceValidationResult) {
                 throw this._error(ERROR_CODE.INVALID_NAMESPACE, usernameValidationResult);
             }
 
-            const validateResult: COMMON_NAME_VALIDATE_RESPONSE = validateCommonName(organizationName);
+            const validateResult: COMMON_NAME_VALIDATE_RESPONSE = validateCommonName(body.organizationName);
 
             if (validateResult !== COMMON_NAME_VALIDATE_RESPONSE.OK) {
                 throw this._error(ERROR_CODE.INVALID_COMMON_NAME, validateResult);
@@ -125,32 +158,31 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
                 }
             }
 
-            const infoLine: Record<string, Basics> | string = body.direct('ownerInfos');
             const infos: Record<string, Basics> = jsonifyBasicRecords(
-                infoLine,
-                this._error(ERROR_CODE.INFO_LINE_FORMAT_ERROR, infoLine.toString()));
+                body.ownerInfos,
+                this._error(ERROR_CODE.INFO_LINE_FORMAT_ERROR, body.ownerInfos.toString()));
 
-            const namespaceInstance: INamespaceModel | null = await NamespaceController.getNamespaceByNamespace(namespace);
+            const namespaceInstance: INamespaceModel | null = await NamespaceController.getNamespaceByNamespace(body.ownerNamespace);
 
             if (!namespaceInstance) {
-                throw panic.code(ERROR_CODE.NAMESPACE_NOT_FOUND, namespace);
+                throw panic.code(ERROR_CODE.NAMESPACE_NOT_FOUND, body.ownerNamespace);
             }
 
-            const isAccountDuplicated: boolean = await AccountController.isAccountDuplicatedByUsernameAndNamespace(username, namespaceInstance._id);
+            const isAccountDuplicated: boolean = await AccountController.isAccountDuplicatedByUsernameAndNamespace(body.ownerUsername, namespaceInstance._id);
 
             if (isAccountDuplicated) {
-                throw this._error(ERROR_CODE.DUPLICATE_ACCOUNT, username);
+                throw this._error(ERROR_CODE.DUPLICATE_ACCOUNT, body.ownerUsername);
             }
 
-            const isOrganizationDuplicated: boolean = await OrganizationController.isOrganizationDuplicatedByName(organizationName);
+            const isOrganizationDuplicated: boolean = await OrganizationController.isOrganizationDuplicatedByName(body.organizationName);
 
             if (isOrganizationDuplicated) {
-                throw this._error(ERROR_CODE.DUPLICATE_ORGANIZATION, organizationName);
+                throw this._error(ERROR_CODE.DUPLICATE_ORGANIZATION, body.organizationName);
             }
 
-            const parsedOrganizationTagIds: ObjectID[] = await TagController.getTagIdsByNames(organizationTags);
-            const parsedOwnerTagIds: ObjectID[] = await TagController.getTagIdsByNames(ownerTags);
-            const parsedGroups: IGroupModel[] = await GroupController.getGroupByNames(groups);
+            const parsedOrganizationTagIds: ObjectID[] = await TagController.getTagIdsByNames(body.organizationTags);
+            const parsedOwnerTagIds: ObjectID[] = await TagController.getTagIdsByNames(body.ownerTags);
+            const parsedGroups: IGroupModel[] = await GroupController.getGroupByNames(body.ownerGroups);
 
             for (const group of parsedGroups) {
                 if (isGroupModelInternalUserGroup(group)) {
@@ -159,7 +191,7 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
             }
 
             const account: IAccountModel = this._createAccount({
-                username,
+                username: body.ownerUsername,
                 namespace: namespaceInstance,
                 displayName: req.body.ownerDisplayName,
                 ownerEmail: req.body.ownerEmail,
@@ -168,7 +200,7 @@ export class InplodeOrganizationRoute extends BrontosaurusRoute {
                 infos,
             }, res.agent);
 
-            const organization: IOrganizationModel = OrganizationController.createUnsavedOrganization(organizationName, account._id);
+            const organization: IOrganizationModel = OrganizationController.createUnsavedOrganization(body.organizationName, account._id);
 
             organization.tags = parsedOrganizationTagIds;
 
