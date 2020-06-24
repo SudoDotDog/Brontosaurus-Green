@@ -4,49 +4,36 @@
  * @description Query
  */
 
-import { AccountController, GroupController, IAccountModel, IGroupModel, INamespaceModel, OrganizationController, TagController, IOrganizationModel, ITagModel } from "@brontosaurus/db";
+import { AccountController, GroupController, IAccountModel, IGroupModel, INamespaceModel, IOrganizationModel, ITagModel, OrganizationController, TagController } from "@brontosaurus/db";
 import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
-import { Pattern } from "@sudoo/pattern";
+import { createListPattern, createMapPattern, createStringPattern, Pattern } from "@sudoo/pattern";
 import { fillStringedResult, StringedResult } from "@sudoo/verify";
 import { ObjectID } from "bson";
 import { GroupAgent } from "../../agent/group";
 import { NamespaceAgent } from "../../agent/namespace";
+import { OrganizationAgent } from "../../agent/organization";
+import { TagAgent } from "../../agent/tag";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
-import { OrganizationAgent } from "../../agent/organization";
-import { TagAgent } from "../../agent/tag";
 
-const bodyPattern: Pattern = {
-    type: 'map',
+const bodyPattern: Pattern = createMapPattern({
+    organizations: createListPattern(createStringPattern()),
+    groups: createListPattern(createStringPattern()),
+    groupsMode: createStringPattern({
+        enum: ['and', 'or'],
+        optional: true,
+    }),
+    tags: createListPattern(createStringPattern()),
+    tagsMode: createStringPattern({
+        enum: ['and', 'or'],
+        optional: true,
+    }),
+}, {
     strict: true,
-    map: {
-        organizations: {
-            type: 'list',
-            element: { type: 'string' },
-        },
-        groups: {
-            type: 'list',
-            element: { type: 'string' },
-        },
-        groupsMode: {
-            type: 'string',
-            enum: ['and', 'or'],
-            optional: true,
-        },
-        tags: {
-            type: 'list',
-            element: { type: 'string' },
-        },
-        tagsMode: {
-            type: 'string',
-            enum: ['and', 'or'],
-            optional: true,
-        },
-    },
-};
+});
 
 export type QueryAccountRouteBody = {
 

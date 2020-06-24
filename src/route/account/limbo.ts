@@ -5,14 +5,22 @@
  */
 
 import { IAccountModel, MatchController } from "@brontosaurus/db";
-import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
-import { Safe, SafeExtract } from "@sudoo/extract";
+import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
+import { createMapPattern, createStringPattern, Pattern } from "@sudoo/pattern";
+import { fillStringedResult, StringedResult } from "@sudoo/verify";
 import { createGreenAuthHandler } from "../../handlers/handlers";
 import { autoHook } from "../../handlers/hook";
 import { createRandomTempPassword } from "../../util/auth";
 import { ERROR_CODE, panic } from "../../util/error";
 import { BrontosaurusRoute } from "../basic";
+
+const bodyPattern: Pattern = createMapPattern({
+    username: createStringPattern(),
+    namespace: createStringPattern(),
+}, {
+    strict: true,
+});
 
 export type LimboAccountRouteBody = {
 
@@ -27,12 +35,13 @@ export class LimboAccountRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
+        autoHook.wrap(createStringedBodyVerifyHandler(bodyPattern), 'Body Verify'),
         autoHook.wrap(this._limboAccountHandler.bind(this), 'Limbo Account'),
     ];
 
     private async _limboAccountHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
 
-        const body: SafeExtract<LimboAccountRouteBody> = Safe.extract(req.body as LimboAccountRouteBody, this._error(ERROR_CODE.INSUFFICIENT_INFORMATION));
+        const body: LimboAccountRouteBody = req.body;
 
         try {
 
@@ -40,13 +49,16 @@ export class LimboAccountRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.APPLICATION_GREEN_NOT_VALID);
             }
 
-            const username: string = body.directEnsure('username');
-            const namespace: string = body.directEnsure('namespace');
+            const verify: StringedResult = fillStringedResult(req.stringedBodyVerify);
 
-            const account: IAccountModel | null = await MatchController.getAccountByUsernameAndNamespaceName(username, namespace);
+            if (!verify.succeed) {
+                throw panic.code(ERROR_CODE.REQUEST_DOES_MATCH_PATTERN, verify.invalids[0]);
+            }
+
+            const account: IAccountModel | null = await MatchController.getAccountByUsernameAndNamespaceName(body.username, body.namespace);
 
             if (!account) {
-                throw this._error(ERROR_CODE.ACCOUNT_NOT_FOUND, username);
+                throw this._error(ERROR_CODE.ACCOUNT_NOT_FOUND, body.username);
             }
 
             const tempPassword: string = createRandomTempPassword();
