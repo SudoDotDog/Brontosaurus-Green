@@ -5,13 +5,20 @@
  */
 
 import { AccountActions, ApplicationController, IAccountModel, IApplicationModel, MatchController, validateAccountAction } from "@brontosaurus/db";
-import { ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
-import { Safe, SafeExtract } from "@sudoo/extract";
+import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
+import { createListPattern, createStrictMapPattern, createStringPattern, Pattern } from "@sudoo/pattern";
+import { fillStringedResult, StringedResult } from "@sudoo/verify";
 import { createGreenAuthHandler } from "../../../handlers/handlers";
 import { autoHook } from "../../../handlers/hook";
 import { ERROR_CODE, panic } from "../../../util/error";
 import { BrontosaurusRoute } from "../../basic";
+
+const bodyPattern: Pattern = createStrictMapPattern({
+    username: createStringPattern(),
+    namespace: createStringPattern(),
+    groups: createListPattern(createStringPattern()),
+});
 
 export type AccountHistoryRecordRouteBody = {
 
@@ -32,12 +39,13 @@ export class AccountHistoryRecordRoute extends BrontosaurusRoute {
 
     public readonly groups: SudooExpressHandler[] = [
         autoHook.wrap(createGreenAuthHandler(), 'Green'),
+        autoHook.wrap(createStringedBodyVerifyHandler(bodyPattern), 'Body Verify'),
         autoHook.wrap(this._accountHistoryRecordHandler.bind(this), 'Account History Record'),
     ];
 
     private async _accountHistoryRecordHandler(req: SudooExpressRequest, res: SudooExpressResponse, next: SudooExpressNextFunction): Promise<void> {
 
-        const body: SafeExtract<AccountHistoryRecordRouteBody> = Safe.extract(req.body as AccountHistoryRecordRouteBody, this._error(ERROR_CODE.INSUFFICIENT_INFORMATION));
+        const body: AccountHistoryRecordRouteBody = req.body;
 
         try {
 
@@ -45,39 +53,35 @@ export class AccountHistoryRecordRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.APPLICATION_GREEN_NOT_VALID);
             }
 
-            const username: string = body.directEnsure('username');
-            const namespace: string = body.directEnsure('namespace');
+            const verify: StringedResult = fillStringedResult(req.stringedBodyVerify);
 
-            const type: keyof AccountActions = body.directEnsure('type');
-            const application: string = body.directEnsure('application');
-            const content: string = body.directEnsure('content');
-
-            const byUsername: string = body.directEnsure('byUsername');
-            const byNamespace: string = body.directEnsure('byNamespace');
-
-            if (!validateAccountAction(type)) {
-                throw panic.code(ERROR_CODE.INVALID_ACCOUNT_ACTION, type);
+            if (!verify.succeed) {
+                throw panic.code(ERROR_CODE.REQUEST_DOES_MATCH_PATTERN, verify.invalids[0]);
             }
 
-            const account: IAccountModel | null = await MatchController.getAccountByUsernameAndNamespaceName(username, namespace);
+            if (!validateAccountAction(body.type)) {
+                throw panic.code(ERROR_CODE.INVALID_ACCOUNT_ACTION, body.type);
+            }
+
+            const account: IAccountModel | null = await MatchController.getAccountByUsernameAndNamespaceName(body.username, body.namespace);
 
             if (!account) {
-                throw this._error(ERROR_CODE.ACCOUNT_NOT_FOUND, username);
+                throw this._error(ERROR_CODE.ACCOUNT_NOT_FOUND, body.username);
             }
 
-            const self: IAccountModel | null = await MatchController.getAccountByUsernameAndNamespaceName(byUsername, byNamespace);
+            const self: IAccountModel | null = await MatchController.getAccountByUsernameAndNamespaceName(body.byUsername, body.byNamespace);
 
             if (!self) {
-                throw this._error(ERROR_CODE.ACCOUNT_NOT_FOUND, byUsername);
+                throw this._error(ERROR_CODE.ACCOUNT_NOT_FOUND, body.byUsername);
             }
 
-            const actionApplication: IApplicationModel | null = await ApplicationController.getApplicationByKey(application);
+            const actionApplication: IApplicationModel | null = await ApplicationController.getApplicationByKey(body.application);
 
             if (!actionApplication) {
-                throw this._error(ERROR_CODE.APPLICATION_NOT_FOUND, application);
+                throw this._error(ERROR_CODE.APPLICATION_NOT_FOUND, body.application);
             }
 
-            account.pushHistory(type, account._id, self._id, content, undefined);
+            account.pushHistory(body.type, account._id, self._id, body.content, undefined);
 
             await account.save();
 
