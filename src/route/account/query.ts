@@ -4,7 +4,7 @@
  * @description Query
  */
 
-import { AccountController, GroupController, IAccountModel, IGroupModel, INamespaceModel, IOrganizationModel, ITagModel, OrganizationController, TagController } from "@brontosaurus/db";
+import { AccountController, GroupController, IAccount, IAccountModel, IGroupModel, INamespaceModel, IOrganizationModel, ITagModel, NamespaceController, OrganizationController, TagController } from "@brontosaurus/db";
 import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
 import { createListPattern, createStrictMapPattern, createStringPattern, Pattern } from "@sudoo/pattern";
@@ -21,12 +21,22 @@ import { BrontosaurusRoute } from "../basic";
 
 const bodyPattern: Pattern = createStrictMapPattern({
 
+    activation: createStringPattern({
+        enum: ['activate', 'inactivate'],
+        optional: true,
+    }),
+    namespace: createStringPattern({
+        optional: true,
+    }),
+
     organizations: createListPattern(createStringPattern()),
+
     groups: createListPattern(createStringPattern()),
     groupsMode: createStringPattern({
         enum: ['and', 'or'],
         optional: true,
     }),
+
     tags: createListPattern(createStringPattern()),
     tagsMode: createStringPattern({
         enum: ['and', 'or'],
@@ -36,12 +46,19 @@ const bodyPattern: Pattern = createStrictMapPattern({
 
 export type QueryAccountRouteBody = {
 
+    readonly activation?: 'activate' | 'inactivate';
+    readonly namespace?: string;
+
     readonly organizations: string[];
+
     readonly groups: string[];
     readonly groupsMode?: 'and' | 'or';
+
     readonly tags: string[];
     readonly tagsMode?: 'and' | 'or';
 };
+
+type AccountQuery = Partial<Record<keyof IAccount, any>>;
 
 export class QueryAccountRoute extends BrontosaurusRoute {
 
@@ -70,8 +87,13 @@ export class QueryAccountRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.REQUEST_DOES_MATCH_PATTERN, verify.invalids[0]);
             }
 
-            let query: Record<string, any> = {};
+            let query: AccountQuery = {};
 
+            // Sync Query
+            query = this._attachActivation(body.activation, query);
+
+            // Async Query
+            query = await this._attachNamespace(body.namespace, query);
             query = await this._attachOrganization(
                 body.organizations,
                 query,
@@ -132,10 +154,49 @@ export class QueryAccountRoute extends BrontosaurusRoute {
         }
     }
 
+    private _attachActivation(
+        activation: 'activate' | 'inactivate' | undefined,
+        query: AccountQuery,
+    ): AccountQuery {
+
+        if (activation === 'activate') {
+            return {
+                ...query,
+                active: true,
+            };
+        }
+        if (activation === 'inactivate') {
+            return {
+                ...query,
+                active: false,
+            };
+        }
+        return query;
+    }
+
+    private async _attachNamespace(
+        namespace: string | undefined,
+        query: AccountQuery,
+    ): Promise<AccountQuery> {
+
+        if (!namespace) {
+            return query;
+        }
+        const namespaceInstance: INamespaceModel | null = await NamespaceController.getNamespaceByNamespace(namespace);
+        if (!namespaceInstance) {
+            return query;
+        }
+
+        return {
+            ...query,
+            namespace: namespaceInstance._id,
+        };
+    }
+
     private async _attachOrganization(
         organizationNames: string[],
-        query: Record<string, any>,
-    ): Promise<Record<string, any>> {
+        query: AccountQuery,
+    ): Promise<AccountQuery> {
 
         if (organizationNames.length === 0) {
             return query;
@@ -152,8 +213,8 @@ export class QueryAccountRoute extends BrontosaurusRoute {
     private async _attachGroup(
         groupNames: string[],
         mode: 'and' | 'or',
-        query: Record<string, any>,
-    ): Promise<Record<string, any>> {
+        query: AccountQuery,
+    ): Promise<AccountQuery> {
 
         if (groupNames.length === 0) {
             return query;
@@ -180,8 +241,8 @@ export class QueryAccountRoute extends BrontosaurusRoute {
     private async _attachTag(
         tagNames: string[],
         mode: 'and' | 'or',
-        query: Record<string, any>,
-    ): Promise<Record<string, any>> {
+        query: AccountQuery,
+    ): Promise<AccountQuery> {
 
         if (tagNames.length === 0) {
             return query;
