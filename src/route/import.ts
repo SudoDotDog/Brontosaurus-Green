@@ -13,6 +13,8 @@ import { RegisterAccountRoute } from "./account/register";
 import { ReplaceAccountTagRoute } from "./account/tag/replace";
 import { UpdateAccountRoute } from "./account/update";
 import { VerifyAccountRoute } from "./account/verify";
+import { QueryDecoratorRoute } from "./decorator/query";
+import { QueryNamespaceRoute } from "./namespace/query";
 import { InplodeOrganizationRoute } from "./organization/inplode";
 import { QueryOrganizationRoute } from "./organization/query";
 import { RegisterSubAccountRoute } from "./organization/register";
@@ -48,6 +50,15 @@ export const RouteList = [
 
     // Tag
     new QueryTagRoute(),
+
+    // Decorator
+    new QueryDecoratorRoute(),
+
+    // Group
+    new QueryTagRoute(),
+
+    // Namespace
+    new QueryNamespaceRoute(),
 
     // Validate
     new ValidateBridgeRoute(),
