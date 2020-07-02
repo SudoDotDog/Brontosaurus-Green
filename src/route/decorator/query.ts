@@ -17,14 +17,19 @@ import { BrontosaurusRoute } from "../basic";
 const bodyPattern: Pattern = createStrictMapPattern({
 
     activation: createStringPattern({
-        enum: ['activate', 'inactivate'],
+        enum: ['active', 'inactive'],
         optional: true,
     }),
 });
 
 export type QueryDecoratorRouteBody = {
 
-    readonly activation?: 'activate' | 'inactivate';
+    readonly activation?: 'active' | 'inactive';
+};
+
+export type QueryDecoratorElement = {
+
+    readonly name: string;
 };
 
 type DecoratorQuery = Partial<Record<keyof IDecorator, any>>;
@@ -63,9 +68,14 @@ export class QueryDecoratorRoute extends BrontosaurusRoute {
 
             const decorators: IDecoratorModel[] = await DecoratorController.getDecoratorsByQuery(query);
 
-            const names: string[] = decorators.map((decorator: IDecoratorModel) => decorator.name);
+            const elements: QueryDecoratorElement[] = decorators.map((decorator: IDecoratorModel) => {
 
-            res.agent.add('names', names);
+                return {
+                    name: decorator.name,
+                };
+            });
+
+            res.agent.add('decorators', elements);
         } catch (err) {
 
             res.agent.fail(HTTP_RESPONSE_CODE.BAD_REQUEST, err);
@@ -75,17 +85,17 @@ export class QueryDecoratorRoute extends BrontosaurusRoute {
     }
 
     private _attachActivation(
-        activation: 'activate' | 'inactivate' | undefined,
+        activation: 'active' | 'inactive' | undefined,
         query: DecoratorQuery,
     ): DecoratorQuery {
 
-        if (activation === 'activate') {
+        if (activation === 'active') {
             return {
                 ...query,
                 active: true,
             };
         }
-        if (activation === 'inactivate') {
+        if (activation === 'inactive') {
             return {
                 ...query,
                 active: false,

@@ -17,14 +17,19 @@ import { BrontosaurusRoute } from "../basic";
 const bodyPattern: Pattern = createStrictMapPattern({
 
     activation: createStringPattern({
-        enum: ['activate', 'inactivate'],
+        enum: ['active', 'inactive'],
         optional: true,
     }),
 });
 
 export type QueryGroupRouteBody = {
 
-    readonly activation?: 'activate' | 'inactivate';
+    readonly activation?: 'active' | 'inactive';
+};
+
+export type QueryGroupElement = {
+
+    readonly name: string;
 };
 
 type GroupQuery = Partial<Record<keyof IGroup, any>>;
@@ -63,9 +68,14 @@ export class QueryGroupRoute extends BrontosaurusRoute {
 
             const groups: IGroupModel[] = await GroupController.getGroupsByQuery(query);
 
-            const names: string[] = groups.map((group: IGroupModel) => group.name);
+            const elements: QueryGroupElement[] = groups.map((group: IGroupModel) => {
 
-            res.agent.add('names', names);
+                return {
+                    name: group.name,
+                };
+            });
+
+            res.agent.add('groups', elements);
         } catch (err) {
 
             res.agent.fail(HTTP_RESPONSE_CODE.BAD_REQUEST, err);
@@ -75,17 +85,17 @@ export class QueryGroupRoute extends BrontosaurusRoute {
     }
 
     private _attachActivation(
-        activation: 'activate' | 'inactivate' | undefined,
+        activation: 'active' | 'inactive' | undefined,
         query: GroupQuery,
     ): GroupQuery {
 
-        if (activation === 'activate') {
+        if (activation === 'active') {
             return {
                 ...query,
                 active: true,
             };
         }
-        if (activation === 'inactivate') {
+        if (activation === 'inactive') {
             return {
                 ...query,
                 active: false,

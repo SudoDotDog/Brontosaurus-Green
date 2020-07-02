@@ -14,6 +14,7 @@ import { ReplaceAccountTagRoute } from "./account/tag/replace";
 import { UpdateAccountRoute } from "./account/update";
 import { VerifyAccountRoute } from "./account/verify";
 import { QueryDecoratorRoute } from "./decorator/query";
+import { QueryGroupRoute } from "./group/query";
 import { QueryNamespaceRoute } from "./namespace/query";
 import { InplodeOrganizationRoute } from "./organization/inplode";
 import { QueryOrganizationRoute } from "./organization/query";
@@ -55,7 +56,7 @@ export const RouteList = [
     new QueryDecoratorRoute(),
 
     // Group
-    new QueryTagRoute(),
+    new QueryGroupRoute(),
 
     // Namespace
     new QueryNamespaceRoute(),

@@ -17,14 +17,19 @@ import { BrontosaurusRoute } from "../basic";
 const bodyPattern: Pattern = createStrictMapPattern({
 
     activation: createStringPattern({
-        enum: ['activate', 'inactivate'],
+        enum: ['active', 'inactive'],
         optional: true,
     }),
 });
 
 export type QueryTagRouteBody = {
 
-    readonly activation?: 'activate' | 'inactivate';
+    readonly activation?: 'active' | 'inactive';
+};
+
+export type QueryTagElement = {
+
+    readonly name: string;
 };
 
 type TagQuery = Partial<Record<keyof ITag, any>>;
@@ -63,9 +68,14 @@ export class QueryTagRoute extends BrontosaurusRoute {
 
             const tags: ITagModel[] = await TagController.getTagsByQuery(query);
 
-            const names: string[] = tags.map((tag: ITagModel) => tag.name);
+            const elements: QueryTagElement[] = tags.map((tag: ITagModel) => {
 
-            res.agent.add('names', names);
+                return {
+                    name: tag.name,
+                };
+            });
+
+            res.agent.add('tags', elements);
         } catch (err) {
 
             res.agent.fail(HTTP_RESPONSE_CODE.BAD_REQUEST, err);
@@ -75,17 +85,17 @@ export class QueryTagRoute extends BrontosaurusRoute {
     }
 
     private _attachActivation(
-        activation: 'activate' | 'inactivate' | undefined,
+        activation: 'active' | 'inactive' | undefined,
         query: TagQuery,
     ): TagQuery {
 
-        if (activation === 'activate') {
+        if (activation === 'active') {
             return {
                 ...query,
                 active: true,
             };
         }
-        if (activation === 'inactivate') {
+        if (activation === 'inactive') {
             return {
                 ...query,
                 active: false,

@@ -17,14 +17,20 @@ import { BrontosaurusRoute } from "../basic";
 const bodyPattern: Pattern = createStrictMapPattern({
 
     activation: createStringPattern({
-        enum: ['activate', 'inactivate'],
+        enum: ['active', 'inactive'],
         optional: true,
     }),
 });
 
 export type QueryNamespaceRouteBody = {
 
-    readonly activation?: 'activate' | 'inactivate';
+    readonly activation?: 'active' | 'inactive';
+};
+
+export type QueryNamespaceElement = {
+
+    readonly name?: string;
+    readonly namespace: string;
 };
 
 type NamespaceQuery = Partial<Record<keyof INamespace, any>>;
@@ -63,9 +69,15 @@ export class QueryNamespaceRoute extends BrontosaurusRoute {
 
             const namespaces: INamespaceModel[] = await NamespaceController.getNamespacesByQuery(query);
 
-            const names: string[] = namespaces.map((namespace: INamespaceModel) => namespace.namespace);
+            const elements: QueryNamespaceElement[] = namespaces.map((namespace: INamespaceModel) => {
 
-            res.agent.add('namespaces', names);
+                return {
+                    name: namespace.name,
+                    namespace: namespace.namespace,
+                };
+            });
+
+            res.agent.add('namespaces', elements);
         } catch (err) {
 
             res.agent.fail(HTTP_RESPONSE_CODE.BAD_REQUEST, err);
@@ -75,17 +87,17 @@ export class QueryNamespaceRoute extends BrontosaurusRoute {
     }
 
     private _attachActivation(
-        activation: 'activate' | 'inactivate' | undefined,
+        activation: 'active' | 'inactive' | undefined,
         query: NamespaceQuery,
     ): NamespaceQuery {
 
-        if (activation === 'activate') {
+        if (activation === 'active') {
             return {
                 ...query,
                 active: true,
             };
         }
-        if (activation === 'inactivate') {
+        if (activation === 'inactive') {
             return {
                 ...query,
                 active: false,

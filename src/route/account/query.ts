@@ -22,7 +22,7 @@ import { BrontosaurusRoute } from "../basic";
 const bodyPattern: Pattern = createStrictMapPattern({
 
     activation: createStringPattern({
-        enum: ['activate', 'inactivate'],
+        enum: ['active', 'inactive'],
         optional: true,
     }),
     namespace: createStringPattern({
@@ -46,7 +46,7 @@ const bodyPattern: Pattern = createStrictMapPattern({
 
 export type QueryAccountRouteBody = {
 
-    readonly activation?: 'activate' | 'inactivate';
+    readonly activation?: 'active' | 'inactive';
     readonly namespace?: string;
 
     readonly organizations: string[];
@@ -155,17 +155,17 @@ export class QueryAccountRoute extends BrontosaurusRoute {
     }
 
     private _attachActivation(
-        activation: 'activate' | 'inactivate' | undefined,
+        activation: 'active' | 'inactive' | undefined,
         query: AccountQuery,
     ): AccountQuery {
 
-        if (activation === 'activate') {
+        if (activation === 'active') {
             return {
                 ...query,
                 active: true,
             };
         }
-        if (activation === 'inactivate') {
+        if (activation === 'inactive') {
             return {
                 ...query,
                 active: false,

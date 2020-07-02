@@ -4,7 +4,7 @@
  * @description Query
  */
 
-import { IOrganizationModel, OrganizationController, TagController } from "@brontosaurus/db";
+import { IOrganizationModel, OrganizationController, TagController, IOrganization } from "@brontosaurus/db";
 import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
 import { createListPattern, createStrictMapPattern, createStringPattern, Pattern } from "@sudoo/pattern";
@@ -17,13 +17,25 @@ import { BrontosaurusRoute } from "../basic";
 
 const bodyPattern: Pattern = createStrictMapPattern({
 
+    activation: createStringPattern({
+        enum: ['active', 'inactive'],
+        optional: true,
+    }),
     tags: createListPattern(createStringPattern()),
 });
 
 export type QueryOrganizationRouteBody = {
 
+    readonly activation?: 'active' | 'inactive';
     readonly tags: string[];
 };
+
+export type QueryOrganizationElement = {
+
+    readonly name: string;
+};
+
+type OrganizationQuery = Partial<Record<keyof IOrganization, any>>;
 
 export class QueryOrganizationRoute extends BrontosaurusRoute {
 
@@ -46,8 +58,6 @@ export class QueryOrganizationRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.APPLICATION_GREEN_NOT_VALID);
             }
 
-            let query: Record<string, any> = {};
-
             const verify: StringedResult = fillStringedResult(req.stringedBodyVerify);
 
             if (!verify.succeed) {
@@ -58,13 +68,24 @@ export class QueryOrganizationRoute extends BrontosaurusRoute {
                 throw panic.code(ERROR_CODE.INSUFFICIENT_SPECIFIC_INFORMATION, 'tags');
             }
 
+            let query: OrganizationQuery = {};
+
+            // Sync Query
+            query = this._attachActivation(body.activation, query);
+
+            // Async Query
             query = await this._attachTag(body.tags, query);
 
             const organizations: IOrganizationModel[] = await OrganizationController.getOrganizationsByQuery(query);
 
-            const names: string[] = organizations.map((organization: IOrganizationModel) => organization.name);
+            const elements: QueryOrganizationElement[] = organizations.map((organization: IOrganizationModel) => {
 
-            res.agent.add('names', names);
+                return {
+                    name: organization.name,
+                };
+            });
+
+            res.agent.add('organizations', elements);
         } catch (err) {
 
             res.agent.fail(HTTP_RESPONSE_CODE.BAD_REQUEST, err);
@@ -73,7 +94,27 @@ export class QueryOrganizationRoute extends BrontosaurusRoute {
         }
     }
 
-    private async _attachTag(tagNames: string[], query: Record<string, any>): Promise<Record<string, any>> {
+    private _attachActivation(
+        activation: 'active' | 'inactive' | undefined,
+        query: OrganizationQuery,
+    ): OrganizationQuery {
+
+        if (activation === 'active') {
+            return {
+                ...query,
+                active: true,
+            };
+        }
+        if (activation === 'inactive') {
+            return {
+                ...query,
+                active: false,
+            };
+        }
+        return query;
+    }
+
+    private async _attachTag(tagNames: string[], query: OrganizationQuery): Promise<OrganizationQuery> {
 
         if (tagNames.length === 0) {
             return query;
