@@ -21,11 +21,16 @@ export abstract class BrontosaurusRoute implements ISudooExpressRoute {
     public onError(code: number, error: Error): SudooExpressErrorInfo {
 
         const err: ConnorError = error as any;
-        this._log.error(`${this.path} - ${error.message} (${code})`);
+        this._log.error(`${this.path} - ${err.message} (${code})`);
 
         return {
             code,
-            message: String(err.code),
+            response: {
+                status: code,
+                code: err.code,
+                description: err.description,
+                message: String(err.message),
+            },
         };
     }
 }
