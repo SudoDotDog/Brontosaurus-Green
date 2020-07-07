@@ -20,6 +20,10 @@ const verifyGreenAccess = async (applicationKey: string, green: string): Promise
         return false;
     }
 
+    if (!application.active) {
+        return false;
+    }
+
     if (!application.greenAccess) {
         return false;
     }
