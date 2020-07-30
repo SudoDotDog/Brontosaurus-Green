@@ -4,6 +4,7 @@
  * @description Public Key
  */
 
+import { ApplicationController, IApplicationModel } from "@brontosaurus/db";
 import { createStringedBodyVerifyHandler, ROUTE_MODE, SudooExpressHandler, SudooExpressNextFunction, SudooExpressRequest, SudooExpressResponse } from "@sudoo/express";
 import { HTTP_RESPONSE_CODE } from "@sudoo/magic";
 import { createStrictMapPattern, createStringPattern, Pattern } from "@sudoo/pattern";
@@ -15,17 +16,14 @@ import { BrontosaurusRoute } from "../basic";
 
 const bodyPattern: Pattern = createStrictMapPattern({
 
-    applicationKey: createStringPattern(),
+    applicationKey: createStringPattern({
+        minimumLength: 1,
+    }),
 });
 
 export type FetchPublicKeyRouteBody = {
 
     readonly applicationKey: string;
-};
-
-export type FetchPublicKeyResponse = {
-
-    readonly name: string;
 };
 
 export class FetchPublicKeyRoute extends BrontosaurusRoute {
@@ -54,6 +52,15 @@ export class FetchPublicKeyRoute extends BrontosaurusRoute {
             if (!verify.succeed) {
                 throw panic.code(ERROR_CODE.REQUEST_DOES_MATCH_PATTERN, verify.invalids[0]);
             }
+
+            const application: IApplicationModel | null = await ApplicationController.getApplicationByKey(body.applicationKey);
+
+            if (!application) {
+                throw panic.code(ERROR_CODE.APPLICATION_NOT_FOUND, body.applicationKey);
+            }
+
+            res.agent.add('applicationKey', application.key);
+            res.agent.add('publicKey', application.publicKey);
         } catch (err) {
 
             res.agent.fail(HTTP_RESPONSE_CODE.BAD_REQUEST, err);
