@@ -1,0 +1,7 @@
+POST http://localhost:8500/application/public-key/fetch
+content-type: application/json
+Authorization: bearer <Auth Token>
+
+{
+    "applicationKey": "WAREHOUSE"
+}
