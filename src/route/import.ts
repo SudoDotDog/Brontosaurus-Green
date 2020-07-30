@@ -12,6 +12,7 @@ import { RegisterAccountRoute } from "./account/register";
 import { ReplaceAccountTagRoute } from "./account/tag/replace";
 import { UpdateAccountRoute } from "./account/update";
 import { VerifyAccountRoute } from "./account/verify";
+import { FetchPublicKeyRoute } from "./application/public-key";
 import { QueryDecoratorRoute } from "./decorator/query";
 import { QueryGroupRoute } from "./group/query";
 import { QueryNamespaceRoute } from "./namespace/query";
@@ -38,6 +39,9 @@ export const RouteList = [
 
     // Account - Group
     new ReplaceAccountGroupRoute(),
+
+    // Application
+    new FetchPublicKeyRoute(),
 
     // Organization
     new InplodeOrganizationRoute(),
