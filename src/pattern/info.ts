@@ -15,7 +15,7 @@ export const createBasicsPattern = (): Pattern => {
             createNumberPattern(),
             createBooleanPattern(),
         ]
-    }
+    };
 };
 
 export const createInfoPattern = (): Pattern => {
