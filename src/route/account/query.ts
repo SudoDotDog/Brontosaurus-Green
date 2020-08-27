@@ -58,6 +58,18 @@ export type QueryAccountRouteBody = {
     readonly tagsMode?: 'and' | 'or';
 };
 
+export type QueryAccountElement = {
+
+    readonly username: string;
+    readonly namespace: string;
+    readonly groups: string[];
+    readonly tags: string[];
+    readonly organization?: string;
+    readonly displayName?: string;
+    readonly email?: string;
+    readonly phone?: string;
+};
+
 type AccountQuery = Partial<Record<keyof IAccount, any>>;
 
 export class QueryAccountRoute extends BrontosaurusRoute {
@@ -111,7 +123,7 @@ export class QueryAccountRoute extends BrontosaurusRoute {
 
             const accounts: IAccountModel[] = await AccountController.getAccountsByQuery(query);
 
-            const infos = [];
+            const infos: QueryAccountElement[] = [];
             const groupAgent: GroupAgent = GroupAgent.create();
             const tagAgent: TagAgent = TagAgent.create();
             const organizationAgent: OrganizationAgent = OrganizationAgent.create();
@@ -147,9 +159,9 @@ export class QueryAccountRoute extends BrontosaurusRoute {
                 });
             }
 
+            res.agent.add('count', infos.length);
             res.agent.add('accounts', infos);
         } catch (err) {
-
             res.agent.fail(HTTP_RESPONSE_CODE.BAD_REQUEST, err);
         } finally {
             next();
