@@ -142,6 +142,8 @@ export class QueryAccountRoute extends BrontosaurusRoute {
                         ? organization.name
                         : undefined,
                     displayName: account.displayName,
+                    email: account.email,
+                    phone: account.phone,
                 });
             }
 
