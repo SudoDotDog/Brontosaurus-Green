@@ -82,16 +82,17 @@ export class UpdateAccountRoute extends BrontosaurusRoute {
             const updatePhoneResult: boolean = this._updatePhone(account, body.phone);
             const updateDisplayNameResult: boolean = this._updateDisplayName(account, body.displayName);
 
-            if (
-                updateAvatarResult
+            const shouldSave: boolean = updateAvatarResult
                 || updateEmailResult
                 || updatePhoneResult
-                || updateDisplayNameResult
-            ) {
+                || updateDisplayNameResult;
+
+            if (shouldSave) {
                 await account.save();
             }
 
             res.agent.add('active', account.active);
+            res.agent.add('saved', shouldSave);
             res.agent.add('username', account.username);
             res.agent.add('limbo', Boolean(account.limbo));
             res.agent.add('twoFA', Boolean(account.twoFA));
