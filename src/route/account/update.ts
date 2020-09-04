@@ -96,6 +96,7 @@ export class UpdateAccountRoute extends BrontosaurusRoute {
             res.agent.add('username', account.username);
             res.agent.add('limbo', Boolean(account.limbo));
             res.agent.add('twoFA', Boolean(account.twoFA));
+            res.agent.addIfExist('avatar', account.avatar);
             res.agent.addIfExist('email', account.email);
             res.agent.addIfExist('phone', account.phone);
             res.agent.addIfExist('displayName', account.displayName);
