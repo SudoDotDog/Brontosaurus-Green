@@ -77,11 +77,17 @@ export class UpdateAccountRoute extends BrontosaurusRoute {
                 throw this._error(ERROR_CODE.ACCOUNT_NOT_FOUND, body.username);
             }
 
-            if (this._updateAvatar(account, body.avatar)
-                || this._updateEmail(account, body.email)
-                || this._updatePhone(account, body.phone)
-                || this._updateDisplayName(account, body.displayName)) {
+            const updateAvatarResult: boolean = this._updateAvatar(account, body.avatar);
+            const updateEmailResult: boolean = this._updateEmail(account, body.email);
+            const updatePhoneResult: boolean = this._updatePhone(account, body.phone);
+            const updateDisplayNameResult: boolean = this._updateDisplayName(account, body.displayName);
 
+            if (
+                updateAvatarResult
+                || updateEmailResult
+                || updatePhoneResult
+                || updateDisplayNameResult
+            ) {
                 await account.save();
             }
 
