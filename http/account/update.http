@@ -1,0 +1,8 @@
+POST https://devl.green.rpngo.com/account/update
+content-type: application/json
+Authorization: bearer <Auth Token>
+
+{
+    "username": "register-test-1",
+    "namespace": "brontosaurus.default"
+}
