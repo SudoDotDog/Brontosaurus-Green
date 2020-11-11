@@ -16,9 +16,11 @@ import { FetchPublicKeyRoute } from "./application/public-key";
 import { QueryDecoratorRoute } from "./decorator/query";
 import { QueryGroupRoute } from "./group/query";
 import { QueryNamespaceRoute } from "./namespace/query";
+import { OrganizationAddTagRoute } from "./organization/add-tag";
 import { InplodeOrganizationRoute } from "./organization/inplode";
 import { QueryOrganizationRoute } from "./organization/query";
 import { RegisterSubAccountRoute } from "./organization/register";
+import { OrganizationRemoveTagRoute } from "./organization/remove-tag";
 import { VerifyOrganizationRoute } from "./organization/verify";
 import { QueryTagRoute } from "./tag/query";
 import { ValidateBridgeRoute } from "./validate/bridge";
@@ -48,6 +50,8 @@ export const RouteList = [
     new QueryOrganizationRoute(),
     new RegisterSubAccountRoute(),
     new VerifyOrganizationRoute(),
+    new OrganizationAddTagRoute(),
+    new OrganizationRemoveTagRoute(),
 
     // Tag
     new QueryTagRoute(),

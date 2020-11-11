@@ -1,4 +1,4 @@
-POST https://devl.green.rpngo.com/account/update
+POST http://localhost:8500/account/update
 content-type: application/json
 Authorization: bearer <Auth Token>
 

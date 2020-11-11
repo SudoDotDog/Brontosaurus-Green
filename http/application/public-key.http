@@ -3,5 +3,5 @@ content-type: application/json
 Authorization: bearer <Auth Token>
 
 {
-    "applicationKey": "WAREHOUSE"
+    "applicationKey": "<Application Key>"
 }

@@ -1,0 +1,8 @@
+POST http://localhost:8500/organization/add-tag
+content-type: application/json
+Authorization: bearer <Auth Token>
+
+{
+    "organization": "<Organization Name>",
+    "tag": "<Tag Name>"
+}
