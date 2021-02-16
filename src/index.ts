@@ -7,6 +7,7 @@
 import { connect } from '@brontosaurus/db';
 import { SudooExpress, SudooExpressApplication } from '@sudoo/express';
 import { LOG_LEVEL, SudooLog } from '@sudoo/log';
+import * as Mongoose from "mongoose";
 import * as Path from 'path';
 import { RouteList } from './route/import';
 import { BrontosaurusConfig, isDevelopment, readConfigEnvironment } from './util/conf';
@@ -31,7 +32,7 @@ const app: SudooExpress = SudooExpress.create(setting);
 
 const config: BrontosaurusConfig = readConfigEnvironment();
 
-connect(config.database, {
+const connection: Mongoose.Connection = connect(config.database, {
     connected: true,
     disconnected: true,
     error: true,
@@ -46,7 +47,9 @@ app.static(Path.join(__dirname, '..', 'public', 'air'));
 app.routeList(RouteList);
 
 // Health
-app.health('/health');
+app.health('/health', () => {
+    return connection.readyState >= 1;
+});
 
 // eslint-disable-next-line @typescript-eslint/no-magic-numbers
 app.host(8500);
