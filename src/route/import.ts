@@ -4,6 +4,8 @@
  * @description Import
  */
 
+import { ActivateAccountRoute } from "./account/activate";
+import { DeactivateAccountRoute } from "./account/deactivate";
 import { AccountDetailRoute } from "./account/detail";
 import { ReplaceAccountGroupRoute } from "./account/group/replace";
 import { LimboAccountRoute } from "./account/limbo";
@@ -29,6 +31,8 @@ import { ValidateDirectRoute } from "./validate/direct";
 export const RouteList = [
 
     // Account
+    new ActivateAccountRoute(),
+    new DeactivateAccountRoute(),
     new AccountDetailRoute(),
     new LimboAccountRoute(),
     new QueryAccountRoute(),
